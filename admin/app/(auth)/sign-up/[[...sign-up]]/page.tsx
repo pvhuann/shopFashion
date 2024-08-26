@@ -1,9 +1,9 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignUp } from '@clerk/nextjs'
 
 const page = () => {
     return (
         <div className='flex justify-center items-center h-full'>
-            <SignIn afterSignOutUrl={'/dashboard'}/>
+            <SignUp />
         </div>
     )
 }

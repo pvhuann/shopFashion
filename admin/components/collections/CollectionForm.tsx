@@ -1,14 +1,15 @@
 'use client'
 
 import { z } from "zod"
+import toast from "react-hot-toast"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Separator } from "../ui/separator"
-import { Button } from "@/components/ui/button"
+import { useParams, useRouter } from "next/navigation"
+
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -17,27 +18,32 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import ImageUpload from "../custom ui/ImageUpload"
-import toast from "react-hot-toast"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import Delete from "../custom ui/Delete"
+import { Separator } from "../ui/separator"
+import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
     description: z.string().trim().min(2).max(600),
-    image: z.string(),
+    image: z.string().url(),
 })
 
+interface CollectionProps {
+    initialData?: CollectionType | null,
+}
 
-const CollectionForm = () => {
-    const [loading, setLoading]= useState(false)
-    const router= useRouter()
+const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+    // const params = useParams()
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: initialData ? initialData : {
             title: "",
             description: "",
-            image: '',
+            image: "",
         },
     })
 
@@ -45,26 +51,45 @@ const CollectionForm = () => {
         // console.log(values);
         try {
             setLoading(true);
-            const res = await fetch('/api/collections', {
+            const url = initialData ? `/api/collections/${initialData._id}` : "/api/collections"
+            const res = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(values),
             })
 
-            if(res.ok){
+            if (res.ok) {
                 setLoading(false);
-                toast.success("Collections created successfully")
+                toast.success(`Collection ${initialData ? "updated" : "created"} successfully`)
+                // window.location.href = "/collections";
                 router.push("/collections")
             }
         } catch (error) {
-            console.log("collection_POST",error);
+            console.log("collection_POST", error);
             toast.error("Something went wrong! Please try again")
-            
+        }
+    }
+
+    //block "Submit" when "Enter" is clicked
+    const handleKeyPress = (event:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter") {
+            event.preventDefault()
         }
     }
 
     return (
         <div className="p-10">
-            <div className="text-heading2-bold">CollectionForm</div>
+
+            {initialData ? (
+                <div className=" flex justify-between items-center">
+                    <div className="text-heading2-bold">Update Collection</div>
+                    <Delete id={initialData._id} title={initialData.title} item="collection"/>
+                </div>
+            ) : (
+                <div className="text-heading2-bold">Create Collection</div>
+            )}
+
             <Separator className="bg-grey-1 my-4" />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -75,9 +100,9 @@ const CollectionForm = () => {
                             <FormItem>
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="title" {...field} />
+                                    <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
                     />
@@ -89,9 +114,9 @@ const CollectionForm = () => {
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Description" {...field} rows={6} />
+                                    <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
                     />
@@ -109,13 +134,13 @@ const CollectionForm = () => {
                                         onRemove={() => field.onChange('')}
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
                     />
                     <div className="flex gap-10">
-                    <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
-                    <Button type="submit" variant={"outline"} className="bg-blue-2" onClick={()=> router.push("/collections")}>Discard</Button>
+                        <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
+                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/collections")}>Discard</Button>
                     </div>
 
                 </form>

@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import LeftSideBar from "@/components/layout/LeftSideBar";
 import TopSideBar from "@/components/layout/TopSideBar";
 import "../globals.css";
+import ToastProvider from "@/lib/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterMultiSessionSingleSignOutUrl={'/sign-in'}>
       <html lang="en">
         <body className={inter.className}>
           <div className="flex max-lg:flex-col text-grey-1">
@@ -29,7 +30,7 @@ export default function RootLayout({
               {children}
             </div>
           </div>
-
+          <ToastProvider />
         </body>
       </html>
     </ClerkProvider>

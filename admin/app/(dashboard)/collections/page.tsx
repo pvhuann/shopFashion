@@ -6,7 +6,7 @@ import Loader from '@/components/custom ui/Loader'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Collections = () => {
     const [loading, setLoading] = useState(true)
@@ -25,18 +25,21 @@ const Collections = () => {
 
         } catch (error) {
             console.log("Collections_GET", error);
+            setLoading(false)
         }
     }
 
     useEffect(()=>{
         getCollections()       
     },[]);
+
+
     return loading? <Loader/>: (
         <div className='p-10'>
             <div className='flex justify-between items-center  mb-4'>
                 <p className='text-heading2-bold'>Collections</p>
                 <Button type='button' className='bg-blue-1 text-white' onClick={()=> router.push('collections/new')}>
-                    <Plus className='ư-4 h-4'/>
+                    <Plus className='w-4 h-4'/>
                     <p>Create collection</p>
                 </Button>
             </div>

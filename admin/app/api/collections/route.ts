@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
+//POST request collection
 export const POST = async(req:NextRequest)=> {
     try {
         //check user with clerk authentication
@@ -36,6 +37,8 @@ export const POST = async(req:NextRequest)=> {
 }
 
 
+
+//GET all collections from the database 
 export const GET = async(req: NextRequest)=>{
     try {
         await connectToDB()

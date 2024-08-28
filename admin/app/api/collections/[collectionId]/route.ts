@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
-//
+//DELETE one collection by _id collection
 export const DELETE = async (req: NextRequest, { params }: { params: { collectionId: string } }) => {
 
     try {
@@ -30,7 +30,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { collectio
     }
 }
 
-
+//GET one collection by _id collection
 export const GET = async (req: NextRequest, { params }: { params: { collectionId: string } }) => {
     try {
         //connect to mongo database
@@ -54,6 +54,8 @@ export const GET = async (req: NextRequest, { params }: { params: { collectionId
     }
 }
 
+
+//POST one collection by _id collection
 export const POST = async (req: NextRequest, { params }: { params: { collectionId: string } }) => {
     try {
 

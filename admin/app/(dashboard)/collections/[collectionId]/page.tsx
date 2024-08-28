@@ -22,7 +22,7 @@ const CollectionDetails = ({params}: {params: {collectionId: string}}) => {
             }
         } catch (error) {
             console.log("CollectionDetails_GET",error);
-            
+            setLoading(false)
         }
     }
 

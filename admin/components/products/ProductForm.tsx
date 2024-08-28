@@ -47,7 +47,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [collections, setCollections] = useState<CollectionType[]>([])
     const router = useRouter()
 
-    const getCollections = async () => {
+    const getCollections= async() =>{
         try {
             const res = await fetch('/api/collections', {
                 method: 'GET',

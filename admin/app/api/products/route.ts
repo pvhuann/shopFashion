@@ -3,6 +3,8 @@ import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+
+//POST one product with requested to the database
 export const POST = async (req: NextRequest) => {
     try {
         const { userId } = auth()

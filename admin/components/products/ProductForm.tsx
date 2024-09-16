@@ -23,17 +23,18 @@ import { Separator } from "../ui/separator"
 import { Button } from "@/components/ui/button"
 import MultiSelect from "../custom ui/MultiSelect"
 import MultiTag from "../custom ui/MultiTag"
+import Loader from "../custom ui/Loader"
 
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
     description: z.string().trim().min(2).max(600),
-    media: z.array(z.string()),
+    media: z.array(z.string().url()),
     category: z.string(),
     collections: z.array(z.string()),
     tags: z.array(z.string()),
-    colors: z.array(z.string()),
     sizes: z.array(z.string()),
+    colors: z.array(z.string()),
     price: z.coerce.number().min(0.1),
     expense: z.coerce.number().min(0.1),
 })
@@ -43,18 +44,42 @@ interface ProductProps {
 }
 
 const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [collections, setCollections] = useState<CollectionType[]>([])
     const router = useRouter()
 
-    const getCollections= async() =>{
+    // create form
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: initialData
+            ? {
+                ...initialData,
+                collections: initialData.collections.map((collection)=> collection._id),
+            }
+            : {
+                title: "",
+                description: "",
+                media: [],
+                category: "",
+                collections: [],
+                tags: [],
+                sizes: [],
+                colors: [],
+                price: 0.1,
+                expense: 0.1,
+            },
+    })
+
+
+    //get all collections
+    const getCollections = async () => {
         try {
             const res = await fetch('/api/collections', {
                 method: 'GET',
             })
             const data = await res.json()
             setCollections(data)
-            setLoading(true)
+            setLoading(false)
         } catch (error) {
             console.log("collections_GET", error);
             toast.error("Something went wrong! Please try again")
@@ -63,42 +88,15 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
 
     useEffect(() => {
         getCollections()
-    },[])
+    }, [])
 
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: initialData 
-        ? {...initialData,
-            collections: initialData.collections.map(collections=> collections._id)
-        }
-        : {
-            title: "",
-            description: "",
-            media: [],
-            category: "",
-            collections: [],
-            tags: [],
-            colors: [],
-            sizes: [],
-            price: 0.1,
-            expense: 0.1,
-        },
-    })
-
-    //block "Submit" when "Enter" is clicked
-    const handleKeyPress = (event:
-        | React.KeyboardEvent<HTMLInputElement>
-        | React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.key === "Enter") {
-            event.preventDefault()
-        }
-    }
+    //handle submit form
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // console.log(values);
         try {
             setLoading(true);
             const url = initialData ? `/api/products/${initialData._id}` : "/api/products"
+            // const url ="/api/products"
             const res = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(values),
@@ -117,7 +115,17 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         }
     }
 
-    return (
+
+    //block "Submit" when "Enter" is clicked
+    const handleKeyPress = (event:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter") {
+            event.preventDefault()
+        }
+    }
+
+    return loading ? <Loader /> : (
         <div className="p-10">
 
             {initialData ? (
@@ -235,7 +243,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormLabel>Tags</FormLabel>
                                     <FormControl>
                                         <MultiTag
-                                        placeholder="Tag"
+                                            placeholder="Tag"
                                             value={field.value}
                                             onChange={(tag) => field.onChange([...field.value, tag])}
                                             onRemove={(tagRemove) => {
@@ -255,7 +263,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormLabel>Colors</FormLabel>
                                     <FormControl>
                                         <MultiTag
-                                        placeholder="Color"
+                                            placeholder="Color"
                                             value={field.value}
                                             onChange={(tag) => field.onChange([...field.value, tag])}
                                             onRemove={(tagRemove) => {
@@ -287,35 +295,35 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 </FormItem>
                             )}
                         />
-                        
-                        
+
+
 
                     </div>
 
                     <FormField
-                            control={form.control}
-                            name="collections"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Collections</FormLabel>
-                                    <FormControl>
-                                        <MultiSelect
-                                            collections={collections}
-                                            value={field.value}
-                                            onChange={(_id)=> {
-                                                field.onChange([...field.value,_id])
-                                            }}
-                                            onRemove={(idToRemove)=> {
-                                                field.onChange([
-                                                    ...field.value.filter((id)=> id!== idToRemove)
-                                                ])
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        />
+                        control={form.control}
+                        name="collections"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Collections</FormLabel>
+                                <FormControl>
+                                    <MultiSelect
+                                        collections={collections}
+                                        value={field.value}
+                                        onChange={(_id) => {
+                                            field.onChange([...field.value, _id])
+                                        }}
+                                        onRemove={(idToRemove) => {
+                                            field.onChange([
+                                                ...field.value.filter((id) => id !== idToRemove)
+                                            ])
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
                     <div className="flex gap-10">
                         <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
                         <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/products")}>Discard</Button>

@@ -1,3 +1,4 @@
+import Collection from "@/lib/models/collections";
 import Product from "@/lib/models/products";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
@@ -23,10 +24,10 @@ export const POST = async (req: NextRequest) => {
             tags,
             colors,
             sizes,
-            prices,
+            price,
             expense } = await req.json()
 
-        if (!title || !description || !media || !category  || !prices ||!expense ) {
+        if (!title || !description || !media || !category || !price || !expense) {
             return new NextResponse("Not enough data to create a new product", { status: 400 })
         }
 
@@ -40,7 +41,7 @@ export const POST = async (req: NextRequest) => {
                 tags,
                 sizes,
                 colors,
-                prices,
+                price,
                 expense,
             }
         )
@@ -49,7 +50,21 @@ export const POST = async (req: NextRequest) => {
 
         return NextResponse.json(newProduct, { status: 200 })
     } catch (error) {
-        console.log(error);
+        console.log("product_POST", error);
+        return new NextResponse("Internal Server Error", { status: 500 })
+    }
+}
+
+
+export const GET = async (req: NextRequest) => {
+    try {
+        await connectToDB()
+        const products = await Product.find()
+                .sort({ createdAt: 'desc' })
+                .populate({ path: "collections", model: Collection });
+        return NextResponse.json(products, { status: 200 })
+    } catch (error) {
+        console.log("Products_GET", error);
         return new NextResponse("Internal Server Error", { status: 500 })
     }
 }

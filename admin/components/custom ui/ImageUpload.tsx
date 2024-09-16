@@ -26,7 +26,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     return (
         <div>
             <div className="mb-4 flex flex-wrap items-center gap-4">
-                {value.map((url) => (
+                {value?.map((url) => (
                     <div key={url} className="relative max-w-[200px] max-h-[200px]">
                         <div className="absolute top-0 right-0 z-10">
                             <Button type="button" onClick={() => onRemove(url)} size="sm" className="bg-red-1 text-white relative group w-10 h-10 rounded-lg">
@@ -35,15 +35,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                         </div>
                         <Image
                             src={url}
-                            alt="collection"
-                            className="object-cover rounded-lg"
+                            alt="image"
+                            className="rounded-lg"
                             width={200}
                             height={200}
                         />
                     </div>
                 ))}
-
-
             </div>
 
             <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={onUpload}>
@@ -54,7 +52,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                                 <Plus className="h-4 w-4" />
                                 <p>Upload Image</p>
                             </div>
-
                         </Button>
                     );
                 }}

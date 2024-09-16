@@ -37,7 +37,6 @@ export const POST = async(req:NextRequest)=> {
 }
 
 
-
 //GET all collections from the database 
 export const GET = async(req: NextRequest)=>{
     try {

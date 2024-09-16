@@ -58,11 +58,8 @@ export const GET = async (req: NextRequest, { params }: { params: { collectionId
 //POST one collection by _id collection
 export const POST = async (req: NextRequest, { params }: { params: { collectionId: string } }) => {
     try {
-
         //connect to clerk auth server
         const { userId } = auth();
-
-
         //check if user is not authenticated
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 })

@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import "../globals.css";
 import Footer from "@/components/Footer";
+import ToastProvider from "@/lib/providers/ToastProvider";
 
 
 const poppins = Poppins({
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
         <ClerkProvider>
+          <ToastProvider/>
           <div className="flex flex-col min-h-screen">
             <div className="flex-grow">
               <Navbar />

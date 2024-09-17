@@ -1,5 +1,6 @@
 
 'use client'
+import useCart from '@/lib/hooks/useCart'
 import { capitalizeWords } from '@/utils/capitalizeWords'
 import { MinusCircle, PlusCircle } from 'lucide-react'
 import React, { useState } from 'react'
@@ -8,6 +9,7 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
     const [selectedColor, setSelectedColor] = useState<string>(productInformation.colors[0] || '')
     const [selectedSize, setSelectedSize] = useState<string>(productInformation.sizes[0] || '')
     const [quantity, setQuantity] = useState<number>(1)
+    const cart = useCart()
     return (
         <div className='flex flex-col gap-4 max-w-[400px]'>
 
@@ -68,7 +70,14 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
 
             <button
                 className='text-base-bold outline rounded-full py-4 hover:bg-black hover:text-white'
-            // onClick={}
+            onClick={()=> {
+                cart.addItem({
+                    item: productInformation,
+                    quantity,
+                    color: selectedColor,
+                    size: selectedSize
+                })
+            }}
             >Add to cart
             </button>
 

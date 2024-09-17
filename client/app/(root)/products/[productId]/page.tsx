@@ -14,7 +14,7 @@ const ProductDetail = async ({ params }: { params: { productId: string } }) => {
         <>
             <div className='flex gap-32 justify-center pt-10'>
                 <Gallery productMedia={productDetails.media} />
-                <ProductInformation productInformation= {{...productDetails, media: undefined}}/>
+                <ProductInformation productInformation= {productDetails}/>
             </div>
         </>
     )

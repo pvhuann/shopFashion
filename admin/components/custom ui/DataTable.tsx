@@ -23,13 +23,17 @@ import { Input } from "../ui/input"
 import { useState } from "react"
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    searchKey: string;
+    hiddenSearchInput:boolean;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    searchKey,
+    hiddenSearchInput,
 }: DataTableProps<TData, TValue>) {
 
     const [columnFilters, setColumnFilters] =useState<ColumnFiltersState>(
@@ -50,12 +54,12 @@ export function DataTable<TData, TValue>({
 
     return (
         <>
-            <div className="py-4">
+            <div className="py-4" hidden={hiddenSearchInput}>
                 <Input
-                    placeholder="Search title..."
-                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                    placeholder={`Search ${searchKey}`}
+                    value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
                     onChange={(event) => {
-                        table.getColumn("title")?.setFilterValue(event.target.value)
+                        table.getColumn(searchKey)?.setFilterValue(event.target.value)
                     }}
                     className="max-w-sm"
                 />

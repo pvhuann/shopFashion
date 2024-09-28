@@ -70,14 +70,14 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
 
             <button
                 className='text-base-bold outline rounded-full py-4 hover:bg-black hover:text-white'
-            onClick={()=> {
-                cart.addItem({
-                    item: productInformation,
-                    quantity,
-                    color: selectedColor,
-                    size: selectedSize
-                })
-            }}
+                onClick={() => {
+                    cart.addItem({
+                        item: productInformation,
+                        quantity,
+                        color: selectedColor,
+                        size: selectedSize
+                    })
+                }}
             >Add to cart
             </button>
 

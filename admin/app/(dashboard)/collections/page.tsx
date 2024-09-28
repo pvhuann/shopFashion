@@ -43,7 +43,7 @@ const Collections = () => {
                     <p>Create collection</p>
                 </Button>
             </div>
-            <DataTable columns={CollectionColumns} data={collections}/>
+            <DataTable columns={CollectionColumns} data={collections} hiddenSearchInput={false} searchKey='title'/>
         </div>
     )
 }

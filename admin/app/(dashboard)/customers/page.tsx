@@ -1,9 +1,21 @@
+import { DataTable } from "@/components/custom ui/DataTable";
+import { CustomerColumns } from "@/components/customers/CustomerColumns";
 
 
-const page = () => {
+const Customers = async() => {
+  const res= await fetch("http:localhost:4000/api/customers", {
+    method: "GET",
+  })
+
+  const customers= await res.json();
+  // console.log(customers);
+  
   return (
-    <div className='px-10 py-5'>page</div>
+    <div className='p-10'>
+      <p className="text-heading2-bold">Customer</p>
+      <DataTable columns={CustomerColumns} data={customers} hiddenSearchInput={false} searchKey="name" />
+    </div>
   )
 }
 
-export default page
+export default Customers

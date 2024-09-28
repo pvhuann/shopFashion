@@ -2,9 +2,10 @@
 
 import useCart from '@/lib/hooks/useCart'
 import { UserButton, useUser } from '@clerk/nextjs'
-import { CircleUserRound, Menu, ShoppingCart } from 'lucide-react'
+import { CircleUserRound, Menu, Search, ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 const Navbar = () => {
@@ -12,20 +13,58 @@ const Navbar = () => {
     const { user } = useUser()
     const [dropDownMenu, setDropDownMenu] = useState(false)
     const cart = useCart()
+    const router = useRouter();
+    const [valueQuery, setValueQuery] = useState('');
+
+    const handleSearch = () => {
+        // console.log(valueQuery.trim());
+        router.push(`/search/${valueQuery.trim()}`);
+        setValueQuery('');
+    }
+
+    const handleKeyDown = (event:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter") {
+            handleSearch();
+            event.preventDefault();
+        }
+    }
+
     return (
         <div className='sticky flex top-0 px-10 py-4 justify-between items-center bg-white shadow-md'>
             <Link href={'/'}>
                 <Image src={'/logo.png'} alt='logo' width={200} height={100} />
             </Link>
-            <Link href={'/'} className='hidden md:block'>
-                Home
-            </Link>
+            <div className='flex justify-between items-center gap-4 max-md:hidden'>
+                <Link href={'/'} className='hover:text-red-1'>
+                    Home
+                </Link>
+                <Link href={user ? '/wishlist' : 'sign-in'} className='hover:text-red-1'>
+                    WishList
+                </Link>
+                <Link href={user ? '/orders' : 'sign-in'} className='hover:text-red-1'>
+                    Orders
+                </Link>
+            </div>
+            <div className='flex justify-center items-center gap-2 rounded-lg border p-2'>
+                <input
+                    type='search'
+                    placeholder='Search...'
+                    className='outline-none'
+                    value={valueQuery}
+                    onKeyDown={(e) => handleKeyDown(e)}
+                    onChange={(e) => setValueQuery(e.target.value)} />
+                <button onClick={handleSearch}>
+                    <Search />
+                </button>
+            </div>
             <div className='flex gap-2 items-center'>
-                <Link href={'/cart'} className='flex gap-1 items-center rounded-md border p-[6px] hover:bg-white' onClick={() => setDropDownMenu(!dropDownMenu)}>
+                <Link href={'/cart'} className='flex gap-1 items-center rounded-md border p-[6px] hover:bg-white'>
                     <ShoppingCart />
                     <p className='text-base-bold'>Cart<span>{`(${cart.cartItems.length})`}</span></p>
                 </Link>
-                <Menu className='cursor-pointer lg:hidden' onClick={() => setDropDownMenu(!dropDownMenu)} />
+                <Menu className='cursor-pointer md:hidden' onClick={() => setDropDownMenu(!dropDownMenu)} />
                 {user ? (
                     <UserButton />
                 ) : (

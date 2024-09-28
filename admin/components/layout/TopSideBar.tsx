@@ -12,11 +12,10 @@ import { navLinks } from '@/lib/constants'
 const TopSideBar = () => {
     const pathName = usePathname()
     const [dropDownMenu, setDropDownMenu] = useState(false)
-    const handleIconMenu= ()=>{
+    const handleIconMenu = () => {
         setDropDownMenu(!dropDownMenu)
-        console.log("reduced menu");
-        
     }
+
     return (
         <div className='w-screen lg:hidden top-0 flex justify-between items-center sticky p-8 bg-blue-2 shadow-xl'>
             <Link href={'/'}>
@@ -32,12 +31,9 @@ const TopSideBar = () => {
             </div>
 
             <div className='relative flex gap-4 items-center text-body-medium'>
-
-
                 {dropDownMenu ? (
-                    <>
-
-                        <SquareX className="cursor-pointer md:hidden" onClick={handleIconMenu}/>
+                    <div>
+                        <SquareX className="cursor-pointer md:hidden" onClick={handleIconMenu} />
                         <div className='flex flex-col gap-4 absolute top-10 right-4 bg-white p-5 shadow-xl md:hidden'>
                             {navLinks.map((link) => (
                                 <Link href={link.url}
@@ -49,7 +45,7 @@ const TopSideBar = () => {
                                 </Link>
                             ))}
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <Menu className="cursor-pointer md:hidden" onClick={handleIconMenu} />
                 )

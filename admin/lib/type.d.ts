@@ -25,8 +25,25 @@ type ProductType= {
     updateAt : Date,
 }
 
-type OrderColumnType={}
+type OrderColumnType={
+    _id: string,
+    customer: string,
+    products: number,
+    totalAmount: number,
+    createdAt: Date,
+}
 
-type OrderItemType={}
+type OrderItemType={
+    product: ProductType,
+    color: string,
+    size: string,
+    price: number,
+    quantity: number,
+}
 
-type CustomerType={}
+type CustomerType={
+    clerkId: string,
+    name: string,
+    email: string,
+    createdAt: Date,
+}

@@ -8,3 +8,11 @@ body,
   height: 100%;
 }
 
+/* clear icon delete in input type search */
+@layer base {
+  [type="search"]::-webkit-search-cancel-button,
+  [type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}

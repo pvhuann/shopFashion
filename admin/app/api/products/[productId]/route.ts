@@ -1,5 +1,5 @@
-import Collection from "@/lib/models/collections";
-import Product from "@/lib/models/products";
+import Collection from "@/lib/models/Collection";
+import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server"
@@ -25,10 +25,10 @@ export const GET = async (req: NextRequest, { params }: { params: { productId: s
 
 export const POST = async (req: NextRequest, { params }: { params: { productId: string } }) => {
     try {
-        // const { userId } = auth()
-        // if (!userId) {
-        //     return new NextResponse("Unauthorized", { status: 401 })
-        // }
+        const { userId } = auth()
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 })
+        }
 
         await connectToDB()
 

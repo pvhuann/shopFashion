@@ -31,7 +31,7 @@ const CollectionDetails = ({ params }: { params: { collectionId: string } }) => 
 
     useEffect(() => {
         getCollectionDetails();
-    }, []);
+    }, [] );
     console.log(collectionDetails?.products);
 
 

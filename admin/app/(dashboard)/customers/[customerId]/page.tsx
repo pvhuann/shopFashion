@@ -2,7 +2,7 @@ import { DataTable } from "@/components/custom ui/DataTable";
 
 
 const page = async ({ params }: { params: { customerId: string } }) => {
-    const res = await fetch(`http://localhost:4000/api/customers/${params.customerId}`, {
+    const res = await fetch(`${process.env.ADMIN_URL}/api/customers/${params.customerId}`, {
         method: 'GET',
     })
     const ordersByCustomerId = await res.json();
@@ -10,7 +10,7 @@ const page = async ({ params }: { params: { customerId: string } }) => {
 
     return (
         <div>
-            
+            <p className="text-heading2-bold">List order</p>
         </div>
     )
 }

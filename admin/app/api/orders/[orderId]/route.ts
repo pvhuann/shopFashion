@@ -9,11 +9,10 @@ export const GET = async (req: NextRequest, { params }: { params: { orderId: str
         await connectToDB();
 
         const orderDetails = await Orders.findById(params.orderId)
-            // .sort({ "products.quantity": 1 })
-            // .populate({
-            //     path: "products.product",
-            //     model: Product,
-            // });
+            .populate({
+                path: "products.product",
+                model: Product,
+            });
 
         if (!orderDetails) {
             return new NextResponse("Order not found", { status: 404 });

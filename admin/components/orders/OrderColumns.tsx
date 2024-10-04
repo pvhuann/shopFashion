@@ -16,6 +16,7 @@ export const OrderColumns: ColumnDef<OrderColumnType>[] = [
     {
         accessorKey: "products",
         header: "Products",
+        cell: ({row})=> <p>{row.original.products.length}</p>
     },
     {
         accessorKey: "totalAmount",

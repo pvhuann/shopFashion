@@ -1,6 +1,6 @@
 
 
-type CollectionType={
+type CollectionType = {
     _id: string,
     title: string,
     description: string,
@@ -8,13 +8,13 @@ type CollectionType={
     products: ProductType[],
 }
 
-type ProductType= {
+type ProductType = {
     _id: string,
     title: string,
     description: string,
-    media:[string],
+    media: [string],
     category: string,
-    collections:[CollectionType],
+    collections: [CollectionType],
     tags: [string],
     sizes: [string],
     colors: [string],
@@ -22,11 +22,29 @@ type ProductType= {
     expense: number,
     // stock: number,
     createAt: Date,
-    updateAt : Date,
+    updateAt: Date,
+}
+type OrderType = {
+    _id: string,
+    shippingAddress: Object,
+    customerClerkId: string,
+    products: [OrderItemType],
+    shippingRate: string,
+    totalAmount: number,
 }
 
-type OrderColumnType={}
+type OrderItemType = {
+    product: ProductType,
+    color: string,
+    size: string,
+    quantity: number,
+    _id: string,
+}
 
-type OrderItemType={}
 
-type CustomerType={}
+type UserType={
+    clerkId: string,
+    wishList: [string],
+    createdAt: string,
+    updatedAt: string,
+}

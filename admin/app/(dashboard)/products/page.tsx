@@ -14,13 +14,13 @@ const Products = () => {
   const router = useRouter()
   const getAllProduct = async () => {
     try {
-      const res = await fetch("/api/products", {
+      const res = await fetch(`/api/products`, {
         method: "GET",
       })
 
-      const data = await res.json()
-      setProducts(data)
-
+      const data = await res.json();
+      setProducts(data);
+      
     } catch (error) {
       console.log("products_GET", error);
 

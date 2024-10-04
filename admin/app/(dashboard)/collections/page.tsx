@@ -19,10 +19,9 @@ const Collections = () => {
                 method: 'GET',
             })
 
-            const data = await res.json()
-            setCollections(data)
-            setLoading(false)
-
+            const data = await res.json();
+            setCollections(data);
+            setLoading(false);
         } catch (error) {
             console.log("Collections_GET", error);
             setLoading(false)

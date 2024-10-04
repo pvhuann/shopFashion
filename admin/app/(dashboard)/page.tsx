@@ -9,7 +9,7 @@ export default async function Home() {
   const totalRevenue = await getTotalSales().then((data) => data.totalRevenue);
   const totalCustomers = await getTotalCustomers();
   const graphData = await getSalesPerMonth();
-  console.log("data: ",graphData);
+  // console.log("data: ",graphData);
   
 
   return (

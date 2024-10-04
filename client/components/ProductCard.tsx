@@ -11,10 +11,11 @@ import { useEffect, useState } from "react"
 
 const ProductCard = ({ product }: { product: ProductType }) => {
 
-    const { user } = useUser()
+    const { user } = useUser();
     const [loading, setLoading] = useState(false)
     const router = useRouter()
     const [isLiked, setIsLiked] = useState(false)
+    
     const getUser = async () => {
         try {
             setLoading(true)

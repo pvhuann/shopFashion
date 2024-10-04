@@ -1,4 +1,5 @@
 import Collection from "@/lib/models/Collection";
+import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -38,6 +39,7 @@ export const GET = async (req: NextRequest, { params }: { params: { collectionId
 
         //find one collection by _id
         const collection = await Collection.findById(params.collectionId)
+            .populate({ path: "products", model: Product });
 
         //not found collection
         if (!collection) {
@@ -74,7 +76,7 @@ export const POST = async (req: NextRequest, { params }: { params: { collectionI
 
         const { title, description, image } = await req.json()
         if (!title || !image) {
-            return new NextResponse(JSON.stringify({message: "Title and Image is required"}), { status: 400 })
+            return new NextResponse(JSON.stringify({ message: "Title and Image is required" }), { status: 400 })
         }
 
         collection = await Collection.findByIdAndUpdate(

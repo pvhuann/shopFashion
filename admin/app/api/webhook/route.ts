@@ -1,10 +1,8 @@
 import Customer from '@/lib/models/Customer';
 import Orders from '@/lib/models/Orders';
 import { connectToDB } from '@/lib/mongoDB';
+import { stripe } from '@/lib/stripe/stripe';
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, { typescript: true });
 
 export const POST = async (req: NextRequest) => {
     try {

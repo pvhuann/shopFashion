@@ -28,7 +28,7 @@ type ProductType= {
 type OrderColumnType={
     _id: string,
     customer: string,
-    products: number,
+    products: [string],
     totalAmount: number,
     createdAt: Date,
 }

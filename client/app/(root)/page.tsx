@@ -13,8 +13,10 @@ export default function Home() {
         height={1000}
         className="w-screen"
       />
-      <Collections />
-      <Products/>
+      <div className="mx-10">
+        <Collections />
+        <Products />
+      </div>
     </div>
   );
 }

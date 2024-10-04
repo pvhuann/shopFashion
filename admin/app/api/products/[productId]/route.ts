@@ -15,7 +15,14 @@ export const GET = async (req: NextRequest, { params }: { params: { productId: s
             return new NextResponse("Product not found", { status: 404 })
         }
 
-        return NextResponse.json(product, { status: 200 })
+        return new NextResponse(JSON.stringify(product), {
+            status: 200,
+            headers: {
+                "Access-Control-Allow-Origin": `${process.env.ECOMMERCE_SHOP_URL}`,
+                "Access-Control-Allow-Methods": "GET",
+                "Access-Control-Allow-Headers": "Content-Type",
+            },
+        });
     } catch (error) {
         console.log("productId_GET", error);
         return new NextResponse("Internal Error", { status: 500 })
@@ -48,7 +55,7 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
             colors,
             price,
             expense,
-        }= await req.json()
+        } = await req.json()
 
         const productUpdate = await Product.findByIdAndUpdate(
             params.productId,
@@ -65,10 +72,10 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
                 expense,
             },
             { new: true }
-        ).populate({ path: "collections" , model: Collection})
+        ).populate({ path: "collections", model: Collection })
 
         await productUpdate.save()
-        return NextResponse.json(productUpdate, {status: 200})
+        return NextResponse.json(productUpdate, { status: 200 })
 
     } catch (error) {
         console.log("productId_POST", error);

@@ -46,15 +46,13 @@ export const POST = async (req: NextRequest) => {
             }
         )
 
-        await newProduct.save()
-
-        if(collections){
-            for(const collectionId of collections){
-                const collection = await Collection.findById(collectionId);
-                if(collection){
-                    collection.products.push(newProduct._id);
-                    await collection.save();
-                }
+        await newProduct.save();
+        
+        for (const collectionId of collections) {
+            const collection = await Collection.findById(collectionId);
+            if (collection) {
+                await collection.products.push(newProduct._id);
+                await collection.save();
             }
         }
 
@@ -70,11 +68,13 @@ export const GET = async (req: NextRequest) => {
     try {
         await connectToDB()
         const products = await Product.find()
-                .sort({ createdAt: 'desc' })
-                .populate({ path: "collections", model: Collection });
+            .sort({ createdAt: 'desc' })
+            .populate({ path: "collections", model: Collection });
+            
         return NextResponse.json(products, { status: 200 })
     } catch (error) {
         console.log("Products_GET", error);
         return new NextResponse("Internal Server Error", { status: 500 })
     }
 }
+

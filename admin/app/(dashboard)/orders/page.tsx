@@ -3,7 +3,7 @@ import { OrderColumns } from "@/components/orders/OrderColumns";
 
 
 const Orders = async () => {
-  const res = await fetch("http://localhost:4000/api/orders", {
+  const res = await fetch(`${process.env.ADMIN_URL}/api/orders`, {
     method: "GET",
   });
 

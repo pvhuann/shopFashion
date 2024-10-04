@@ -6,7 +6,7 @@ import Link from 'next/link'
 export const OrderItemColumns: ColumnDef<OrderItemType>[] = [
     {
         accessorKey: "product",
-        header: "Product Name",
+        header: "Product title",
         cell: ({ row }) => <Link href={`/products/${row.original.product._id}`} className='hover:text-red-1'>{row.original.product.title}</Link>
     },
     {

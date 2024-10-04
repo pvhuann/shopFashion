@@ -8,9 +8,9 @@ const Products = async () => {
         <div className='pt-10'>
             <p className='text-heading1-bold text-center'>Products</p>
             {!products || products.length === 0? (
-                <div className='text-center text-body-bold pt-3'>No product found</div>
+                <div className='text-center text-body-bold my-3'>No product found</div>
             ): (
-                <div className='flex gap-4 flex-wrap justify-center'>
+                <div className='flex gap-6 flex-wrap my-6 justify-center'>
                     {products.map((product:ProductType)=> (
                         <ProductCard key={product._id} product={product}/>
                     ))}

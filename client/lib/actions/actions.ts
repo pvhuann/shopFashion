@@ -15,7 +15,7 @@ export const getProducts= async()=> {
     return await products.json();
 }
 
-export const getProductsDetails= async(productId: string)=> {
+export const getProductDetails= async(productId: string)=> {
     const productDetails= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`);
     return await productDetails.json();
 }
@@ -28,4 +28,18 @@ export const getProductsByCollection= async(collectionId: string)=> {
 export const getSearchedProducts= async(query: string)=> {
     const result= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/${query}`);
     return await result.json();
+}
+
+export const getOrdersByCustomerId= async(customerId: string)=> {
+    const orders= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers/${customerId}`);
+    return await orders.json();
+}
+
+export const getProductInOrderItem= async(productId: string)=> {
+    const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`);
+    const data= await res.json();
+    return {
+        imageUrl: data.media[0],
+        price: data.price,
+    }
 }

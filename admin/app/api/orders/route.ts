@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest)=> {
             return {
                 _id: order._id,
                 customer: customer.name,
-                products: order.products.length,
+                products: order.products,
                 totalAmount: order.totalAmount,
                 createdAt: format(order.createdAt, "MMM do, yyyy"),
             }
@@ -23,6 +23,5 @@ export const GET = async (req: NextRequest)=> {
     } catch (error) {
         console.log("orders_GET", error);
         return new NextResponse("Internal Server Error", {status: 500});
-        
     }
 }

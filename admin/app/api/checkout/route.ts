@@ -1,4 +1,5 @@
-import { stripe } from '@/lib/stripe/stripe';
+
+import { stripe } from '@/lib/stripe';
 import { NextRequest, NextResponse } from 'next/server';
 // import Stripe from 'stripe';
 

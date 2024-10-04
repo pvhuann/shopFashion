@@ -1,5 +1,6 @@
+import { stripe } from '@/lib/stripe/stripe';
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 
 
 const corsHeaders = {
@@ -10,9 +11,9 @@ const corsHeaders = {
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
-    typescript: true,
-});
+// export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
+//     typescript: true,
+// });
 
 export async function POST(req: NextRequest) {
     try {

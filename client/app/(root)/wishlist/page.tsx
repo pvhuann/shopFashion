@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 const WishList = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [wishList, setWishList] = useState<ProductType[]>([]);
-    const [singInUser, setSingInUser] = useState<UserType|null>(null);
+    const [singInUser, setSingInUser] = useState<UserType>();
 
     const { user } = useUser();
     const getUser = async () => {

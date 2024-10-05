@@ -8,10 +8,10 @@ import { useEffect, useState } from 'react'
 
 const CollectionDetails = ({ params }: { params: { collectionId: string } }) => {
 
-    const [loading, setLoading] = useState(true)
-    const [collectionDetails, setCollectionDetails] = useState<CollectionType | null>(null)
-    const[productsInCollection, setProductsInCollection] = useState<ProductType[]| null>(null)
-
+    const [loading, setLoading] = useState(true);
+    const [collectionDetails, setCollectionDetails] = useState<CollectionType | null>(null);
+    const[productsInCollection, setProductsInCollection] = useState<ProductType[]>([]);
+    const a= new Array<ProductType>;
     const getCollectionDetails = async () => {
         try {
             const res = await fetch(`/api/collections/${params.collectionId}`, {
@@ -52,7 +52,7 @@ const CollectionDetails = ({ params }: { params: { collectionId: string } }) => 
                 ))} */}
                 <DataTable
                     columns={ProductInCollectionColumns}
-                    data={productsInCollection??[]}
+                    data={productsInCollection}
                     searchKey='title'
                     hiddenSearchInput={false} />
             </div>

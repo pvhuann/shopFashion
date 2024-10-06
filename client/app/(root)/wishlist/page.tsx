@@ -7,19 +7,21 @@ import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react'
 
 const WishList = () => {
+    const { user } = useUser();
+
     const [loading, setLoading] = useState<boolean>(true);
     const [wishList, setWishList] = useState<ProductType[]>([]);
-    const [singInUser, setSingInUser] = useState<UserType>();
+    let [signInUser, setSignInUser] = useState<UserType | null>(null);
 
-    const { user } = useUser();
+
     const getUser = async () => {
         try {
             const res = await fetch(`/api/users`, { method: 'GET' });
             const data = await res.json();
-            setSingInUser(data);
+            setSignInUser(data);
             setLoading(false);
         } catch (error) {
-            console.log("user_GET error: " + error);
+            console.log("user_GET error: ",error);
         }
     }
 
@@ -28,16 +30,17 @@ const WishList = () => {
             getUser()
         }
     }, [user])
-    // console.log(user);
 
     const getWishList = async () => {
-
         setLoading(true);
-        if (!setSingInUser) return;
+        if (!signInUser) {
+            setLoading(false);
+            return;
+        };
 
-        const wishListProducts =await Promise.all(singInUser.wishList.map(async (productId) => {
-            const res = await getProductDetails(productId);
-            return res;
+        const wishListProducts = await Promise.all(signInUser?.wishList.map(async (productId: string) => {
+            const res = await getProductDetails(productId)
+            return res
         }))
         setWishList(wishListProducts);
         setLoading(false);
@@ -45,10 +48,10 @@ const WishList = () => {
 
 
     useEffect(() => {
-        if (singInUser) {
+        if (signInUser) {
             getWishList()
         }
-    }, [singInUser])
+    }, [signInUser])
 
 
     return (
@@ -74,5 +77,6 @@ const WishList = () => {
     )
 }
 
-// export const dynamic = "force-dynamic";
+
 export default WishList;
+export const dynamic = "force-dynamic";

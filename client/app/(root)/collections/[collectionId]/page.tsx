@@ -6,7 +6,7 @@ import React from 'react'
 const CollectionInformation = async({params}: {params: {collectionId: string}}) => {
   
   const collectionDetails =await getCollectionDetails(params.collectionId);
-  console.log(collectionDetails);
+  // console.log(collectionDetails);
   
   return (
     <div className='flex flex-col gap-10'>

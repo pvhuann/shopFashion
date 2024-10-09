@@ -1,6 +1,6 @@
 
 export const getCollections = async()=> {
-    const collections= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections`,{method:"GET"});
+    const collections= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections`);
     return await collections.json();
 }
 
@@ -21,7 +21,8 @@ export const getProductDetails= async(productId: string)=> {
 }
 
 export const getProductsByCollection= async(collectionId: string)=> {
-    const products= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/}`)
+    const products= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/collections/}`);
+    return await products.json();
 }
 
 

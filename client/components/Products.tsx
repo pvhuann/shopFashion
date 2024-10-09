@@ -3,7 +3,6 @@ import ProductCard from './ProductCard'
 
 const Products = async () => {
     const products = await getProducts()
-
     return (
         <div className='pt-10'>
             <p className='text-heading1-bold text-center'>Products</p>

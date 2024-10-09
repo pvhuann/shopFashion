@@ -1,23 +1,21 @@
 'use client'
 
-import useCart from "@/lib/hooks/useCart"
 import { useUser } from "@clerk/nextjs"
 import { MinusCircle, PlusCircle, Trash } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
+import useCart from "@/lib/hooks/useCart"
 
 const Cart = () => {
     const { user } = useUser()
-    // console.log('USER:', user);
 
     const customer = {
         clerkId: user?.id,
         email: user?.emailAddresses[0].emailAddress,
         fullName: user?.fullName,
     }
-    // console.log("Customer:", customer);
 
     const router = useRouter()
     const cart = useCart()
@@ -34,21 +32,18 @@ const Cart = () => {
                 });
                 const data = await res.json();
                 window.location.href = data.url;
-                console.log(data);
-                // console.log(cart.cartItems);
-                
+                console.log(data);         
             }
         } catch (error) {
             console.log("checkout_POST", error);
-            
         }
     }
+
     return (
         <div className="flex gap-20 p-10">
             <div className="w-3/5">
                 <p className="text-heading3-bold">Shopping Cart</p>
                 <hr className="my-2" />
-
                 {cart.cartItems.length === 0 ? (
                     <p className="text-body-bold">No item in cart</p>
                 ) : (

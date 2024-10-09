@@ -1,11 +1,8 @@
-import ProductCard from '@/components/ProductCard';
 import { getSearchedProducts } from '@/lib/actions/actions'
-import React from 'react'
+import ProductCard from '@/components/ProductCard';
 
 const page = async ({ params }: { params: { query: string } }) => {
     const resultSearchedProducts = await getSearchedProducts(params.query);
-    // console.log(resultSearchedProducts);
-
     return (
         <div className='flex flex-col gap-10 mt-10 ml-10'>
             <div className='text-heading3-bold'>Results search product for <i className='text-red-1'>{decodeURI(params.query)}</i></div>
@@ -21,6 +18,5 @@ const page = async ({ params }: { params: { query: string } }) => {
         </div>
     )
 }
-
 export default page;
 export const dynamic = "force-dynamic";

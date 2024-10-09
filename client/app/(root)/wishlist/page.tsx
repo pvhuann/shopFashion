@@ -1,18 +1,16 @@
 'use client'
+import { useUser } from '@clerk/nextjs';
+import { useEffect, useState } from 'react'
 
 import Loader from '@/components/Loader';
 import ProductCard from '@/components/ProductCard';
 import { getProductDetails } from '@/lib/actions/actions';
-import { useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react'
 
 const WishList = () => {
     const { user } = useUser();
-
     const [loading, setLoading] = useState<boolean>(true);
     const [wishList, setWishList] = useState<ProductType[]>([]);
     let [signInUser, setSignInUser] = useState<UserType | null>(null);
-
 
     const getUser = async () => {
         try {
@@ -37,9 +35,8 @@ const WishList = () => {
             setLoading(false);
             return;
         };
-
-        const wishListProducts = await Promise.all(signInUser?.wishList.map(async (productId: string) => {
-            const res = await getProductDetails(productId)
+        const wishListProducts = await Promise.all(signInUser.wishList.map(async (productId: string) => {
+            const res = await getProductDetails(productId);
             return res
         }))
         setWishList(wishListProducts);
@@ -49,10 +46,9 @@ const WishList = () => {
 
     useEffect(() => {
         if (signInUser) {
-            getWishList()
+            getWishList();
         }
     }, [signInUser])
-
 
     return (
         <div className='m-10'>
@@ -76,7 +72,6 @@ const WishList = () => {
         </div>
     )
 }
-
 
 export default WishList;
 export const dynamic = "force-dynamic";

@@ -1,9 +1,7 @@
 'use client'
-
-import useCart from '@/lib/hooks/useCart'
 import Link from 'next/link'
 import { useEffect } from 'react'
-
+import useCart from '@/lib/hooks/useCart'
 const page = () => {
     const cart= useCart();
     useEffect(()=> cart.clearCart(), [])
@@ -17,5 +15,4 @@ const page = () => {
         </div>
     )
 }
-
 export default page

@@ -1,12 +1,12 @@
 'use client'
 
-import { capitalizeWords } from "@/utils/capitalizeWords"
 import { useUser } from "@clerk/nextjs"
 import { Heart } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { capitalizeWords } from "@/utils/capitalizeWords"
 
 
 const ProductCard = ({ product }: { product: ProductType }) => {
@@ -79,4 +79,4 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     )
 }
 
-export default ProductCard
+export default ProductCard;

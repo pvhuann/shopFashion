@@ -1,12 +1,10 @@
-import { getProductDetails, getProductInOrderItem } from '@/lib/actions/actions'
+import { getProductInOrderItem } from '@/lib/actions/actions'
 import Image from 'next/image';
 
 
 const OrderItem = async ({ orderItem }: { orderItem: OrderItemType }) => {
     const getItem = await getProductInOrderItem(orderItem.product.toString());
-    // console.log(getItem);
 
-    // const productItem= await getItem.json();
     return (
         <div>
             <div className="flex gap-4">

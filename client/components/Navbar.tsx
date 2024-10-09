@@ -1,15 +1,14 @@
 'use client'
 
-import useCart from '@/lib/hooks/useCart'
-import { UserButton, useUser } from '@clerk/nextjs'
 import { CircleUserRound, Menu, Search, ShoppingCart } from 'lucide-react'
+import { UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import useCart from '@/lib/hooks/useCart'
 
 const Navbar = () => {
-
     const { user } = useUser()
     const [dropDownMenu, setDropDownMenu] = useState(false)
     const cart = useCart()
@@ -17,7 +16,6 @@ const Navbar = () => {
     const [valueQuery, setValueQuery] = useState('');
 
     const handleSearch = () => {
-        // console.log(valueQuery.trim());
         router.push(`/search/${valueQuery.trim()}`);
         setValueQuery('');
     }

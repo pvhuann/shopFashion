@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 
 const ProductSchema = new mongoose.Schema({
     title: {
-        type:String,
-        require:true,
+        type: String,
+        require: true,
     },
     description: {
         type: String,
@@ -12,7 +12,7 @@ const ProductSchema = new mongoose.Schema({
     media: {
         type: [String],
     },
-    category:{
+    category: {
         type: String,
     },
     collections: [
@@ -21,15 +21,35 @@ const ProductSchema = new mongoose.Schema({
             ref: "Collection"
         }
     ],
-    tags:{
+    tags: {
         type: [String],
     },
     sizes: {
         type: [String],
     },
-    colors:{
+    colors: {
         type: [String],
     },
+    // variants: [
+    //     {
+    //         color: { type: String, },
+    //         image: { type: String, },
+    //         size: { type: String, },
+    //         price: {
+    //             type: mongoose.Schema.Types.Decimal128,
+    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+    //         },
+    //         inventory: {
+    //             type: mongoose.Schema.Types.Decimal128,
+    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+    //         },
+    //         sale: {
+    //             type: mongoose.Schema.Types.Decimal128,
+    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+    //             default: 0,
+    //         },
+    //     },
+    // ],
     price: {
         type: mongoose.Schema.Types.Decimal128,
         get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }

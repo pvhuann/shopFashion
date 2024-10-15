@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="w-screen">
       <Image
         src={'https://res.cloudinary.com/dti2tnjem/image/upload/v1725813631/wwqqitoumgzqvrt0n6jm.png'}
         alt="banner"

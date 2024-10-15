@@ -1,11 +1,13 @@
-
+import { format } from "date-fns";
 import { getOrdersByCustomerId } from "@/lib/actions/actions";
 import { auth } from "@clerk/nextjs/server";
-import OrderItem from "@/components/OrderItem";
+import OrderItem from "@/components/orders/OrderItem";
 
 const Orders = async () => {
     const { userId } = auth();
     const orders = await getOrdersByCustomerId(userId as string);
+    console.log(orders);
+    
 
     return (
         <div className="px-10 py-5 max-sm:px-3">
@@ -22,6 +24,7 @@ const Orders = async () => {
                             <p className="text-base-bold">
                                 Total Amount: ${order.totalAmount}
                             </p>
+                            <p className="text-base-bold">Created At : {format(order.createdAt, "HH:mm:ss MMM do, yyyy")}</p>
                         </div>
 
                         <div className="flex flex-col gap-5">

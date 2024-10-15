@@ -8,6 +8,15 @@ type CollectionType={
     products: ProductType[],
 }
 
+type VariantType= {
+    color: string,
+    image: string,
+    size: string,
+    price: number,
+    inventory: number,
+    sale: number,
+}
+
 type ProductType= {
     _id: string,
     title: string,
@@ -20,9 +29,10 @@ type ProductType= {
     colors: [string],
     price: number,
     expense: number,
-    // stock: number,
     createAt: Date,
     updateAt : Date,
+    // variants:[VariantType],
+    // stock: number,
 }
 
 type OrderColumnType={
@@ -46,4 +56,11 @@ type CustomerType={
     name: string,
     email: string,
     createdAt: Date,
+}
+
+type CartItemType={
+    productId: string,
+    color: string,
+    size: string,
+    quantity: number,
 }

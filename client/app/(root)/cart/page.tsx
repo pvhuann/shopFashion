@@ -7,9 +7,12 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 import useCart from "@/lib/hooks/useCart"
+import { useState } from "react"
+
 
 const Cart = () => {
-    const { user } = useUser()
+    const { user } = useUser();
+
 
     const customer = {
         clerkId: user?.id,
@@ -18,9 +21,9 @@ const Cart = () => {
     }
 
     const router = useRouter()
-    const cart = useCart()
-    const total = cart.cartItems.reduce((acc, cartItem) => acc + cartItem.item.price * cartItem.quantity, 0)
+    const cart = useCart();
 
+    const totalCart = cart.cartItems.reduce((acc, cartItem) => acc + cartItem.item.price * cartItem.quantity, 0)
     const handleCheckout = async () => {
         try {
             if (!user) {
@@ -32,7 +35,7 @@ const Cart = () => {
                 });
                 const data = await res.json();
                 window.location.href = data.url;
-                console.log(data);         
+                console.log(data);
             }
         } catch (error) {
             console.log("checkout_POST", error);
@@ -49,12 +52,13 @@ const Cart = () => {
                 ) : (
                     <div className="flex flex-col gap-4">
                         {cart.cartItems.map((cartItem, index) => (
+                            // <ItemCart key={index} cartItem={cartItem} />
                             <div
                                 key={index}
                                 className="w-full flex p-4 hover:bg-grey-1 justify-between"
                             >
-                                <div className="flex items-center gap-3">
-                                    <Link href={`/products/${cartItem.item._id}`}>
+                                <div className="flex items-center">
+                                    <Link href={`/products/${cartItem.item._id}`} className="flex flex-col gap-2">
                                         <Image
                                             src={cartItem.item.media[0]}
                                             width={100}
@@ -62,23 +66,27 @@ const Cart = () => {
                                             alt="product"
                                             className="rounded-md object-cover"
                                         />
-                                    </Link>
-                                    <div className="flex flex-col gap-3">
                                         <p className="text-body-bold">{cartItem.item.title}</p>
-                                        {cartItem.color && (
-                                            <p className="text-small-medium">{cartItem.color}</p>
-                                        )}
-
-                                        {cartItem.size && (
-                                            <p className="text-small-medium">{cartItem.size}</p>
-                                        )}
+                                        <p className="text-body-bold">${cartItem.item.price}</p>
+                                    </Link>
+                                    <div className="flex gap-3">
+                                        <select name="" id="colors" onChange={(e)=> cart.updateItem(cartItem.item._id, e.target.value, cartItem.size)}>
+                                            {cartItem.item.colors.map((color, index: number) => (
+                                                <option key={index} value={color} selected={color === cartItem.color}>{color}</option>
+                                            ))}
+                                        </select>
+                                        <select name="" id="sizes" onChange={(e) => cart.updateItem(cartItem.item._id, cartItem.color, e.target.value)}>
+                                            {cartItem.item.sizes.map((size, index: number) => (
+                                                <option key={index} value={size} selected={size === cartItem.size}>{size}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div className='flex items-center gap-4'>
                                     <MinusCircle
                                         size={30}
-                                        className='hover:text-red-1 cursor-pointer'
+                                        className={`${cartItem.quantity >1 ? "hover:text-red-1 cursor-pointer" :"cursor-not-allowed" }`}
                                         onClick={() => cartItem.quantity > 1 && cart.decreaseQuantity(cartItem.item._id, cartItem.color, cartItem.size)} />
                                     <p className='text-body-medium'>{cartItem.quantity}</p>
                                     <PlusCircle
@@ -104,7 +112,7 @@ const Cart = () => {
                 <p>Summary{' '}<span>{`(${cart.cartItems.length} ${cart.cartItems.length > 1 ? "items" : "item"})`}</span></p>
                 <div className="flex justify-between text-body-semibold">
                     <p>Total Amount</p>
-                    <p>${' ' + parseFloat(total.toFixed(2))}</p>
+                    <p>${' ' + parseFloat(totalCart.toFixed(2))}</p>
                 </div>
                 <button
                     className="border rounded-lg w-full p-3 hover:text-white hover:bg-black"

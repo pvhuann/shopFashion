@@ -19,7 +19,7 @@ const OrderItem = async ({ orderItem }: { orderItem: OrderItemType }) => {
                     <p className="text-small-medium">
                         Title:{" "}
                         <span className="text-small-bold">
-                            {orderItem.product.title}
+                            {getItem.title}
                         </span>
                     </p>
                     {orderItem.color && (
@@ -40,7 +40,7 @@ const OrderItem = async ({ orderItem }: { orderItem: OrderItemType }) => {
                     )}
                     <p className="text-small-medium">
                         Unit price:{" "}
-                        <span className="text-small-bold">{getItem.price}</span>
+                        <span className="text-small-bold">${getItem.price}</span>
                     </p>
                     <p className="text-small-medium">
                         Quantity:{" "}

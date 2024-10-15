@@ -25,19 +25,47 @@ import MultiSelect from "../custom ui/MultiSelect"
 import MultiTag from "../custom ui/MultiTag"
 import Loader from "../custom ui/Loader"
 
+// const variantSchema = z.object({
+//     color: z.string().min(1, "Color is required"),
+//     image: z.string().url("Invalid URL"),
+//     size: z.string().min(1, "Size is required"),
+//     price: z.number().min(0, "Price must be at least 0"),
+//     inventory: z.number().min(0, "Inventory must be at least 0"),
+//     sale: z.number().min(0).max(100, "Sale must be between 0 and 100"),
+// })
 
-const formSchema = z.object({
-    title: z.string().trim().min(2).max(30),
-    description: z.string().trim().min(2).max(600),
-    media: z.array(z.string().url()),
-    category: z.string(),
-    collections: z.array(z.string()),
-    tags: z.array(z.string()),
-    sizes: z.array(z.string()),
-    colors: z.array(z.string()),
-    price: z.coerce.number().min(0.1),
-    expense: z.coerce.number().min(0.1),
-})
+// const productSchema = z.object({
+//     title: z.string().min(1, "Title is required").max(50, "Title must be at least 50"),
+//     description: z.string().min(1, "Description is required").max(500, "Description must be at least 500"),
+//     media: z.array(z.string().url()).nonempty("Media is required"),
+//     category: z.string().min(1, "Category is required").max(50, "Category must be at least 50"),
+//     // store: z.string().min(1, "Store is required"),
+//     totalInventory: z.number().min(0, "Total inventory must be at least 0"),
+//     mainImages: z.array(z.string().url()).nonempty("Main images are required"),
+//     variants: z.array(variantSchema).nonempty("At least one variant is required"),
+// })
+    
+    const formSchema = z.object({
+        title: z.string().trim().min(2).max(30),
+        description: z.string().trim().min(2).max(600),
+        media: z.array(z.string().url()),
+        category: z.string(),
+        collections: z.array(z.string()),
+        tags: z.array(z.string()),
+        sizes: z.array(z.string()),
+        colors: z.array(z.string()),
+        price: z.coerce.number().min(0.1),
+        expense: z.coerce.number().min(0.1),
+    })
+
+// interface VariantProps{
+//     color: string;
+//     size:string;
+//     image:string;
+//     price:number;
+//     inventory:number;
+//     sale:number;
+// }
 
 interface ProductProps {
     initialData?: ProductType | null,
@@ -54,7 +82,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         defaultValues: initialData
             ? {
                 ...initialData,
-                collections: initialData.collections.map((collection)=> collection._id),
+                collections: initialData.collections.map((collection) => collection._id),
             }
             : {
                 title: "",
@@ -63,10 +91,11 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 category: "",
                 collections: [],
                 tags: [],
+                // variants: [],
                 sizes: [],
                 colors: [],
-                price: 0.1,
-                expense: 0.1,
+                price: 0,
+                expense: 0,
             },
     })
 

@@ -30,8 +30,8 @@ const Navbar = () => {
     }
 
     return (
-        <div className='sticky flex top-0 px-10 py-4 justify-between items-center bg-white shadow-md'>
-            <Link href={'/'}>
+        <div className='sticky flex top-0 px-10 max-md:px-4 py-4 max-md:py-2 justify-between items-center bg-white shadow-md relative'>
+            <Link href={'/'} className='max-md:hidden'>
                 <Image src={'/logo.png'} alt='logo' width={200} height={100} />
             </Link>
             <div className='flex justify-between items-center gap-4 max-md:hidden'>
@@ -45,7 +45,22 @@ const Navbar = () => {
                     Orders
                 </Link>
             </div>
-            <div className='flex justify-center items-center gap-2 rounded-lg border p-2'>
+            <Menu className='cursor-pointer md:hidden' onClick={() => setDropDownMenu(!dropDownMenu)} />
+            {dropDownMenu && (
+                <div className='flex flex-col gap-2 top-0 left-0 absolute bg-white p-4 rounded-md'>
+                    <Link href={'/'} className='hover:text-red-1' onClick={() => setDropDownMenu(!dropDownMenu)}>
+                        Home
+                    </Link>
+
+                    <Link href={'/wishlist'} className='hover:text-red-1' onClick={() => setDropDownMenu(!dropDownMenu)}>
+                        WishList
+                    </Link>
+                    <Link href={user ? '/orders' : 'sign-in'} className='hover:text-red-1' onClick={() => setDropDownMenu(!dropDownMenu)}>
+                        Orders
+                    </Link>
+                </div>
+            )}
+            <div className='flex justify-between items-center gap-2 rounded-lg border p-2 max-md:p-1 max-md:w-2/3 max-sm:1/3'>
                 <input
                     type='search'
                     placeholder='Search...'
@@ -59,10 +74,10 @@ const Navbar = () => {
             </div>
             <div className='flex gap-2 items-center'>
                 <Link href={'/cart'} className='flex gap-1 items-center rounded-md border p-[6px] hover:bg-white'>
-                    <ShoppingCart />
-                    <p className='text-base-bold'>Cart<span>{`(${cart.cartItems.length})`}</span></p>
+                    <ShoppingCart size={20} className='max-md:w-4 max-md:h-4' />
+                    <p className='text-base-bold max-lg:hidden'>Cart<span>{`(${cart.cartItems.length})`}</span></p>
                 </Link>
-                <Menu className='cursor-pointer md:hidden' onClick={() => setDropDownMenu(!dropDownMenu)} />
+
                 {user ? (
                     <UserButton />
                 ) : (
@@ -71,17 +86,7 @@ const Navbar = () => {
                         <span className='text-base-medium hidden md:block'>Sign-in</span>
                     </Link>
                 )}
-                {dropDownMenu && (
-                    <div className='flex flex-col gap-2 top-16 right-4 absolute bg-white-1 p-4 rounded-md'>
-                        <Link href={'/'} className='hover:text-red-1'>
-                            Home
-                        </Link>
 
-                        <Link href={'/'} className='hover:text-red-1'>
-                            WishList
-                        </Link>
-                    </div>
-                )}
             </div>
         </div>
     )

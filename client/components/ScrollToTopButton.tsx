@@ -28,7 +28,7 @@ const ScrollToTopButton = () => {
     return (
             <div>
                 {showButtonScrollToTop&&(
-                    <CircleChevronUp className='cursor-pointer fixed bottom-4 right-4 w-10 h-10 z-50'
+                    <CircleChevronUp className='cursor-pointer fixed bottom-4 right-4 max-md:right-2 w-10 h-10 z-50'
                     onClick={scrollToTop}
                 /> 
                 )}

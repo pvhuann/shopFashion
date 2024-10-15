@@ -24,7 +24,7 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
                 <p className='text-base-medium text-grey-2'>Description:</p>
                 <p>{productInformation.description}</p>
             </div>
-            {productInformation.colors?.length && (
+            {productInformation.colors?.length>0 && (
                 <div className='flex flex-col gap-2'>
                     <p className='text-base-medium text-grey-2'>Colors:</p>
                     <div className='flex gap-3'>

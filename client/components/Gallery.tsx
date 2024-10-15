@@ -13,7 +13,7 @@ export const Gallery = ({ productMedia }: { productMedia: string[] }) => {
                 alt='product'
                 width={400} 
                 height={400}
-                className='rounded-lg shadow-xl max-h-[400px] max-w-[400px] min-h-[400px] min-w-[400px]'
+                className='rounded-lg object-cover shadow-xl max-h-[400px] max-w-[400px] min-h-[400px] min-w-[400px]'
             />
             <div className='flex gap-2 overflow-auto tailwind-scrollbar-hide'>
                 {productMedia.map((image, index) => (

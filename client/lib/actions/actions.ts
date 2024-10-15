@@ -40,6 +40,7 @@ export const getProductInOrderItem= async(productId: string)=> {
     const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`);
     const data= await res.json();
     return {
+        title:data.title,
         imageUrl: data.media[0],
         price: data.price,
     }

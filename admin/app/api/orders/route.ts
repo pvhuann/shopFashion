@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest)=> {
                 customer: customer.name,
                 products: order.products,
                 totalAmount: order.totalAmount,
-                createdAt: format(order.createdAt, "MMM do, yyyy"),
+                createdAt: format(order.createdAt, "HH:mm:ss MMM do, yyyy"),
             }
         }));
 

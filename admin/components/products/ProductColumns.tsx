@@ -11,7 +11,14 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }) => <Link href={`/products/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+        cell: ({ row }) => (
+            <div className='flex items-center gap-2'>
+
+                <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
+                <Link href={`/products/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+            </div>
+        )
+
     },
     {
         accessorKey: "collections",
@@ -31,15 +38,20 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         header: "Expense($)",
     },
     {
-        accessorKey: "media",
-        header: "Media",
-        cell: ({ row }) => (
-            <Link href={row.original.media[0]}>
-                <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
-            </Link>
-        ),
+        header:"Created At",
+        accessorKey:"createAt"
     },
+    // {
+    //     accessorKey: "media",
+    //     header: "Media",
+    //     cell: ({ row }) => (
+    //         <Link href={row.original.media[0]}>
+    //             <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
+    //         </Link>
+    //     ),
+    // },
     {
+        header: "Actions",
         id: "actions",
         cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='product' />,
     }

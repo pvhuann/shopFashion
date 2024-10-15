@@ -31,6 +31,7 @@ type OrderType = {
     products: [OrderItemType],
     shippingRate: string,
     totalAmount: number,
+    createdAt: Date,
 }
 
 type OrderItemType = {

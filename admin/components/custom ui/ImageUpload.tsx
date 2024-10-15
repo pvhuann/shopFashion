@@ -18,9 +18,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     onRemove,
     value,
 }) => {
-    const onUpload = (result: any) => {
+    const handleOnnSuccess = (result: any) => {
         onChange(result.info.secure_url);
-        console.log('Upload finished:', result.info.secure_url);
+        // console.log('Upload finished:', result.info.secure_url);
     };
 
     return (
@@ -44,7 +44,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 ))}
             </div>
 
-            <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={onUpload}>
+            <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={handleOnnSuccess}>
                 {({ open }) => {
                     return (
                         <Button type="button" onClick={() => open()} className="bg-grey-1 text-white relative group w-[200px] h-10 rounded-xl">

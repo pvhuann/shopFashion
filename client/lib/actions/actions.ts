@@ -45,3 +45,8 @@ export const getProductInOrderItem= async(productId: string)=> {
         price: data.price,
     }
 }
+
+export const getRelatedProducts =async (productId:string)=> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}/related`);
+    return await res.json();
+}

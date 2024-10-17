@@ -20,6 +20,7 @@ type ProductType = {
     colors: [string],
     price: number,
     expense: number,
+    inventory: number,
     // stock: number,
     createAt: Date,
     updateAt: Date,

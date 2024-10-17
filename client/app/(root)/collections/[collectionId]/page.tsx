@@ -23,6 +23,7 @@ const CollectionInformation = async({params}: {params: {collectionId: string}}) 
       </div>
       <div className='flex gap-6 justify-center'>
         {collectionDetails.products.map((product: ProductType)=>(
+          // <div>{product.title}</div>
           <ProductCard product={product} key={product._id}/>
         ))}
       </div>

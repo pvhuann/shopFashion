@@ -58,10 +58,12 @@ const ProductSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Decimal128,
         get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
     },
-    // stock: {
-    //     type:Number, 
-    //     min:0,
-    // },
+    inventory: {
+        type: Number,
+        default: 0,
+        min: 0,
+        // get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+    },
     createAt: {
         type: Date,
         default: Date.now(),

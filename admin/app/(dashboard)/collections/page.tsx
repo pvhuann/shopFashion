@@ -37,6 +37,7 @@ const Collections = () => {
         <div className='p-10'>
             <div className='flex justify-between items-center  mb-4'>
                 <p className='text-heading2-bold'>Collections</p>
+                <hr />
                 <Button type='button' className='bg-blue-1 text-white' onClick={()=> router.push('collections/new')}>
                     <Plus className='w-4 h-4'/>
                     <p>Create collection</p>

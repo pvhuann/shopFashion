@@ -30,7 +30,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className='sticky flex top-0 px-10 max-md:px-4 py-4 max-md:py-2 justify-between items-center bg-white shadow-md relative'>
+        <div className='sticky flex top-0 px-20 max-md:px-4 py-4 max-md:py-2 justify-between items-center bg-white shadow-md relative'>
             <Link href={'/'} className='max-md:hidden'>
                 <Image src={'/logo.png'} alt='logo' width={200} height={100} />
             </Link>

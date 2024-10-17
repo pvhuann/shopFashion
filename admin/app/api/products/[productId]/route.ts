@@ -55,6 +55,7 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
             colors,
             price,
             expense,
+            inventory,
         } = await req.json()
 
         const productUpdate = await Product.findByIdAndUpdate(
@@ -70,6 +71,7 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
                 colors,
                 price,
                 expense,
+                inventory,
             },
             { new: true }
         ).populate({ path: "collections", model: Collection })

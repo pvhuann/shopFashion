@@ -43,7 +43,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         e.preventDefault();
         try {
             if (!user) {
-                router.push('/sing-in')
+                router.push('/sign-in')
                 return;
             } else {
                 const res = await fetch('/api/users/wishList', {

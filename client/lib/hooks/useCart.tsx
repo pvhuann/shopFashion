@@ -14,7 +14,8 @@ interface CartStore {
     addItem: (item: CartItem) => void;
     removeItem: (idToRemove: string, colorToRemove: string, sizeToRemove: string) => void;
     updateColorItem: (idToUpdate: string, oldColor: string, newColor: string, size: string) => void;
-    updateSizeItem: (idToUpdate: string, color: string,oldSize: string, newSize: string) => void;
+    updateSizeItem: (idToUpdate: string, color: string, oldSize: string, newSize: string) => void;
+    updateQuantity: (itemId: string, color: string, size: string, newQuantity: number) => void;
     increaseQuantity: (idToIncrease: string, colorToIncrease: string, sizeToIncrease: string) => void;
     decreaseQuantity: (idToDecrease: string, colorToDecrease: string, sizeToDecrease: string) => void;
     clearCart: () => void;
@@ -41,32 +42,34 @@ const useCart = create(
                 }
             },
 
-            updateColorItem: (idToUpdate: string, oldColor: string,newColor:string, size: string) => {
-                    const newCartItems = get().cartItems.map((cartItem) => {
-                        if (cartItem.item._id === idToUpdate && cartItem.color ===oldColor && cartItem.size === size  ) {
-                            return { ...cartItem, color: newColor }; // Return the updated cartItem
-                        } else {
-                            return cartItem; // Return the original cartItem if it doesn't match the id
-                        }
-                    });
-                    set({ cartItems: newCartItems });
-                    toast.success("Item color updated");
-                
+            updateColorItem: (idToUpdate: string, oldColor: string, newColor: string, size: string) => {
+                const newCartItems = get().cartItems.map((cartItem) => {
+                    if (cartItem.item._id === idToUpdate && cartItem.color === oldColor && cartItem.size === size) {
+                        return { ...cartItem, color: newColor }; // Return the updated cartItem
+                    } else {
+                        return cartItem; // Return the original cartItem if it doesn't match the id
+                    }
+                });
+                set({ cartItems: newCartItems });
+                toast.success("Item color updated");
+
             },
 
-            updateSizeItem: (idToUpdate: string, color: string, oldSize:string, newSize: string) => {
-                    const newCartItems = get().cartItems.map((cartItem) => {
-                        if (cartItem.item._id === idToUpdate
-                            && cartItem.color === color && cartItem.size === oldSize
-                        ) {
-                            return { ...cartItem, size: newSize }; // Return the updated cartItem
-                        } else {
-                            return cartItem; // Return the original cartItem if it doesn't match the id
-                        }
-                    });
-                    set({ cartItems: newCartItems });
-                    toast.success("Item size updated");
-                
+
+
+            updateSizeItem: (idToUpdate: string, color: string, oldSize: string, newSize: string) => {
+                const newCartItems = get().cartItems.map((cartItem) => {
+                    if (cartItem.item._id === idToUpdate
+                        && cartItem.color === color && cartItem.size === oldSize
+                    ) {
+                        return { ...cartItem, size: newSize }; // Return the updated cartItem
+                    } else {
+                        return cartItem; // Return the original cartItem if it doesn't match the id
+                    }
+                });
+                set({ cartItems: newCartItems });
+                toast.success("Item size updated");
+
             },
 
             removeItem: (idToRemove: string, colorToRemove: string, sizeToRemove: string) => {
@@ -79,6 +82,16 @@ const useCart = create(
                 );
                 set({ cartItems: newCartItems });
                 toast.success("Item removed from cart");
+            },
+            
+            updateQuantity: (itemId: string, color: string, size: string, newQuantity: number) => {
+                const newCartItems = get().cartItems.map((cartItem) =>
+                    (cartItem.item._id === itemId && cartItem.color === color && cartItem.size === size)
+                        ? { ...cartItem, quantity: newQuantity }
+                        : cartItem
+                );
+                set({ cartItems: newCartItems });
+                toast.success("Item quantity updated");
             },
 
             increaseQuantity: (idToIncrease: string, colorToIncrease: string, sizeToIncrease: string) => {

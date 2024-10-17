@@ -13,6 +13,7 @@ const ordersSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Product",
             },
+            price:Number,
             color: String,
             size: String,
             quantity: Number,

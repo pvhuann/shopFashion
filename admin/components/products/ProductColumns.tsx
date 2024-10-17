@@ -38,6 +38,10 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         header: "Expense($)",
     },
     {
+        accessorKey: "inventory",
+        header: "Inventory",
+    },
+    {
         header:"Created At",
         accessorKey:"createAt"
     },

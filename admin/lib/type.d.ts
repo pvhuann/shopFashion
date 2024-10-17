@@ -29,6 +29,7 @@ type ProductType= {
     colors: [string],
     price: number,
     expense: number,
+    inventory: number,
     createAt: Date,
     updateAt : Date,
     // variants:[VariantType],

@@ -1,16 +1,16 @@
 
 'use client'
 import { MinusCircle, PlusCircle } from 'lucide-react'
-import  { useState } from 'react'
+import { useState } from 'react'
 import useCart from '@/lib/hooks/useCart'
 import { capitalizeWords } from '@/utils/capitalizeWords'
 
 const ProductInformation = ({ productInformation }: { productInformation: ProductType }) => {
     const [selectedColor, setSelectedColor] = useState<string>(productInformation.colors[0] || '');
     const [selectedSize, setSelectedSize] = useState<string>(productInformation.sizes[0] || '');
-    const [quantity, setQuantity] = useState<number>(1);
+    const [quantity, setQuantity] = useState<number>(productInformation.inventory === 0 ? 0 : 1);
     const cart = useCart();
-    
+
     return (
         <div className='flex flex-col gap-4 max-w-[400px]'>
 
@@ -24,7 +24,7 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
                 <p className='text-base-medium text-grey-2'>Description:</p>
                 <p>{productInformation.description}</p>
             </div>
-            {productInformation.colors?.length>0 && (
+            {productInformation.colors?.length > 0 && (
                 <div className='flex flex-col gap-2'>
                     <p className='text-base-medium text-grey-2'>Colors:</p>
                     <div className='flex gap-3'>
@@ -55,6 +55,10 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
             )}
 
             <div className='flex flex-col gap-2'>
+                <p className='text-base-medium text-grey-2'>Inventory: <span className=''>{productInformation.inventory}</span></p>
+            </div>
+
+            <div className='flex flex-col gap-2'>
                 <p className='text-base-medium text-grey-2'>Quantity:</p>
                 <div className='flex items-center gap-4'>
                     <MinusCircle
@@ -65,22 +69,28 @@ const ProductInformation = ({ productInformation }: { productInformation: Produc
                     <PlusCircle
                         size={30}
                         className='hover:text-red-1 cursor-pointer'
-                        onClick={() => setQuantity(quantity + 1)} />
+                        onClick={() => quantity < productInformation.inventory && setQuantity(quantity + 1)} />
                 </div>
             </div>
 
-            <button
-                className='text-base-bold outline rounded-full py-4 hover:bg-black hover:text-white'
-                onClick={() => {
-                    cart.addItem({
-                        item: productInformation,
-                        quantity,
-                        color: selectedColor,
-                        size: selectedSize
-                    })
-                }}
-            >Add to cart
-            </button>
+            {quantity > 0 ? (
+                <button
+                    type='button'
+                    className='text-base-bold outline rounded-full py-4 hover:bg-black hover:text-white'
+                    onClick={() => {
+                        cart.addItem({
+                            item: productInformation,
+                            quantity,
+                            color: selectedColor,
+                            size: selectedSize
+                        })
+                    }}
+                >Add to cart
+                </button>
+            ) : (
+                <button type='button' className='cursor-not-allowed text-base-bold outline rounded-full py-4 hover:bg-black hover:text-white'>Add to cart</button>
+            )}
+
 
         </div>
     )

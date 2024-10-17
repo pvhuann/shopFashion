@@ -10,6 +10,7 @@ import useCart from "@/lib/hooks/useCart"
 
 
 
+
 const Cart = () => {
     const { user } = useUser();
 
@@ -18,9 +19,14 @@ const Cart = () => {
         email: user?.emailAddresses[0].emailAddress,
         fullName: user?.fullName,
     }
-
     const router = useRouter()
     const cart = useCart();
+
+    // const [value, setValue] = useState<number>(1);
+    // const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     console.log("onChange called");
+    //     setValue(parseInt(event.target.value));
+    // };
 
     const totalCart = cart.cartItems.reduce((acc, cartItem) => acc + cartItem.item.price * cartItem.quantity, 0)
     const handleCheckout = async () => {
@@ -34,7 +40,7 @@ const Cart = () => {
                 });
                 const data = await res.json();
                 window.location.href = data.url;
-                console.log(data);
+                // console.log(data);
             }
         } catch (error) {
             console.log("checkout_POST", error);
@@ -73,9 +79,10 @@ const Cart = () => {
                                         {/* select option colors and sizes */}
                                         <div className="flex gap-3">
                                             <select
-                                                name=""
+                                                className="max-md:min-w-[80px]"
+                                                name="colors"
                                                 id="colors"
-                                                onChange={(e) => cart.updateColorItem(cartItem.item._id,cartItem.color, e.target.value, cartItem.size)}>
+                                                onChange={(e) => cart.updateColorItem(cartItem.item._id, cartItem.color, e.target.value, cartItem.size)}>
                                                 {cartItem.item.colors.map((color, index: number) => (
                                                     <option
                                                         className=""
@@ -93,9 +100,11 @@ const Cart = () => {
                                             </select>
 
                                             <select
-                                                name=""
+                                                className="max-md:min-w-[80px]"
+
+                                                name="Sizes"
                                                 id="sizes"
-                                                onChange={(e) => cart.updateSizeItem(cartItem.item._id, cartItem.color,cartItem.size, e.target.value)}>
+                                                onChange={(e) => cart.updateSizeItem(cartItem.item._id, cartItem.color, cartItem.size, e.target.value)}>
                                                 {cartItem.item.sizes.map((size, index: number) => (
                                                     <option
                                                         disabled={
@@ -119,19 +128,36 @@ const Cart = () => {
                                                 size={30}
                                                 className={`${cartItem.quantity > 1 ? "hover:text-red-1 cursor-pointer" : "cursor-not-allowed"}`}
                                                 onClick={() => cartItem.quantity > 1 && cart.decreaseQuantity(cartItem.item._id, cartItem.color, cartItem.size)} />
-                                            <p className='text-body-medium'>{cartItem.quantity}</p>
+
+                                            <input
+                                                type="number"
+                                                value={cartItem.quantity}
+                                                // onChange={onChange}
+                                                onChange={(e) => {
+                                                    const newQuantity = parseInt(e.target.value);
+                                                    if (newQuantity >= 1 && newQuantity <= cartItem.item.inventory) {
+                                                        cart.updateQuantity(cartItem.item._id, cartItem.color, cartItem.size, newQuantity);
+                                                    }
+                                                }}
+                                                className="text-center w-16 border border-gray-300 rounded-md px-2 py-1"
+                                            />
+                                            {/* <p className="text-body-bold">{cartItem.quantity}</p> */}
                                             <PlusCircle
                                                 size={30}
                                                 className='hover:text-red-1 cursor-pointer'
-                                                onClick={() => cart.increaseQuantity(cartItem.item._id, cartItem.color, cartItem.size)} />
+                                                onClick={() => cartItem.quantity < cartItem.item.inventory && cart.increaseQuantity(cartItem.item._id, cartItem.color, cartItem.size)} />
                                         </div>
 
 
-                                        <Trash
+                                        <u onClick={() => cart.removeItem(cartItem.item._id, cartItem.color, cartItem.size)}
+                                            className="text-body-bold text-red-1 cursor-pointer">
+                                            Remove
+                                        </u>
+                                        {/* <Trash
                                             size={30}
                                             className="hover:text-red-1 cursor-pointer"
                                             onClick={() => cart.removeItem(cartItem.item._id, cartItem.color, cartItem.size)}
-                                        />
+                                        /> */}
                                     </div>
                                 </div>
                             ))}
@@ -140,7 +166,7 @@ const Cart = () => {
                     )}
                 </div>
 
-                    {/* right */}
+                {/* right */}
                 <div className="w-2/5 max-md:w-full flex flex-col gap-6 p-4 max-md:p-0">
                     <p>Summary{' '}<span>{`(${cart.cartItems.length} ${cart.cartItems.length > 1 ? "items" : "item"})`}</span></p>
                     <div className="flex justify-between text-body-semibold">

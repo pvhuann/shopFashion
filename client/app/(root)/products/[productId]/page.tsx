@@ -4,11 +4,13 @@ import ProductInformation from '@/components/ProductInformation';
 import { getProductDetails, getRelatedProducts } from '@/lib/actions/actions'
 const ProductDetail = async ({ params }: { params: { productId: string } }) => {
     const productDetails = await getProductDetails(params.productId);
+    console.log(productDetails);
+    
     const relatedProducts = await getRelatedProducts(params.productId);
 
     return (
         <div className='flex flex-col gap-10 p-10 max-md:p-4'>
-            <div className='flex gap-32 justify-center pt-10'>
+            <div className='flex gap-32 justify-center pt-10 max-md:flex-col max-md:gap-4'>
                 <Gallery productMedia={productDetails.media} />
                 <ProductInformation productInformation={productDetails} />
             </div>

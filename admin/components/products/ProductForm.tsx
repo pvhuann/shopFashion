@@ -44,19 +44,20 @@ import Loader from "../custom ui/Loader"
 //     mainImages: z.array(z.string().url()).nonempty("Main images are required"),
 //     variants: z.array(variantSchema).nonempty("At least one variant is required"),
 // })
-    
-    const formSchema = z.object({
-        title: z.string().trim().min(2).max(30),
-        description: z.string().trim().min(2).max(600),
-        media: z.array(z.string().url()),
-        category: z.string(),
-        collections: z.array(z.string()),
-        tags: z.array(z.string()),
-        sizes: z.array(z.string()),
-        colors: z.array(z.string()),
-        price: z.coerce.number().min(0.1),
-        expense: z.coerce.number().min(0.1),
-    })
+
+const formSchema = z.object({
+    title: z.string().trim().min(2).max(30),
+    description: z.string().trim().min(2).max(600),
+    media: z.array(z.string().url()),
+    category: z.string(),
+    collections: z.array(z.string()),
+    tags: z.array(z.string()),
+    sizes: z.array(z.string()),
+    colors: z.array(z.string()),
+    price: z.coerce.number().min(0.1),
+    expense: z.coerce.number().min(0.1),
+    inventory: z.coerce.number().min(0),
+})
 
 // interface VariantProps{
 //     color: string;
@@ -96,6 +97,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 colors: [],
                 price: 0,
                 expense: 0,
+                inventory: 0,
             },
     })
 
@@ -244,6 +246,20 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormLabel>Expense($)</FormLabel>
                                     <FormControl>
                                         <Input type="number" placeholder="expense" {...field} onKeyDown={handleKeyPress} />
+                                    </FormControl>
+                                    <FormMessage className="text-red-1" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="inventory"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Inventory</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="inventory" {...field} onKeyDown={handleKeyPress} />
                                     </FormControl>
                                     <FormMessage className="text-red-1" />
                                 </FormItem>

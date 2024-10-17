@@ -25,8 +25,8 @@ import { useState } from "react"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    searchKey: string;
-    hiddenSearchInput:boolean;
+    searchKey?: string;
+    hiddenSearchInput?:boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -54,12 +54,12 @@ export function DataTable<TData, TValue>({
 
     return (
         <>
-            <div className="py-4" hidden={hiddenSearchInput}>
+            <div className="py-4" hidden={hiddenSearchInput ?? true}>
                 <Input
                     placeholder={`Search ${searchKey}`}
-                    value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+                    value={(table.getColumn(searchKey??"")?.getFilterValue() as string) ?? ""}
                     onChange={(event) => {
-                        table.getColumn(searchKey)?.setFilterValue(event.target.value)
+                        table.getColumn(searchKey??"")?.setFilterValue(event.target.value)
                     }}
                     className="max-w-sm"
                 />

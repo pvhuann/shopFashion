@@ -9,11 +9,16 @@ const ProductSchema = new mongoose.Schema({
     description: {
         type: String,
     },
+    vendor:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Product",
+    },
     media: {
         type: [String],
     },
     category: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category"
     },
     collections: [
         {
@@ -23,7 +28,7 @@ const ProductSchema = new mongoose.Schema({
     ],
     tags: {
         type: [String],
-    },
+    }, 
     sizes: {
         type: [String],
     },
@@ -62,13 +67,12 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         min: 0,
-        // get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
     },
-    createAt: {
+    createdAt: {
         type: Date,
         default: Date.now(),
     },
-    updateAt: {
+    updatedAt: {
         type: Date,
         default: Date.now(),
     },

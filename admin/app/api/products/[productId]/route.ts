@@ -50,6 +50,7 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
             media,
             category,
             collections,
+            
             tags,
             sizes,
             colors,
@@ -102,6 +103,15 @@ export const DELETE = async (req: NextRequest, { params }: { params: { productId
         }
 
         await Product.findByIdAndDelete(params.productId)
+
+        // Update collections
+        await Promise.all(
+            product.collections.map((collectionId: string) =>
+                Collection.findByIdAndUpdate(collectionId, {
+                    $pull: { products: product._id },
+                })
+            )
+        );
         return new NextResponse("Product deleted", { status: 200 })
 
     } catch (error) {

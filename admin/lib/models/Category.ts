@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const  collectionSchema= new mongoose.Schema({
+const  categorySchema= new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -30,5 +30,5 @@ const  collectionSchema= new mongoose.Schema({
     }
 })
 
-const Collection= mongoose.models.Collection || mongoose.model("Collection", collectionSchema);
-export default Collection
+const Category= mongoose.models.Category || mongoose.model("Category", categorySchema);
+export default Category

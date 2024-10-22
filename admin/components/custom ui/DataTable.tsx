@@ -7,6 +7,10 @@ import {
     useReactTable,
     ColumnFiltersState,
     getFilteredRowModel,
+    SortingState,
+    VisibilityState,
+    getPaginationRowModel,
+    getSortedRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -20,13 +24,16 @@ import {
 
 import { Input } from "../ui/input"
 
-import { useState } from "react"
+import React, { useState } from "react"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
+import { ChevronDown } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     searchKey?: string;
-    hiddenSearchInput?:boolean;
+    hiddenSearchInput?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,33 +43,77 @@ export function DataTable<TData, TValue>({
     hiddenSearchInput,
 }: DataTableProps<TData, TValue>) {
 
-    const [columnFilters, setColumnFilters] =useState<ColumnFiltersState>(
+    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
+    const [columnVisibility, setColumnVisibility] =
+        React.useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = React.useState({})
+
 
 
     const table = useReactTable({
         data,
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
         state: {
+            sorting,
             columnFilters,
+            columnVisibility,
+            rowSelection,
         },
     })
 
     return (
         <>
-            <div className="py-4" hidden={hiddenSearchInput ?? true}>
-                <Input
-                    placeholder={`Search ${searchKey}`}
-                    value={(table.getColumn(searchKey??"")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => {
-                        table.getColumn(searchKey??"")?.setFilterValue(event.target.value)
-                    }}
-                    className="max-w-sm"
-                />
+            <div className="py-4 w-full" hidden={hiddenSearchInput ?? true}>
+                <div className="flex items-center">
+
+                    <Input
+                        placeholder={`Search ${searchKey}`}
+                        value={(table.getColumn(searchKey ?? "")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) => {
+                            table.getColumn(searchKey ?? "")?.setFilterValue(event.target.value)
+                        }}
+                        className="max-w-sm"
+                    />
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="ml-auto">
+                                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-white">
+                            {table
+                                .getAllColumns()
+                                .filter((column) => column.getCanHide())
+                                .map((column) => {
+                                    return (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            className="capitalize"
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(value) =>
+                                                column.toggleVisibility(!!value)
+                                            }
+                                        >
+                                            {column.id}
+                                        </DropdownMenuCheckboxItem>
+                                    )
+                                })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+
             </div>
 
             <div className="rounded-md border">
@@ -108,6 +159,30 @@ export function DataTable<TData, TValue>({
                         )}
                     </TableBody>
                 </Table>
+            </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="flex-1 text-sm text-muted-foreground">
+                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                </div>
+                <div className="space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </>
 

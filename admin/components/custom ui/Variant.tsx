@@ -2,7 +2,9 @@ import React from 'react'
 
 const Variant = () => {
     return (
-        <div>Variant</div>
+        <div>
+            
+        </div>
     )
 }
 

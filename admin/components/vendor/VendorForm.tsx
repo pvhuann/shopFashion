@@ -1,0 +1,163 @@
+'use client'
+
+import { z } from "zod"
+import toast from "react-hot-toast"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useParams, useRouter } from "next/navigation"
+
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import Delete from "../custom ui/Delete"
+import { Separator } from "../ui/separator"
+import { Button } from "@/components/ui/button"
+
+const formSchema = z.object({
+    name: z.string().trim().min(2).max(100),
+    email: z.string().email(),
+    phone: z.string().min(10).max(15),
+    address: z.string().trim().min(2).max(600),
+    // products: z.array(z.string()),
+})
+
+interface VendorProps {
+    initialData?: VendorType | null,
+}
+
+const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+    // const params = useParams()
+
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: initialData ? initialData : {
+            name: "",
+            email: "",
+            phone: "",
+            address: "",
+        },
+    })
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        // console.log(values);
+        try {
+            setLoading(true);
+            const url = initialData ? `/api/vendor/${initialData._id}` : "/api/vendor"
+            const res = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(values),
+            })
+
+            if (res.ok) {
+                setLoading(false);
+                toast.success(`Vendor ${initialData ? "updated" : "created"} successfully`)
+                // window.location.href = "/collections";
+                router.push("/vendor")
+            }
+        } catch (error) {
+            console.log("Vendor_POST:", error);
+            toast.error("Something went wrong! Please try again")
+        }
+    }
+
+    //block "Submit" when "Enter" is clicked
+    const handleKeyPress = (event:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter") {
+            event.preventDefault()
+        }
+    }
+
+    return (
+        <div className="p-10">
+
+            {initialData ? (
+                <div className=" flex justify-between items-center">
+                    <div className="text-heading2-bold">Update vendor</div>
+                    <Delete id={initialData._id} title={initialData.name} item="collection" />
+                </div>
+            ) : (
+                <div className="text-heading2-bold">Create vendor</div>
+            )}
+
+            <hr className="text-black my-4" />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="name" {...field} onKeyDown={handleKeyPress} />
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input type="email" placeholder="Email" {...field}  onKeyDown={handleKeyPress} />
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Phone number</FormLabel>
+                                <FormControl>
+                                    <Input type="tel" placeholder="Phone number" {...field} onKeyDown={handleKeyPress} />
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Address</FormLabel>
+                                <FormControl>
+                                    <Input type="text" placeholder="Address" {...field} onKeyDown={handleKeyPress} />
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex gap-10">
+                        <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
+                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/collections")}>Discard</Button>
+                    </div>
+
+                </form>
+            </Form>
+        </div>
+    )
+}
+
+export default VendorForm

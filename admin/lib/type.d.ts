@@ -5,34 +5,55 @@ type CollectionType={
     title: string,
     description: string,
     image: string,
-    products: ProductType[],
+    products?: ProductType[],
 }
 
-type VariantType= {
-    color: string,
-    image: string,
-    size: string,
-    price: number,
-    inventory: number,
-    sale: number,
-}
-
-type ProductType= {
+type CategoryType={
     _id: string,
     title: string,
     description: string,
-    media:[string],
-    category: string,
-    collections:[CollectionType],
-    tags: [string],
-    sizes: [string],
-    colors: [string],
-    price: number,
-    expense: number,
-    inventory: number,
+    image: string,
+    products?: ProductType[],
+}
+
+type VariantType= {
+    color?: string,
+    image?: string,
+    size?: string,
+    material?:string,
+    style?:string,
+    weight?:number,
+    price: number|0,
+    inventory: number|0,
+    // sale: number|0,
+}
+type VendorType= {
+    _id: string,
+    name: string,
+    email: string,
+    phone: string,
+    address: string,
+    products?: ProductType[],
+    createAt: Date,
+    updateAt: Date,
+}
+type ProductType= {
+    _id: string,
+    title: string,
+    description?: string,
+    vendor?:string | null,
+    media?:[string],
+    category?: [CategoryType],
+    collections?:[CollectionType],
+    tags?: [string],
+    // sizes?: [string],
+    // colors?: [string],
+    originalPrice?: number|0,
+    sellingPrice?: number|0,
+    inventory?: number|0,
     createAt: Date,
     updateAt : Date,
-    // variants:[VariantType],
+    variants:[VariantType],
     // stock: number,
 }
 
@@ -65,3 +86,5 @@ type CartItemType={
     size: string,
     quantity: number,
 }
+
+

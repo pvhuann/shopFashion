@@ -24,15 +24,20 @@ import { Button } from "@/components/ui/button"
 import MultiSelect from "../custom ui/MultiSelect"
 import MultiTag from "../custom ui/MultiTag"
 import Loader from "../custom ui/Loader"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { Label } from "../ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { DataTable } from "../custom ui/DataTable"
+// import { VariantColumns } from "../variants/VariantColumns"
 
-// const variantSchema = z.object({
-//     color: z.string().min(1, "Color is required"),
-//     image: z.string().url("Invalid URL"),
-//     size: z.string().min(1, "Size is required"),
-//     price: z.number().min(0, "Price must be at least 0"),
-//     inventory: z.number().min(0, "Inventory must be at least 0"),
-//     sale: z.number().min(0).max(100, "Sale must be between 0 and 100"),
-// })
+const variantSchema = z.object({
+    color: z.string().min(1, "Color is required"),
+    image: z.string().url("Invalid URL"),
+    size: z.string().min(1, "Size is required"),
+    price: z.number().min(0, "Price must be at least 0"),
+    inventory: z.number().min(0, "Inventory must be at least 0"),
+    // sale: z.number().min(0).max(100, "Sale must be between 0 and 100"),
+})
 
 // const productSchema = z.object({
 //     title: z.string().min(1, "Title is required").max(50, "Title must be at least 50"),
@@ -171,7 +176,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
             <Separator className="bg-grey-1 my-4" />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="title"
                         render={({ field }) => (
@@ -183,9 +188,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="description"
                         render={({ field }) => (
@@ -197,7 +202,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     <FormField
                         control={form.control}
@@ -223,8 +228,303 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                         )}
                     />
 
+                    {/* product information  */}
+                    <Card className="w-full shadow-lg">
+                        <CardHeader>
+                            <CardTitle>Product information</CardTitle>
+                        </CardHeader>
+                        <hr />
+                        <CardContent className='m-10 p-2 flex flex-col gap-4'>
+                            {/* product title */}
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Title</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* product code and product weight */}
+                            {/* <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Title</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
+                                            </FormControl>
+                                            <FormMessage className="text-red-1" />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Weight</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
+                                            </FormControl>
+                                            <FormMessage className="text-red-1" />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div> */}
+                            {/* test */}
+                            {/* <form>
+                                <div className="grid w-full items-center gap-4">
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="name">Name</Label>
+                                        <Input id="name" placeholder="Name of your project" />
+                                    </div>
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="framework">Framework</Label>
+                                        <Select>
+                                            <SelectTrigger id="framework">
+                                                <SelectValue placeholder="Select" />
+                                            </SelectTrigger>
+                                            <SelectContent position="popper">
+                                                <SelectItem value="next">Next.js</SelectItem>
+                                                <SelectItem value="sveltekit">SvelteKit</SelectItem>
+                                                <SelectItem value="astro">Astro</SelectItem>
+                                                <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </form> */}
+
+                            {/* product description */}
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    {/*product media */}
+                    <Card className='shadow-lg'>
+                        <CardHeader>
+                            <CardTitle>Product media</CardTitle>
+                        </CardHeader>
+                        <hr />
+                        <CardContent className="bg-gray-100 m-10 p-2 rounded-lg border-dashed border-2 flex flex-col gap-2 items-center">
+                            <img src="/oc-browse.svg" alt="" className="w-[150px] h-[200px]" />
+                            <p className="text-base-bold text-black">Drag and drop your file here</p>
+                            <p>or</p>
+                            <button type="button" className="p-2 bg-white rounded-lg">Browser file</button>
+                        </CardContent>
+                    </Card>
+
+                    {/* product variant */}
+                    <Card className='shadow-lg'>
+                        <CardHeader>
+                            <CardTitle>Product variants</CardTitle>
+                        </CardHeader>
+                        <hr />
+                        <CardContent className="p-2 m-10">
+                            <div>
+                                <p>OPTION</p>
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="framework">Framework</Label>
+                                    <Select>
+                                        <SelectTrigger id="framework">
+                                            <SelectValue placeholder="Select" />
+                                        </SelectTrigger>
+                                        <SelectContent position="popper">
+                                            <SelectItem value="next">Next.js</SelectItem>
+                                            <SelectItem value="sveltekit">SvelteKit</SelectItem>
+                                            <SelectItem value="astro">Astro</SelectItem>
+                                            <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                            {/* <DataTable columns={VariantColumns} data={variantSchema}/> */}
+                            {/* <VariantColumns/> */}
+
+                        </CardContent>
+                    </Card>
+
+                    {/* product price */}
+                    <Card className='shadow-lg'>
+                        <CardHeader>
+                            <CardTitle>Pricing</CardTitle>
+                        </CardHeader>
+                        <hr />
+                        <CardContent className="m-10 p-2 flex flex-col gap-6">
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Original price($)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Selling price($)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Profit(%)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="%" {...field} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    {/* product organization */}
+                    <Card className='shadow-lg'>
+                        <CardHeader>
+                            <CardTitle>Organization</CardTitle>
+                        </CardHeader>
+                        <hr />
+                        <CardContent className="m-10 p-2 flex flex-col gap-6">
+
+                            {/* product vendor */}
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex justify-between">
+                                            <p>Vendor</p>
+                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/vendor/add-vendor')}>+Add vendor</Button>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input type="text" placeholder="price" {...field} onKeyDown={handleKeyPress} />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* product category */}
+                            <FormField
+                                control={form.control}
+                                name="collections"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex justify-between">
+                                            <p>Category</p>
+                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/category/add-category')}>+Add category</Button>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <MultiSelect
+                                                collections={collections}
+                                                value={field.value}
+                                                onChange={(_id) => {
+                                                    field.onChange([...field.value, _id])
+                                                }}
+                                                onRemove={(idToRemove) => {
+                                                    field.onChange([
+                                                        ...field.value.filter((id) => id !== idToRemove)
+                                                    ])
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* product collections */}
+                            <FormField
+                                control={form.control}
+                                name="collections"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex justify-between">
+                                            <p>Collections</p>
+                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/collections/add-collection')}>+Add collection</Button>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <MultiSelect
+                                                collections={collections}
+                                                value={field.value}
+                                                onChange={(_id) => {
+                                                    field.onChange([...field.value, _id])
+                                                }}
+                                                onRemove={(idToRemove) => {
+                                                    field.onChange([
+                                                        ...field.value.filter((id) => id !== idToRemove)
+                                                    ])
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* product tags */}
+                            <FormField
+                                control={form.control}
+                                name="colors"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Colors</FormLabel>
+                                        <FormControl>
+                                            <MultiTag
+                                                placeholder="Color"
+                                                value={field.value}
+                                                onChange={(tag) => field.onChange([...field.value, tag])}
+                                                onRemove={(tagRemove) => {
+                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-1" />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+
+
+
                     <div className="md:grid md:grid-cols-3 gap-8">
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="price"
                             render={({ field }) => (
@@ -236,9 +536,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="expense"
                             render={({ field }) => (
@@ -250,9 +550,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="inventory"
                             render={({ field }) => (
@@ -264,9 +564,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="category"
                             render={({ field }) => (
@@ -278,9 +578,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="tags"
                             render={({ field }) => (
@@ -299,8 +599,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
-                        <FormField
+                        /> */}
+
+                        {/* <FormField
                             control={form.control}
                             name="colors"
                             render={({ field }) => (
@@ -319,8 +620,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
-                        <FormField
+                        /> */}
+
+
+                        {/* <FormField
                             control={form.control}
                             name="sizes"
                             render={({ field }) => (
@@ -339,13 +642,13 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <FormMessage className="text-red-1" />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
 
 
                     </div>
 
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="collections"
                         render={({ field }) => (
@@ -368,7 +671,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 <FormMessage className="text-red-1" />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                     <div className="flex gap-10">
                         <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
                         <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/products")}>Discard</Button>

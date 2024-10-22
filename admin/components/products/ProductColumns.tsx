@@ -14,7 +14,7 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         cell: ({ row }) => (
             <div className='flex items-center gap-2'>
 
-                <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
+                <Image src={row.original.media?.[0] ?? "/No_Image_Available.jpg"} alt="" width={100} height={0} className='' />
                 <Link href={`/products/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
             </div>
         )
@@ -23,7 +23,7 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         accessorKey: "collections",
         header: "Collections",
-        cell: ({ row }) => row.original.collections.map((collection) => collection.title).join(", "),
+        cell: ({ row }) => row.original.collections?.map((collection) => collection.title).join(", "),
     },
     {
         accessorKey: "category",

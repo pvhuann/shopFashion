@@ -13,7 +13,7 @@ export const ProductInCollectionColumns: ColumnDef<ProductType>[] = [
         header: "Title",
         cell: ({ row }) =>
             <Link href={`/products/${row.original._id}`} className='hover:text-red-1'>
-                <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
+                <Image src={row.original.media?.[0] ?? "/logo.png"} alt="" width={100} height={0} className='' />
                 {row.original.title}
             </Link>
     },

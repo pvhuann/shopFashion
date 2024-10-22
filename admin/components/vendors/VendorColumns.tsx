@@ -1,10 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 
-export const vendorColumns: ColumnDef<VendorType>[] = [
+export const VendorColumns: ColumnDef<VendorType>[] = [
     {
         accessorKey: "name",
         header: "Name",
+        cell:({row})=> <Link href={`/vendors/vendor-details/${row.original._id}`} className='hover:text-red-1'>{row.original.name}</Link>,
     },
     {
         accessorKey: "email",
@@ -26,11 +28,11 @@ export const vendorColumns: ColumnDef<VendorType>[] = [
 
     {
         header: "Created At",
-        accessorKey: "createAt"
+        accessorKey: "createdAt"
     },
     {
         header: "Updated At",
-        accessorKey: "updateAt"
+        accessorKey: "updatedAt"
     },
 
 ]

@@ -1,5 +1,8 @@
 import {
+    FileBadge,
+    House,
     LayoutDashboard,
+    Rows3,
     Shapes,
     ShoppingBag,
     Tag,
@@ -8,113 +11,258 @@ import {
 
 export const navLinks = [
     {
-        url: "/",
-        icon: <LayoutDashboard />,
+        icon: <House />,
         label: "Dashboard",
-        navChild:["Default", "Alternative"],
+        navChild: [
+            {
+                name: "Default",
+                url: "/",
+            },
+            {
+                name: "Alternative",
+                url: "/alternative",
+            },
+        ],
     },
     {
-        url: "/collections",
+        icon: <FileBadge />,
+        label: "Vendors",
+        navChild: [{
+            name: "Vendors",
+            url: "/vendors"
+        },
+        {
+            name: "Add vendor",
+            url: "/vendors/add-vendor"
+        },
+        {
+            name: "Vendor details",
+            url: "/vendors/vendor-details"
+        }],
+    },
+    {
+        url: "/",
+        icon: <Rows3 />,
+        label: "Categories",
+        navChild: [
+            {
+                name: "Categories",
+                url: "/categories"
+            },
+            {
+                name: "Add category",
+                url: "/categories/add-category"
+            },
+            {
+                name: "Category details",
+                url: "/categories/category-details"
+            },
+        ]
+    },
+    {
         icon: <Shapes />,
         label: "Collections",
-        navChild:["Collections","Add Collection", "Collection Details"],
+        navChild: [
+            {
+                name: "Collections",
+                url: "/collections"
+            },
+            {
+                name: "Add collection",
+                url: "/collections/add-collection"
+            },
+            {
+                name: "Collection details",
+                url: "/collections/collection-details"
+            },
+        ],
 
     },
     {
-        url: "/products",
+
         icon: <Tag />,
         label: "Products",
-        navChild:["Products","Add Product", "Product Details"],
+        navChild: [
+            {
+                name: "Products",
+                url: "/products"
+            },
+            {
+                name: "Add product",
+                url: "/products/add-product"
+            },
+            {
+                name: "Product details",
+                url: "/products/product-details"
+            },
+        ],
 
     },
     {
-        url: "/orders",
+
         icon: <ShoppingBag />,
         label: "Orders",
-        navChild:["Orders", "Order Details"],
+        navChild: [
+            {
+                name: "Orders",
+                url: "/orders"
+            },
+            {
+                name: "Order details",
+                url: "/orders/order-details"
+            },
+        ],
 
     },
     {
-        url: "/customers",
+
         icon: <UsersRound />,
         label: "Customers",
-        navChild:["Customers","Add Customer",  "Customer Details"],
+        navChild: [
+            {
+                name: "Customers",
+                url: "/customers"
+            },
+            {
+                name: "Add customer",
+                url: "/customers/add-customer"
+            },
+            {
+                name: "Customer details",
+                url: "/customers/customer-details"
+            },
+        ],
+
+    },
+
+
+    {
+        icon: <House />,
+        label: "Dashboard",
+        navChild: [
+            {
+                name: "Default",
+                url: "/",
+            },
+            {
+                name: "Alternative",
+                url: "/alternative",
+            },
+        ],
+    },
+    {
+        icon: <FileBadge />,
+        label: "Vendors",
+        navChild: [{
+            name: "Vendors",
+            url: "/vendors"
+        },
+        {
+            name: "Add vendor",
+            url: "/vendors/add-vendor"
+        },
+        {
+            name: "Vendor details",
+            url: "/vendors/vendor-details"
+        }],
+    },
+    {
+        url: "/",
+        icon: <Rows3 />,
+        label: "Categories",
+        navChild: [
+            {
+                name: "Categories",
+                url: "/categories"
+            },
+            {
+                name: "Add category",
+                url: "/categories/add-category"
+            },
+            {
+                name: "Category details",
+                url: "/categories/category-details"
+            },
+        ]
+    },
+    {
+        icon: <Shapes />,
+        label: "Collections",
+        navChild: [
+            {
+                name: "Collections",
+                url: "/collections"
+            },
+            {
+                name: "Add collection",
+                url: "/collections/add-collection"
+            },
+            {
+                name: "Collection details",
+                url: "/collections/collection-details"
+            },
+        ],
+
+    },
+    {
+
+        icon: <Tag />,
+        label: "Products",
+        navChild: [
+            {
+                name: "Products",
+                url: "/products"
+            },
+            {
+                name: "Add product",
+                url: "/products/add-product"
+            },
+            {
+                name: "Product details",
+                url: "/products/product-details"
+            },
+        ],
+
+    },
+    {
+
+        icon: <ShoppingBag />,
+        label: "Orders",
+        navChild: [
+            {
+                name: "Orders",
+                url: "/orders"
+            },
+            {
+                name: "Order details",
+                url: "/orders/order-details"
+            },
+        ],
+
+    },
+    {
+
+        icon: <UsersRound />,
+        label: "Customers",
+        navChild: [
+            {
+                name: "Customers",
+                url: "/customers"
+            },
+            {
+                name: "Add customer",
+                url: "/customers/add-customer"
+            },
+            {
+                name: "Customer details",
+                url: "/customers/customer-details"
+            },
+        ],
 
     },
 
 
 
 
-
-    
-    // {
-    //     url: "/",
-    //     icon: <LayoutDashboard />,
-    //     label: "Dashboard",
-    //     navChild:["Default", "Alternative"],
-    // },
-    // {
-    //     url: "/collections",
-    //     icon: <Shapes />,
-    //     label: "Collections",
-    //     navChild:["Collection List","Add Collection", "Collection Details"],
-
-    // },
-    // {
-    //     url: "/products",
-    //     icon: <Tag />,
-    //     label: "Products",
-    //     navChild:["Product List","Add Product", "Product Details"],
-
-    // },
-    // {
-    //     url: "/orders",
-    //     icon: <ShoppingBag />,
-    //     label: "Orders",
-    //     navChild:["Order List", "Order Details"],
-
-    // },
-    // {
-    //     url: "/customers",
-    //     icon: <UsersRound />,
-    //     label: "Customers",
-    //     navChild:["Customer List","Add Customer",  "Customer Details"],
-
-    // },
-
-    // {
-    //     url: "/",
-    //     icon: <LayoutDashboard />,
-    //     label: "Dashboard",
-    //     navChild:["Default", "Alternative"],
-    // },
-    // {
-    //     url: "/collections",
-    //     icon: <Shapes />,
-    //     label: "Collections",
-    //     navChild:["Collection List","Add Collection", "Collection Details"],
-
-    // },
-    // {
-    //     url: "/products",
-    //     icon: <Tag />,
-    //     label: "Products",
-    //     navChild:["Product List","Add Product", "Product Details"],
-
-    // },
-    // {
-    //     url: "/orders",
-    //     icon: <ShoppingBag />,
-    //     label: "Orders",
-    //     navChild:["Order List", "Order Details"],
-
-    // },
-    // {
-    //     url: "/customers",
-    //     icon: <UsersRound />,
-    //     label: "Customers",
-    //     navChild:["Customer List","Add Customer",  "Customer Details"],
-
-    // },
 
 ];

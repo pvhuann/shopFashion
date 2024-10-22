@@ -11,7 +11,7 @@ export const OrderItemColumns: ColumnDef<OrderItemType>[] = [
         cell: ({ row }) =>
             <Link href={`/products/${row.original.product._id}`} className='hover:text-red-1'>
                 <Image
-                    src={row.original.product.media[0]}
+                    src={row.original.product.media?.[0]?? "/No_Image_Available.jpg"}
                     alt={row.original.product.title}
                     width={100}
                     height={100}
@@ -31,7 +31,7 @@ export const OrderItemColumns: ColumnDef<OrderItemType>[] = [
     {
         accessorKey: "price",
         header: "Price ($)",
-        cell: ({ row }) => row.original.product.price,
+        cell: ({ row }) => 0,
     },
     {
         accessorKey: "quantity",

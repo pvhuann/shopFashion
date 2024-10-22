@@ -1,4 +1,4 @@
-import VendorForm from '@/components/vendor/VendorForm'
+import VendorForm from '@/components/vendors/VendorForm'
 
 
 const page = () => {

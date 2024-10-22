@@ -9,7 +9,7 @@ export const CustomerColumns: ColumnDef<CustomerType>[] = [
     {
         accessorKey: "clerkId",
         header: "Clerk Id",
-        cell: ({ row }) => <Link href={`/customers/${row.original.clerkId}`} className='hover:text-red-1'>{row.original.clerkId}</Link>
+        cell: ({ row }) => <Link href={`/customers/customer-details/${row.original.clerkId}`} className='hover:text-red-1'>{row.original.clerkId}</Link>
     },
     {
         accessorKey: "name",

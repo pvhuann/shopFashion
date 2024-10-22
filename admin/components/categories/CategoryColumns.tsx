@@ -10,7 +10,7 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }) => <Link href={`/category/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+        cell: ({ row }) => <Link href={`/category/category-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
     },
     {
         accessorKey: "products",
@@ -26,6 +26,15 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
             </Link>
         ),
     },
+    {
+        header: "Created At",
+        accessorKey: "createdAt"
+    },
+    {
+        header: "Updated At",
+        accessorKey: "updatedAt"
+    },
+
     {
         id: "actions",
         cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='category' />,

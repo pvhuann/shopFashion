@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Delete from "../custom ui/Delete"
-import { Separator } from "../ui/separator"
 import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
@@ -52,8 +51,8 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         // console.log(values);
         try {
             setLoading(true);
-            const url = initialData ? `/api/vendor/${initialData._id}` : "/api/vendor"
-            const res = await fetch(url, {
+            const url = initialData ? `/api/vendors/${initialData._id}` : "/api/vendors"
+            const res = await fetch( url, {
                 method: 'POST',
                 body: JSON.stringify(values),
             })
@@ -84,11 +83,15 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
 
             {initialData ? (
                 <div className=" flex justify-between items-center">
-                    <div className="text-heading2-bold">Update vendor</div>
+                    <div className="flex flex-col">
+
+                    <p className="">Vendors/ Vendor details</p>
+                    <p className="text-heading2-bold">{initialData.name}</p>
+                    </div>
                     <Delete id={initialData._id} title={initialData.name} item="collection" />
                 </div>
             ) : (
-                <div className="text-heading2-bold">Create vendor</div>
+                <div className="text-heading2-bold">Vendors/ Create vendor</div>
             )}
 
             <hr className="text-black my-4" />
@@ -151,7 +154,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                     />
                     <div className="flex gap-10">
                         <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
-                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/collections")}>Discard</Button>
+                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/vendor")}>Discard</Button>
                     </div>
 
                 </form>

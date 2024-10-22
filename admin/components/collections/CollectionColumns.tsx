@@ -10,7 +10,7 @@ export const CollectionColumns: ColumnDef<CollectionType>[] = [
     {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }) => <Link href={`/collections/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+        cell: ({ row }) => <Link href={`/collections/collection-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
     },
     {
         accessorKey: "products",
@@ -25,6 +25,14 @@ export const CollectionColumns: ColumnDef<CollectionType>[] = [
                 <Image src={row.original.image} alt={row.original.title} width={100} height={0} className='' />
             </Link>
         ),
+    },
+    {
+        header: "Created At",
+        accessorKey: "createdAt"
+    },
+    {
+        header: "Updated At",
+        accessorKey: "updatedAt"
     },
     {
         id: "actions",

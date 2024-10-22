@@ -32,6 +32,9 @@ export const GET= async(req:NextRequest)=>{
         
         await connectToDB();
         const vendor= await Vendor.find().sort({createdAt:"desc"});
+        if(!vendor){
+            return new NextResponse("Vendor not found", {status:404});
+        }
         return NextResponse.json(vendor, {status:200});
     } catch (error) {
         console.log("VENDOR_GET:", error);

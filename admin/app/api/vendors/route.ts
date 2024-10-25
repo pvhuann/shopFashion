@@ -3,6 +3,8 @@ import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
 
+
+// create a new vendor
 export const POST = async(req:NextRequest)=> {
     try {
         const {name, email, phone, address} = await req.json();
@@ -27,6 +29,8 @@ export const POST = async(req:NextRequest)=> {
     }
 }
 
+
+// get all vendors
 export const GET= async(req:NextRequest)=>{
     try {
         
@@ -39,6 +43,5 @@ export const GET= async(req:NextRequest)=>{
     } catch (error) {
         console.log("VENDOR_GET:", error);
         return new NextResponse("Internal Server Error", {status:500})
-        
     }
 }

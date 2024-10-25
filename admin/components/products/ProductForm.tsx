@@ -28,6 +28,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "../ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { DataTable } from "../custom ui/DataTable"
+import { VariantColumns } from "../variants/VariantColumns"
+import { CldUploadWidget } from "next-cloudinary"
+import Image from "next/image"
+import { X } from "lucide-react"
 // import { VariantColumns } from "../variants/VariantColumns"
 
 const variantSchema = z.object({
@@ -54,6 +58,7 @@ const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
     description: z.string().trim().min(2).max(600),
     media: z.array(z.string().url()),
+    vendor: z.string(),
     category: z.string(),
     collections: z.array(z.string()),
     tags: z.array(z.string()),
@@ -78,9 +83,13 @@ interface ProductProps {
 }
 
 const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
-    const [loading, setLoading] = useState(true)
-    const [collections, setCollections] = useState<CollectionType[]>([])
-    const router = useRouter()
+    const [loading, setLoading] = useState(true);
+    const [collections, setCollections] = useState<CollectionType[]>([]);
+    const [vendors, setVendors] = useState<VendorType[]>([]);
+    const [categories, setCategories] = useState<CategoryType[]>([]);
+    // const [variantSchema, setVariantSchema] = useState < VariantType>[]
+    const router = useRouter();
+
 
     // create form
     const form = useForm<z.infer<typeof formSchema>>({
@@ -88,11 +97,12 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         defaultValues: initialData
             ? {
                 ...initialData,
-                collections: initialData.collections.map((collection) => collection._id),
+                collections: initialData.collections?.map((collection) => collection._id),
             }
             : {
                 title: "",
                 description: "",
+                vendor: "",
                 media: [],
                 category: "",
                 collections: [],
@@ -121,10 +131,54 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
             toast.error("Something went wrong! Please try again")
         }
     }
-
     useEffect(() => {
         getCollections()
     }, [])
+
+
+
+    // get all vendors
+    const getVendors = async () => {
+        try {
+            const res = await fetch('/api/vendors', {
+                method: "GET",
+            })
+            const data = await res.json();
+            // const vendorNames = data.map((vendor: { name: string }) => vendor.name);
+            // const vendorNames = data.map((vendor: VendorType) => vendor.name);
+            setVendors(data);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong! Please try again")
+        }
+    }
+    useEffect(() => {
+        getVendors()
+    }, [])
+
+
+
+    // get all categories
+    const getCategories = async () => {
+        try {
+            const res = await fetch(`/api/categories`, {
+                method: "GET",
+            })
+            const data = await res.json();
+            // const vendorNames= data.map((vendor: {name:string})=> vendor.name);
+            // const categoryTitles = data.map((category: { title: string }) => category.title);
+            setCategories(data);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong! Please try again")
+        }
+    }
+    useEffect(() => {
+        getCategories()
+    }, [])
+
 
 
     //handle submit form
@@ -161,8 +215,15 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         }
     }
 
+    const handleOnnSuccess = (result: any) => {
+        form.setValue("media", [...form.getValues("media"), result.info.secure_url])
+        console.log('Upload finished:', result.info.secure_url);
+    };
+
+
+
     return loading ? <Loader /> : (
-        <div className="p-10">
+        <div className="">
 
             {initialData ? (
                 <div className=" flex justify-between items-center">
@@ -173,85 +234,37 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 <div className="text-heading2-bold">Create Product</div>
             )}
 
-            <Separator className="bg-grey-1 my-4" />
+            <Separator className="bg-grey-1 mt-4" />
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    {/* <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Title</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
-                                </FormControl>
-                                <FormMessage className="text-red-1" />
-                            </FormItem>
-                        )}
-                    /> */}
+                <form onSubmit={form.handleSubmit(onSubmit)} className="">
 
-                    {/* <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
-                                </FormControl>
-                                <FormMessage className="text-red-1" />
-                            </FormItem>
-                        )}
-                    /> */}
-
-                    <FormField
-                        control={form.control}
-                        name="media"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Media</FormLabel>
-                                <FormControl>
-                                    <ImageUpload
-                                        value={field.value}
-                                        onChange={(url) => {
-                                            field.onChange([...field.value, url])
-                                        }}
-                                        onRemove={(url) => {
-                                            field.onChange(
-                                                [...field.value.filter((item) => item !== url)]
-                                            )
-                                        }}
+                    <div className="flex gap-6 max-lg:flex-col">
+                        {/* left */}
+                        <div className="space-y-10 w-2/3 max-lg:w-full">
+                            {/* product information  */}
+                            <Card className="w-full mt-10">
+                                <CardHeader>
+                                    <CardTitle>Product information</CardTitle>
+                                </CardHeader>
+                                <hr />
+                                <CardContent className='m-10 p-2 flex flex-col gap-4'>
+                                    {/* product title */}
+                                    <FormField
+                                        control={form.control}
+                                        name="title"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Title</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
                                     />
-                                </FormControl>
-                                <FormMessage className="text-red-1" />
-                            </FormItem>
-                        )}
-                    />
 
-                    {/* product information  */}
-                    <Card className="w-full shadow-lg">
-                        <CardHeader>
-                            <CardTitle>Product information</CardTitle>
-                        </CardHeader>
-                        <hr />
-                        <CardContent className='m-10 p-2 flex flex-col gap-4'>
-                            {/* product title */}
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Title</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* product code and product weight */}
-                            {/* <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
+                                    {/* product code and product weight */}
+                                    {/* <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
                                 <FormField
                                     control={form.control}
                                     name="title"
@@ -279,8 +292,8 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     )}
                                 />
                             </div> */}
-                            {/* test */}
-                            {/* <form>
+                                    {/* test */}
+                                    {/* <form>
                                 <div className="grid w-full items-center gap-4">
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="name">Name</Label>
@@ -303,378 +316,291 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 </div>
                             </form> */}
 
-                            {/* product description */}
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Description</FormLabel>
-                                        <FormControl>
-                                            <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-                        </CardContent>
-                    </Card>
+                                    {/* product description */}
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Description</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
 
-                    {/*product media */}
-                    <Card className='shadow-lg'>
-                        <CardHeader>
-                            <CardTitle>Product media</CardTitle>
-                        </CardHeader>
-                        <hr />
-                        <CardContent className="bg-gray-100 m-10 p-2 rounded-lg border-dashed border-2 flex flex-col gap-2 items-center">
-                            <img src="/oc-browse.svg" alt="" className="w-[150px] h-[200px]" />
-                            <p className="text-base-bold text-black">Drag and drop your file here</p>
-                            <p>or</p>
-                            <button type="button" className="p-2 bg-white rounded-lg">Browser file</button>
-                        </CardContent>
-                    </Card>
+                            {/*product media */}
+                            <Card className=''>
+                                <CardHeader>
+                                    <CardTitle>Product media</CardTitle>
+                                </CardHeader>
+                                <hr />
+                                <CardContent className="bg-gray-100 m-10 p-2 rounded-lg border-dashed border-2 flex flex-col gap-2 items-center " >
+                                    <Image src="/oc-browse.svg" alt="browse" width={100} height={100} className="w-[150px] h-[200px]" />
+                                    {/* <p className="text-base-bold text-black">Drag and drop your file here</p>
+                            <p>or</p> */}
+                                    <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={handleOnnSuccess}>
+                                        {({ open }) => {
+                                            return (
+                                                <Button onClick={() => open()} type="button" className="p-2 bg-white rounded-lg">Upload file</Button>
+                                            )
+                                        }}
+                                    </CldUploadWidget>
+                                    <FormField
+                                        control={form.control}
+                                        name="media"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <div className='flex flex-wrap gap-2'>
+                                                        {
+                                                            field.value.map((url, index) => (
+                                                                <div key={index} className="relative max-w-[200px] max-h-[200px]">
+                                                                    <div className="absolute top-0 right-0 z-10">
+                                                                        <Button type="button"
+                                                                            // onClick={() => form.setValue("media", [...form.getValues("media").filter((item) => item !== url)])}
+                                                                            onClick={() => field.onChange([...field.value.filter((item) => item !== url)])}
+                                                                            size="sm" className="bg-red-1 text-white relative group w-6 h-6 rounded-lg">
+                                                                            <X className="h-2 w-2 absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out" />
+                                                                        </Button>
+                                                                    </div>
+                                                                    <Image
+                                                                        src={url}
+                                                                        alt="image"
+                                                                        className="rounded-lg object-cover w-[300px] h-[150px]"
+                                                                        width={200}
+                                                                        height={200}
+                                                                    />
 
-                    {/* product variant */}
-                    <Card className='shadow-lg'>
-                        <CardHeader>
-                            <CardTitle>Product variants</CardTitle>
-                        </CardHeader>
-                        <hr />
-                        <CardContent className="p-2 m-10">
-                            <div>
-                                <p>OPTION</p>
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="framework">Framework</Label>
-                                    <Select>
-                                        <SelectTrigger id="framework">
-                                            <SelectValue placeholder="Select" />
-                                        </SelectTrigger>
-                                        <SelectContent position="popper">
-                                            <SelectItem value="next">Next.js</SelectItem>
-                                            <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                                            <SelectItem value="astro">Astro</SelectItem>
-                                            <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                            {/* <DataTable columns={VariantColumns} data={variantSchema}/> */}
-                            {/* <VariantColumns/> */}
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {/* <div >
+                                            <Image src={form.getValues("media")[0]} alt="" width={100} height={100} className='' />
+                                        </div> */}
 
-                        </CardContent>
-                    </Card>
+                                </CardContent>
+                            </Card>
 
-                    {/* product price */}
-                    <Card className='shadow-lg'>
-                        <CardHeader>
-                            <CardTitle>Pricing</CardTitle>
-                        </CardHeader>
-                        <hr />
-                        <CardContent className="m-10 p-2 flex flex-col gap-6">
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Original price($)</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Selling price($)</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Profit(%)</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="%" {...field} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-                        </CardContent>
-                    </Card>
+                            {/* product variant */}
+                            <Card className="">
+                                <CardHeader>
+                                    <CardTitle>Product variants</CardTitle>
+                                </CardHeader>
+                                <hr />
+                                <CardContent className="p-2 m-10">
+                                    <div>
+                                        <p>OPTION</p>
+                                        <div className="flex flex-col space-y-1.5">
+                                            <Label htmlFor="framework">Framework</Label>
+                                            <Select>
+                                                <SelectTrigger id="framework">
+                                                    <SelectValue placeholder="Select" />
+                                                </SelectTrigger>
+                                                <SelectContent position="popper" className="bg-white">
+                                                    <SelectItem value="next">Next.js</SelectItem>
+                                                    <SelectItem value="sveltekit">SvelteKit</SelectItem>
+                                                    <SelectItem value="astro">Astro</SelectItem>
+                                                    <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                    {/* <DataTable columns={VariantColumns} data={variantSchema} /> */}
+                                    {/* <VariantColumns/> */}
 
-                    {/* product organization */}
-                    <Card className='shadow-lg'>
-                        <CardHeader>
-                            <CardTitle>Organization</CardTitle>
-                        </CardHeader>
-                        <hr />
-                        <CardContent className="m-10 p-2 flex flex-col gap-6">
+                                </CardContent>
+                            </Card>
 
-                            {/* product vendor */}
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="flex justify-between">
-                                            <p>Vendor</p>
-                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/vendor/add-vendor')}>+Add vendor</Button>
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input type="text" placeholder="price" {...field} onKeyDown={handleKeyPress} />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
+                        </div>
 
-                            {/* product category */}
-                            <FormField
-                                control={form.control}
-                                name="collections"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="flex justify-between">
-                                            <p>Category</p>
-                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/category/add-category')}>+Add category</Button>
-                                        </FormLabel>
-                                        <FormControl>
-                                            <MultiSelect
-                                                collections={collections}
-                                                value={field.value}
-                                                onChange={(_id) => {
-                                                    field.onChange([...field.value, _id])
-                                                }}
-                                                onRemove={(idToRemove) => {
-                                                    field.onChange([
-                                                        ...field.value.filter((id) => id !== idToRemove)
-                                                    ])
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
+                        {/* right */}
+                        <div className="w-1/3 space-y-10 mt-10 max-lg::mt-4 max-lg:w-full">
+                            {/* product price */}
+                            <Card className=''>
+                                <CardHeader>
+                                    <CardTitle>Pricing</CardTitle>
+                                </CardHeader>
+                                <hr />
+                                <CardContent className="m-10 p-2 flex flex-col gap-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="price"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Original price($)</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="price"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Selling price($)</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="" {...field} onKeyDown={handleKeyPress} />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="price"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Profit(%)</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="%" {...field} onKeyDown={handleKeyPress} />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
 
-                            {/* product collections */}
-                            <FormField
-                                control={form.control}
-                                name="collections"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="flex justify-between">
-                                            <p>Collections</p>
-                                            <Button type="button" className="text-blue-1" onClick={() => router.push('/collections/add-collection')}>+Add collection</Button>
-                                        </FormLabel>
-                                        <FormControl>
-                                            <MultiSelect
-                                                collections={collections}
-                                                value={field.value}
-                                                onChange={(_id) => {
-                                                    field.onChange([...field.value, _id])
-                                                }}
-                                                onRemove={(idToRemove) => {
-                                                    field.onChange([
-                                                        ...field.value.filter((id) => id !== idToRemove)
-                                                    ])
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
+                            {/* product organization */}
+                            <Card className=''>
+                                <CardHeader>
+                                    <CardTitle>Organization</CardTitle>
+                                </CardHeader>
+                                <hr />
+                                <CardContent className="m-10 p-2 flex flex-col gap-6">
 
-                            {/* product tags */}
-                            <FormField
-                                control={form.control}
-                                name="colors"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Colors</FormLabel>
-                                        <FormControl>
-                                            <MultiTag
-                                                placeholder="Color"
-                                                value={field.value}
-                                                onChange={(tag) => field.onChange([...field.value, tag])}
-                                                onRemove={(tagRemove) => {
-                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-red-1" />
-                                    </FormItem>
-                                )}
-                            />
-                        </CardContent>
-                    </Card>
+                                    {/* product vendor */}
+                                    <FormField
+                                        control={form.control}
+                                        name="vendor"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex justify-between">
+                                                    <p>Vendor</p>
+                                                    <Button type="button" className="text-blue-1" onClick={() => router.push('/vendors/add-vendor')}>+Add vendor</Button>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    {/* <Input type="text" placeholder="price" {...field} onKeyDown={handleKeyPress} /> */}
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select a vendor" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-white">
+                                                            {vendors.map((vendor, index) => (
+                                                                <SelectItem key={index} value={vendor._id}>
+                                                                    {vendor.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
 
+                                    {/* product category */}
+                                    <FormField
+                                        control={form.control}
+                                        name="category"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex justify-between">
+                                                    <p>Category</p>
+                                                    <Button type="button" className="text-blue-1" onClick={() => router.push('/categories/add-category')}>+Add category</Button>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    {/* <Input type="text" placeholder="price" {...field} onKeyDown={handleKeyPress} /> */}
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select a category" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-white">
+                                                            {categories.map((category, index) => (
+                                                                <SelectItem key={index} value={category._id}>
+                                                                    {category.title}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {/* product collections */}
+                                    <FormField
+                                        control={form.control}
+                                        name="collections"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex justify-between">
+                                                    <p>Collections</p>
+                                                    <Button type="button" className="text-blue-1" onClick={() => router.push('/collections/add-collection')}>+Add collection</Button>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <MultiSelect
+                                                        collections={collections}
+                                                        value={field.value}
+                                                        onChange={(_id) => {
+                                                            field.onChange([...field.value, _id])
+                                                        }}
+                                                        onRemove={(idToRemove) => {
+                                                            field.onChange([
+                                                                ...field.value.filter((id) => id !== idToRemove)
+                                                            ])
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
 
-
-                    <div className="md:grid md:grid-cols-3 gap-8">
-                        {/* <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Price($)</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="price" {...field} onKeyDown={handleKeyPress} />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-                        {/* <FormField
-                            control={form.control}
-                            name="expense"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Expense($)</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="expense" {...field} onKeyDown={handleKeyPress} />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-                        {/* <FormField
-                            control={form.control}
-                            name="inventory"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Inventory</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="inventory" {...field} onKeyDown={handleKeyPress} />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-                        {/* <FormField
-                            control={form.control}
-                            name="category"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Category</FormLabel>
-                                    <FormControl>
-                                        <Input type="text" placeholder="Category" {...field} onKeyDown={handleKeyPress} />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-                        {/* <FormField
-                            control={form.control}
-                            name="tags"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Tags</FormLabel>
-                                    <FormControl>
-                                        <MultiTag
-                                            placeholder="Tag"
-                                            value={field.value}
-                                            onChange={(tag) => field.onChange([...field.value, tag])}
-                                            onRemove={(tagRemove) => {
-                                                field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-                        {/* <FormField
-                            control={form.control}
-                            name="colors"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Colors</FormLabel>
-                                    <FormControl>
-                                        <MultiTag
-                                            placeholder="Color"
-                                            value={field.value}
-                                            onChange={(tag) => field.onChange([...field.value, tag])}
-                                            onRemove={(tagRemove) => {
-                                                field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-
-                        {/* <FormField
-                            control={form.control}
-                            name="sizes"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Sizes</FormLabel>
-                                    <FormControl>
-                                        <MultiTag
-                                            placeholder="Size"
-                                            value={field.value}
-                                            onChange={(tag) => field.onChange([...field.value, tag])}
-                                            onRemove={(tagRemove) => {
-                                                field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-1" />
-                                </FormItem>
-                            )}
-                        /> */}
-
-
+                                    {/* product tags */}
+                                    <FormField
+                                        control={form.control}
+                                        name="tags"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Tags</FormLabel>
+                                                <FormControl>
+                                                    <MultiTag
+                                                        placeholder="Create tags"
+                                                        value={field.value}
+                                                        onChange={(tag) => field.onChange([...field.value, tag])}
+                                                        onRemove={(tagRemove) => {
+                                                            field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </div>
 
                     </div>
 
-                    {/* <FormField
-                        control={form.control}
-                        name="collections"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Collections</FormLabel>
-                                <FormControl>
-                                    <MultiSelect
-                                        collections={collections}
-                                        value={field.value}
-                                        onChange={(_id) => {
-                                            field.onChange([...field.value, _id])
-                                        }}
-                                        onRemove={(idToRemove) => {
-                                            field.onChange([
-                                                ...field.value.filter((id) => id !== idToRemove)
-                                            ])
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormMessage className="text-red-1" />
-                            </FormItem>
-                        )}
-                    /> */}
-                    <div className="flex gap-10">
-                        <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
-                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/products")}>Discard</Button>
+                    <div className="flex gap-10 mt-10">
+                        <Button type="submit"  className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800">Submit</Button>
+                        <Button type="button" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800" onClick={() => router.push("/products")}>Discard</Button>
                     </div>
                 </form>
             </Form>

@@ -15,7 +15,7 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
             <div className='flex items-center gap-2'>
 
                 <Image src={row.original.media?.[0] ?? "/No_Image_Available.jpg"} alt="" width={100} height={0} className='' />
-                <Link href={`/products/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+                <Link href={`/products/product-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
             </div>
         )
 

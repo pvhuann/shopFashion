@@ -7,13 +7,23 @@ type CollectionType={
     image: string,
     products?: ProductType[],
 }
+type SubCategoryType = {
+    _id: string,
+    title: string,
+    description: string,
+    mainCategory?: CategoryType,
+    products?: ProductType[],
+}
 
 type CategoryType={
     _id: string,
     title: string,
     description: string,
     image: string,
-    products?: ProductType[],
+    // products?: ProductType[],
+    subCategory?: [SubCategoryType],
+    createdAt: Date,
+    updatedAt: Date,
 }
 
 type VariantType= {

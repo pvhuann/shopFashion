@@ -1,3 +1,4 @@
+import { min } from "date-fns";
 import mongoose from "mongoose";
 
 
@@ -9,9 +10,9 @@ const ProductSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    vendor:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Product",
+    vendor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
     },
     media: {
         type: [String],
@@ -28,33 +29,29 @@ const ProductSchema = new mongoose.Schema({
     ],
     tags: {
         type: [String],
-    }, 
+    },
     sizes: {
         type: [String],
     },
     colors: {
         type: [String],
     },
-    // variants: [
-    //     {
-    //         color: { type: String, },
-    //         image: { type: String, },
-    //         size: { type: String, },
-    //         price: {
-    //             type: mongoose.Schema.Types.Decimal128,
-    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
-    //         },
-    //         inventory: {
-    //             type: mongoose.Schema.Types.Decimal128,
-    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
-    //         },
-    //         sale: {
-    //             type: mongoose.Schema.Types.Decimal128,
-    //             get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
-    //             default: 0,
-    //         },
-    //     },
-    // ],
+    variants: [
+        {
+            color: { type: String, },
+            image: { type: String, },
+            size: { type: String, },
+            price: {
+                type: mongoose.Schema.Types.Decimal128,
+                get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+            },
+            inventory: {
+                type: Number,
+                min: 0,
+                default: 0,
+            }
+        },
+    ],
     price: {
         type: mongoose.Schema.Types.Decimal128,
         get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }

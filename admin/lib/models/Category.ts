@@ -11,13 +11,18 @@ const  categorySchema= new mongoose.Schema({
 
     image :{
         type: String,
-        required: true,
     },
 
-    products:[
+    // products:[
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: "Product"
+    //     }
+    // ],
+    subCategory:[
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Product"
+            ref: "SubCategory",
         }
     ],
     createdAt: {

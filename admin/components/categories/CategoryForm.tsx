@@ -51,7 +51,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
         // console.log(values);
         try {
             setLoading(true);
-            const url = initialData ? `/api/category/${initialData._id}` : "/api/category"
+            const url = initialData ? `/api/categories/${initialData._id}` : "/api/categories"
             const res = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(values),
@@ -61,7 +61,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                 setLoading(false);
                 toast.success(`Category ${initialData ? "updated" : "created"} successfully`)
                 // window.location.href = "/collections";
-                router.push("/category")
+                router.push("/categories")
             }
         } catch (error) {
             console.log("Category_POST", error);

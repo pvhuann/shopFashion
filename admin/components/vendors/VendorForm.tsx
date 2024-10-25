@@ -79,19 +79,20 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
     }
 
     return (
-        <div className="p-10">
+        <div className="">
 
             {initialData ? (
                 <div className=" flex justify-between items-center">
                     <div className="flex flex-col">
 
-                    <p className="">Vendors/ Vendor details</p>
-                    <p className="text-heading2-bold">{initialData.name}</p>
+                    <p className="">Vendors/ <span className="text-black">Vendor details</span></p>
+                    <p className="text-heading2-bold text-black">{initialData.name}</p>
                     </div>
-                    <Delete id={initialData._id} title={initialData.name} item="collection" />
+                    <Delete id={initialData._id} title={initialData.name} item="vendors" />
+                    {/* <Button type="button">Delete</Button> */}
                 </div>
             ) : (
-                <div className="text-heading2-bold">Vendors/ Create vendor</div>
+                <div className="text-heading2-bold text-black">Vendors/ Create vendor</div>
             )}
 
             <hr className="text-black my-4" />
@@ -154,7 +155,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                     />
                     <div className="flex gap-10">
                         <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
-                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/vendor")}>Discard</Button>
+                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/vendors")}>Discard</Button>
                     </div>
 
                 </form>

@@ -1,7 +1,10 @@
+import Product from "@/lib/models/Product";
 import Vendor from "@/lib/models/Vendor";
 import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
+
+// get vendor by id
 export const GET= async(req:NextRequest, {params}:{params:{vendorId:string}})=> {
 
     try {
@@ -16,12 +19,12 @@ export const GET= async(req:NextRequest, {params}:{params:{vendorId:string}})=> 
         return NextResponse.json(vendor, {status:200});
     } catch (error) {
         console.log("VENDOR_ID_GET", error);
-        return new NextResponse("Internal Server Error", {status:500})
-        
+        return new NextResponse("Internal Server Error", {status:500});
     
     }
 }
 
+// update vendor by id
 export const POST = async(req:NextRequest, {params}:{params:{vendorId: string}})=> {
     try {
         
@@ -29,7 +32,7 @@ export const POST = async(req:NextRequest, {params}:{params:{vendorId: string}})
 
         let vendor= await Vendor.findById(params.vendorId);
         if(!vendor){
-            return new NextResponse("No vendor found", {status:404})
+            return new NextResponse("No vendor found", {status:404});
         }
 
         const {name, email, phone, address} = await req.json();
@@ -43,30 +46,27 @@ export const POST = async(req:NextRequest, {params}:{params:{vendorId: string}})
         return NextResponse.json(vendor, {status:200});
     } catch (error) {
         console.log("VENDOR_ID_POST:",error);
-        return new NextResponse("Internal Server Error", {status:500})
+        return new NextResponse("Internal Server Error", {status:500});
     }
 }
 
-
+// delete vendor by id
 export const DELETE = async(req:NextRequest, {params}:{params:{vendorId: string}})=> {
     try {
         await connectToDB();
         
-        const vendor= await Vendor.findById(params.vendorId)
+        const result= await Vendor.findByIdAndDelete(params.vendorId);
 
-        if(!vendor){
-            return new NextResponse("No vendor found", {status:404})
+        if(!result){
+            return new NextResponse("No vendor found", {status:404});
         }
-
-        await Vendor.findByIdAndDelete(params.vendorId);
-
-        
+        await Product.updateMany({vendor: params.vendorId}, { $pull: { vendor: params.vendorId }});
 
         return new NextResponse("Vendor deleted", {status:200});
 
     } catch (error) {
         console.log("VENDOR_ID_DELETE:",error);
-        return new NextResponse("Internal Server Error", {status:500})
+        return new NextResponse("Internal Server Error", {status:500});
         
     
     }

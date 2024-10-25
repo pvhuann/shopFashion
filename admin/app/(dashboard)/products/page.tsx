@@ -74,7 +74,7 @@ const Products = () => {
             </div>
 
           </div>
-          <Button type='button' onClick={() => router.push('/vendor/add-vendor')} className='bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800'>+Add product</Button>
+          <Button type='button' onClick={() => router.push('/products/add-product')} className='bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800'>+Add product</Button>
         </div>
         {/* <div className='flex'>
                         <Button>All products</Button>

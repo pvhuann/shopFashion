@@ -22,7 +22,7 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
         header: "Image",
         cell: ({ row }) => (
             <Link href={row.original.image}>
-                <Image src={row.original.image} alt={row.original.title} width={100} height={0} className='' />
+                <Image src={row.original.image} alt={row.original.title} width={100} height={100} className='w-[100px] h-[50px]' />
             </Link>
         ),
     },

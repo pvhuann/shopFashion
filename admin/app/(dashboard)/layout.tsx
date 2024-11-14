@@ -6,7 +6,9 @@ import LeftSideBar from "@/components/layout/LeftSideBar";
 import "../globals.css";
 import ToastProvider from "@/lib/ToastProvider";
 import { Input } from "@/components/ui/input";
-import { BellDot } from "lucide-react";
+import { ArrowLeftToLine, BellDot, Link } from "lucide-react";
+import Image from "next/image";
+
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -33,8 +35,10 @@ export default function RootLayout({
             <LeftSideBar />
             {/* <TopSideBar /> */}
             <div className="flex-1">
-              <div className="flex justify-between items-center border-b-[1px] h-[100px] py-2 px-10">
-                <Input className="w-[400px]" />
+              <div className="flex justify-between items-center border-b-[1px] h-[100px] py-2 px-10 ">
+                <div>
+                  <Input className="max-w-[400px]" />
+                </div>
                 <div className="flex gap-4 items-center">
                   <BellDot size={36} className="rounded-full p-2 cursor-pointer hover:bg-blue-50 hover:text-blue-700 " />
                   <UserButton />

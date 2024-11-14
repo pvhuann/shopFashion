@@ -21,10 +21,11 @@ import ImageUpload from "../custom ui/ImageUpload"
 import Delete from "../custom ui/Delete"
 import { Separator } from "../ui/separator"
 import { Button } from "@/components/ui/button"
+import Loader from "../custom ui/Loader"
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
-    description: z.string().trim().min(2).max(600),
+    description: z.string().trim().min(2).max(1000),
     image: z.string().url(),
 })
 
@@ -78,7 +79,7 @@ const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
         }
     }
 
-    return (
+    return loading? <Loader/>: (
         <div className="p-10">
 
             {initialData ? (

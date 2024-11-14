@@ -15,7 +15,7 @@ const LeftSideBar = () => {
     const [hideBar, setHideBar] = useState(false);
     const [showNavChild, setShowNavChild] = useState<number | null>(null);
     return (
-        <div className='max-[1200px]:hidden'>
+        <div className=''>
             <div className={`min-h-svh flex flex-col gap-14 left-0 top-0 pt-8 pl-6 pb-8 border-r-[1px] max-lg:hidden sticky transition-all duration-300 ease-in-out ${hideBar ? 'w-[120px]' : 'w-[260px]'}`}>
                 <ArrowLeftToLine
                     size={40}

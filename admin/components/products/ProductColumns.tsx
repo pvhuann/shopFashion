@@ -4,6 +4,8 @@ import { ColumnDef } from '@tanstack/react-table'
 import Delete from '../custom ui/Delete'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Input } from '../ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 
 
@@ -28,10 +30,25 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         accessorKey: "category",
         header: "Category",
+        // cell: ({ row }) => (
+        //     <Select>
+        //         <SelectTrigger id="framework">
+        //             <SelectValue placeholder="Select" />
+        //         </SelectTrigger>
+        //         <SelectContent position="popper" className="bg-white">
+        //             <SelectItem value="color">Color</SelectItem>
+        //             <SelectItem value="size">Size</SelectItem>
+        //             <SelectItem value="style">Style</SelectItem>
+        //             <SelectItem value="material">Material</SelectItem>
+        //             <SelectItem value="image">Image</SelectItem>
+        //         </SelectContent>
+        //     </Select>
+        // )
     },
     {
         accessorKey: "price",
         header: "Price($)",
+        cell: ({ row }) => <Input value={row.original.price} disabled={true} />
     },
     {
         accessorKey: "expense",
@@ -42,8 +59,8 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         header: "Inventory",
     },
     {
-        header:"Created At",
-        accessorKey:"createAt"
+        header: "Created At",
+        accessorKey: "createAt"
     },
     // {
     //     accessorKey: "media",

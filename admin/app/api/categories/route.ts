@@ -20,18 +20,18 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
     try {
-        const { title, description, image } = await req.json();
+        const { title, description, image , parent} = await req.json();
         if (!title || !description || !image) {
             return new NextResponse("Title, Description and Image are required", { status: 400 })
         }
         await connectToDB();
 
-        const existingCategory = await Category.findOne({ title })
+        const existingCategory = await Category.findOne({ title , parent})
         if (existingCategory) {
             return new NextResponse("Category already exists", { status: 400 })
         }
 
-        const newCategory = await Category.create({ title, description, image })
+        const newCategory = await Category.create({ title, description, image, parent })
         await newCategory.save()
         return new NextResponse(JSON.stringify(newCategory), { status: 200 })
 

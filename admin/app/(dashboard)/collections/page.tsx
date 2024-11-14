@@ -21,10 +21,13 @@ const Collections = () => {
 
             const data = await res.json();
             setCollections(data);
-            setLoading(false);
+            console.log(collections);
+            
         } catch (error) {
             console.log("Collections_GET", error);
-            setLoading(false)
+            
+        }finally{
+            setLoading(false);
         }
     }
 

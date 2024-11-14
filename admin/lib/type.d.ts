@@ -7,21 +7,21 @@ type CollectionType={
     image: string,
     products?: ProductType[],
 }
-type SubCategoryType = {
-    _id: string,
-    title: string,
-    description: string,
-    mainCategory?: CategoryType,
-    products?: ProductType[],
-}
+// type SubCategoryType = {
+//     _id: string,
+//     title: string,
+//     description: string,
+//     mainCategory?: CategoryType,
+//     products?: ProductType[],
+// }
 
 type CategoryType={
     _id: string,
     title: string,
     description: string,
     image: string,
-    // products?: ProductType[],
-    subCategory?: [SubCategoryType],
+    parent?: string |null ,
+    products?: ProductType[],
     createdAt: Date,
     updatedAt: Date,
 }
@@ -33,6 +33,7 @@ type VariantType= {
     material?:string,
     style?:string,
     weight?:number,
+
     price: number|0,
     inventory: number|0,
     // sale: number|0,
@@ -50,20 +51,21 @@ type VendorType= {
 type ProductType= {
     _id: string,
     title: string,
-    description?: string,
-    vendor?:string | null,
-    media?:[string],
+    description: string,
+    vendor:string | null,
+    media:[string],
     category?: [CategoryType],
     collections?:[CollectionType],
     tags?: [string],
+    weight?:number|0,
     // sizes?: [string],
     // colors?: [string],
-    originalPrice?: number|0,
+    expense?: number|0,
     sellingPrice?: number|0,
+    variants:[VariantType],
     inventory?: number|0,
     createAt: Date,
     updateAt : Date,
-    variants:[VariantType],
     // stock: number,
 }
 

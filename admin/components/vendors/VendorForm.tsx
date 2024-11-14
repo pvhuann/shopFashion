@@ -155,7 +155,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                     />
                     <div className="flex gap-10">
                         <Button type="submit" variant={"outline"} className="bg-blue-2">Submit</Button>
-                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.push("/vendors")}>Discard</Button>
+                        <Button type="button" variant={"outline"} className="bg-blue-2" onClick={() => router.back()}>Discard</Button>
                     </div>
 
                 </form>

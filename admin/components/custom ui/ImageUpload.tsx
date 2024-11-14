@@ -48,8 +48,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={handleOnnSuccess}>
                 {({ open }) => {
                     return (
-                        <Button type="button" onClick={() => open()} className="bg-grey-1 text-white relative group w-[200px] h-10 rounded-xl">
-                            <div className='flex items-center absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-110 transition duration-150 group-hover:ease-in-out'>
+                        <Button type="button" onClick={() => open()} className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover: text-white relative group w-[200px] h-10 rounded-xl">
+                            <div className='flex items-center absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
                                 <Plus className="h-4 w-4" />
                                 <p>Upload Image</p>
                             </div>

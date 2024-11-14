@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const  categorySchema= new mongoose.Schema({
+const categorySchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -9,31 +9,37 @@ const  categorySchema= new mongoose.Schema({
 
     description: String,
 
-    image :{
+    image: {
         type: String,
     },
 
-    // products:[
+    parent: { // Reference to the parent category (if any)
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category", // Reference to itself
+        default: null, // Top-level categories have no parent
+    },
+    // subcategories: [ // Array to store direct children categories
     //     {
     //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Product"
-    //     }
+    //         ref: "Category",
+    //     },
     // ],
-    subCategory:[
+    products: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "SubCategory",
+            ref:"Product",
+            default: null, // Top-level products have no parent
         }
     ],
     createdAt: {
-        type:Date,
+        type: Date,
         default: Date.now,
     },
-    updatedAt:{
+    updatedAt: {
         type: Date,
         default: Date.now,
     }
 })
 
-const Category= mongoose.models.Category || mongoose.model("Category", categorySchema);
+const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
 export default Category

@@ -17,10 +17,10 @@ export const ProductInCollectionColumns: ColumnDef<ProductType>[] = [
                 {row.original.title}
             </Link>
     },
-    {
-        accessorKey: "category",
-        header: "Category",
-    },
+    // {
+    //     accessorKey: "category",
+    //     header: "Category",
+    // },
     {
         accessorKey: "price",
         header: "Price($)",
@@ -33,15 +33,15 @@ export const ProductInCollectionColumns: ColumnDef<ProductType>[] = [
         accessorKey: "inventory",
         header: "Inventory",
     },
-    {
-        header: "Delete product",
-        id: "actions",
-        cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='product' />,
-    },
-    {
-        header: "Remove product from collection",
-        id: "actions",
-        cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='product' />,
-    }
+    // {
+    //     header: "Delete product",
+    //     id: "actions",
+    //     cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='product' />,
+    // },
+    // {
+    //     header: "Remove product from collection",
+    //     id: "actions",
+    //     cell: ({ row }) => <Delete id={row.original._id} title={row.original.title} item='product' />,
+    // }
 
 ]

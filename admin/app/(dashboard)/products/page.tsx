@@ -1,9 +1,10 @@
 'use client'
 
 import { DataTable } from "@/components/custom ui/DataTable"
+import Loader from "@/components/custom ui/Loader"
 import { ProductColumns } from "@/components/products/ProductColumns"
 import { Button } from "@/components/ui/button"
-import { FileDown, FileUp, Plus } from "lucide-react"
+import { FileDown, FileUp } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import * as XLSX from 'xlsx';
@@ -11,6 +12,7 @@ import * as XLSX from 'xlsx';
 
 
 const Products = () => {
+  const [loading, setLoading]= useState(true)
   const [products, setProducts] = useState([])
   const router = useRouter()
   const getAllProduct = async () => {
@@ -25,6 +27,8 @@ const Products = () => {
     } catch (error) {
       console.log("products_GET", error);
 
+    }finally{
+      setLoading(false);
     }
   }
 
@@ -43,7 +47,7 @@ const Products = () => {
     await XLSX.writeFile(wb, "products.xlsx");
 
   };
-  return (
+  return loading? <Loader/>: (
     // <div className='p-10'>
     //   <div className='flex justify-between items-center  mb-4'>
     //     <p className='text-heading2-bold'>Products</p>
@@ -76,11 +80,11 @@ const Products = () => {
           </div>
           <Button type='button' onClick={() => router.push('/products/add-product')} className='bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800'>+Add product</Button>
         </div>
-        {/* <div className='flex'>
-                        <Button>All products</Button>
+        <div className='flex'>
+                        <Button className="">All products</Button>
                         <Button>Publish</Button>
-                        <Button>Unpublish</Button>
-                </div> */}
+                        <Button>UnPublish</Button>
+                </div>
         <hr className='my-10' />
         <DataTable columns={ProductColumns} data={products} hiddenSearchInput={false} searchKey='name' />
 

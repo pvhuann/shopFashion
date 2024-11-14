@@ -69,14 +69,14 @@ const formSchema = z.object({
     inventory: z.coerce.number().min(0),
 })
 
-// interface VariantProps{
-//     color: string;
-//     size:string;
-//     image:string;
-//     price:number;
-//     inventory:number;
-//     sale:number;
-// }
+interface VariantProps{
+    color: string;
+    size:string;
+    image:string;
+    price:number;
+    inventory:number;
+    sale:number;
+}
 
 interface ProductProps {
     initialData?: ProductType | null,
@@ -247,7 +247,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <CardTitle>Product information</CardTitle>
                                 </CardHeader>
                                 <hr />
-                                <CardContent className='m-10 p-2 flex flex-col gap-4'>
+                                <CardContent className='mt-4 flex flex-col gap-4'>
                                     {/* product title */}
                                     <FormField
                                         control={form.control}
@@ -324,7 +324,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                             <FormItem>
                                                 <FormLabel>Description</FormLabel>
                                                 <FormControl>
-                                                    <Textarea placeholder="Description" {...field} rows={6} onKeyDown={handleKeyPress} />
+                                                    <Textarea placeholder="Description" {...field} rows={5} onKeyDown={handleKeyPress} />
                                                 </FormControl>
                                                 <FormMessage className="text-red-1" />
                                             </FormItem>
@@ -334,19 +334,19 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                             </Card>
 
                             {/*product media */}
-                            <Card className=''>
+                            <Card >
                                 <CardHeader>
                                     <CardTitle>Product media</CardTitle>
                                 </CardHeader>
                                 <hr />
-                                <CardContent className="bg-gray-100 m-10 p-2 rounded-lg border-dashed border-2 flex flex-col gap-2 items-center " >
+                                <CardContent className="bg-gray-100 m-6 py-10 rounded-lg border-dashed border-2 flex flex-col gap-2 items-center " >
                                     <Image src="/oc-browse.svg" alt="browse" width={100} height={100} className="w-[150px] h-[200px]" />
                                     {/* <p className="text-base-bold text-black">Drag and drop your file here</p>
                             <p>or</p> */}
                                     <CldUploadWidget uploadPreset="kyysqcj8" onSuccess={handleOnnSuccess}>
                                         {({ open }) => {
                                             return (
-                                                <Button onClick={() => open()} type="button" className="p-2 bg-white rounded-lg">Upload file</Button>
+                                                <Button onClick={() => open()} type="button" className="py-2 px-4 bg-white rounded-lg shadow  hover:text-blue-1 hover:shadow-lg">Upload file</Button>
                                             )
                                         }}
                                     </CldUploadWidget>
@@ -356,7 +356,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
-                                                    <div className='flex flex-wrap gap-2'>
+                                                    <div className='flex flex-wrap gap-2 mt-4'>
                                                         {
                                                             field.value.map((url, index) => (
                                                                 <div key={index} className="relative max-w-[200px] max-h-[200px]">
@@ -371,7 +371,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                                     <Image
                                                                         src={url}
                                                                         alt="image"
-                                                                        className="rounded-lg object-cover w-[300px] h-[150px]"
+                                                                        className="rounded-lg object-cover w-[300px] h-[150px] max-md:w-[100px] max-md:h-[50px]"
                                                                         width={200}
                                                                         height={200}
                                                                     />
@@ -398,27 +398,32 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <CardTitle>Product variants</CardTitle>
                                 </CardHeader>
                                 <hr />
-                                <CardContent className="p-2 m-10">
-                                    <div>
-                                        <p>OPTION</p>
-                                        <div className="flex flex-col space-y-1.5">
-                                            <Label htmlFor="framework">Framework</Label>
-                                            <Select>
-                                                <SelectTrigger id="framework">
-                                                    <SelectValue placeholder="Select" />
-                                                </SelectTrigger>
-                                                <SelectContent position="popper" className="bg-white">
-                                                    <SelectItem value="next">Next.js</SelectItem>
-                                                    <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                                                    <SelectItem value="astro">Astro</SelectItem>
-                                                    <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                                                </SelectContent>
-                                            </Select>
+                                <CardContent className="mt-4 flex flex-col items-start gap-4">
+                                    <div className="w-full">
+                                        <div className="flex gap-4">
+                                            {/* <Label htmlFor="option" className="text-black">OPTIONS</Label> */}
+                                            <div className="w-1/3">
+                                                <Select>
+                                                    <SelectTrigger id="framework">
+                                                        <SelectValue placeholder="Select" />
+                                                    </SelectTrigger>
+                                                    <SelectContent position="popper" className="bg-white">
+                                                        <SelectItem value="color">Color</SelectItem>
+                                                        <SelectItem value="size">Size</SelectItem>
+                                                        <SelectItem value="style">Style</SelectItem>
+                                                        <SelectItem value="material">Material</SelectItem>
+                                                        <SelectItem value="image">Image</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <Input placeholder="Enter values" className="" />
                                         </div>
                                     </div>
                                     {/* <DataTable columns={VariantColumns} data={variantSchema} /> */}
                                     {/* <VariantColumns/> */}
 
+                                    <Button className="text-blue-1 p-0">+Add another option</Button>
+                                    <Button className="text-blue-1 p-0">Generate variants table</Button>
                                 </CardContent>
                             </Card>
 
@@ -432,7 +437,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <CardTitle>Pricing</CardTitle>
                                 </CardHeader>
                                 <hr />
-                                <CardContent className="m-10 p-2 flex flex-col gap-6">
+                                <CardContent className="mt-4 flex flex-col gap-6">
                                     <FormField
                                         control={form.control}
                                         name="price"
@@ -481,7 +486,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     <CardTitle>Organization</CardTitle>
                                 </CardHeader>
                                 <hr />
-                                <CardContent className="m-10 p-2 flex flex-col gap-6">
+                                <CardContent className=" flex flex-col gap-6">
 
                                     {/* product vendor */}
                                     <FormField
@@ -489,7 +494,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         name="vendor"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="flex justify-between">
+                                                <FormLabel className="flex justify-between items-center">
                                                     <p>Vendor</p>
                                                     <Button type="button" className="text-blue-1" onClick={() => router.push('/vendors/add-vendor')}>+Add vendor</Button>
                                                 </FormLabel>
@@ -519,7 +524,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         name="category"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="flex justify-between">
+                                                <FormLabel className="flex justify-between items-center">
                                                     <p>Category</p>
                                                     <Button type="button" className="text-blue-1" onClick={() => router.push('/categories/add-category')}>+Add category</Button>
                                                 </FormLabel>
@@ -548,7 +553,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         name="collections"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="flex justify-between">
+                                                <FormLabel className="flex justify-between items-center">
                                                     <p>Collections</p>
                                                     <Button type="button" className="text-blue-1" onClick={() => router.push('/collections/add-collection')}>+Add collection</Button>
                                                 </FormLabel>
@@ -599,8 +604,8 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                     </div>
 
                     <div className="flex gap-10 mt-10">
-                        <Button type="submit"  className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800">Submit</Button>
-                        <Button type="button" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800" onClick={() => router.push("/products")}>Discard</Button>
+                        <Button type="submit" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-md ">Submit</Button>
+                        <Button type="button" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-md " onClick={() => router.push("/products")}>Discard</Button>
                     </div>
                 </form>
             </Form>

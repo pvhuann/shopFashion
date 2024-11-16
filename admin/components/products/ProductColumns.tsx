@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 export const ProductColumns: ColumnDef<ProductType>[] = [
     {
-        accessorKey: "title",
         header: "Title",
+        accessorKey: "title",
         cell: ({ row }) => (
             <div className='flex items-center gap-2'>
 
@@ -23,13 +23,13 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
 
     },
     {
-        accessorKey: "collections",
         header: "Collections",
+        accessorKey: "collections",
         cell: ({ row }) => row.original.collections?.map((collection) => collection.title).join(", "),
     },
     {
-        accessorKey: "category",
         header: "Category",
+        accessorKey: "category",
         // cell: ({ row }) => (
         //     <Select>
         //         <SelectTrigger id="framework">
@@ -46,21 +46,34 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         // )
     },
     {
-        accessorKey: "price",
+        header: "Vendor",
+        accessorKey: "vendor",
+    },
+    {
         header: "Price($)",
+        accessorKey: "price",
         cell: ({ row }) => <Input value={row.original.price} disabled={true} />
     },
     {
-        accessorKey: "expense",
         header: "Expense($)",
+        accessorKey: "expense",
     },
     {
-        accessorKey: "inventory",
+        header: "Variants",
+        accessorKey: "variants",
+        cell: ({ row }) =>  {row.original.variants.length}
+    },
+    {
         header: "Inventory",
+        accessorKey: "inventory",
     },
     {
         header: "Created At",
-        accessorKey: "createAt"
+        accessorKey: "createdAt"
+    },
+    {
+        header: "Updated At",
+        accessorKey: "updatedAt"
     },
     // {
     //     accessorKey: "media",

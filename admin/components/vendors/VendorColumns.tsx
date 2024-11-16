@@ -11,6 +11,7 @@ export const VendorColumns: ColumnDef<VendorType>[] = [
     {
         accessorKey: "email",
         header: "Email",
+        cell: ({row})=> <Link href={`mailto:${row.original.email}`} className='hover:text-red-1'> {row.original.email}</Link>
     },
     {
         accessorKey: "phone",

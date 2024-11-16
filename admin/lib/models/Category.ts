@@ -7,10 +7,14 @@ const categorySchema = new mongoose.Schema({
         unique: true
     },
 
-    description: String,
+    description: {
+        type: String,
+        default: null
+    },
 
     image: {
         type: String,
+        default: null,
     },
 
     parent: { // Reference to the parent category (if any)

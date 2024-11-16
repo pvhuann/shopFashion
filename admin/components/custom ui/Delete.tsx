@@ -18,14 +18,22 @@ import toast from 'react-hot-toast'
 interface DeleteProps {
     id: string,
     title: string,
-    item:string
+    item: string
 }
 
 const Delete: React.FC<DeleteProps> = ({ id, title, item }) => {
 
     const onDelete = async () => {
         try {
-            const itemType= item==="collection"? "collections" : "products"
+            // const itemType= item==="collection"? "collections" : ("product" ? "products": "categories")
+            let itemType;
+            if (item == "collection") {
+                itemType = "collections";
+            } else if (item == "products") {
+                itemType = "products";
+            } else {
+                itemType = "categories";
+            }
             const res = await fetch(`/api/${itemType}/${id}`, {
                 method: "DELETE",
             })
@@ -44,7 +52,7 @@ const Delete: React.FC<DeleteProps> = ({ id, title, item }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger className='bg-red-1 text-white relative group w-10 h-10 rounded-xl'>
-                <Trash size={16} className='absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out'/>
+                <Trash size={16} className='absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out' />
             </AlertDialogTrigger>
             <AlertDialogContent className='bg-white text-grey-1'>
                 <AlertDialogHeader>

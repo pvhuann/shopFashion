@@ -6,6 +6,8 @@ type CollectionType={
     description: string,
     image: string,
     products?: ProductType[],
+    createdAt: Date,
+    updatedAt: Date,
 }
 // type SubCategoryType = {
 //     _id: string,
@@ -18,8 +20,8 @@ type CollectionType={
 type CategoryType={
     _id: string,
     title: string,
-    description: string,
-    image: string,
+    description?: string| null,
+    image?: string| null,
     parent?: string |null ,
     products?: ProductType[],
     createdAt: Date,
@@ -32,9 +34,8 @@ type VariantType= {
     size?: string,
     material?:string,
     style?:string,
-    weight?:number,
-
     price: number|0,
+    expense: number|0,
     inventory: number|0,
     // sale: number|0,
 }
@@ -45,8 +46,8 @@ type VendorType= {
     phone: string,
     address: string,
     products?: ProductType[],
-    createAt: Date,
-    updateAt: Date,
+    createdAt: Date,
+    updatedAt: Date,
 }
 type ProductType= {
     _id: string,
@@ -54,18 +55,18 @@ type ProductType= {
     description: string,
     vendor:string | null,
     media:[string],
-    category?: [CategoryType],
-    collections?:[CollectionType],
-    tags?: [string],
+    category?:CartItemType | null,
+    collections?:[CollectionType]| [],
+    tags?: [string]| [],
     weight?:number|0,
     // sizes?: [string],
     // colors?: [string],
     expense?: number|0,
-    sellingPrice?: number|0,
+    price?: number|0,
     variants:[VariantType],
     inventory?: number|0,
-    createAt: Date,
-    updateAt : Date,
+    createdAt: Date,
+    updatedAt : Date,
     // stock: number,
 }
 
@@ -90,6 +91,7 @@ type CustomerType={
     name: string,
     email: string,
     createdAt: Date,
+    updatedAt: Date,
 }
 
 type CartItemType={

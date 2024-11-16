@@ -10,7 +10,7 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }) => <Link href={`/category/category-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
+        cell: ({ row }) => <Link href={`/categories/category-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
     },
     {
         accessorKey: "products",

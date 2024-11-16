@@ -13,18 +13,23 @@ const ProductSchema = new mongoose.Schema({
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
+        default: null,
     },
     media: {
         type: [String],
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category"
+        ref: "Category",
+        default: null,
+
     },
     collections: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Collection"
+            ref: "Collection",
+            default: null,
+
         }
     ],
     tags: {
@@ -38,12 +43,22 @@ const ProductSchema = new mongoose.Schema({
     },
     variants: [
         {
-            color: { type: String, },
-            image: { type: String, },
-            size: { type: String, },
+            color: { type: String, default: null },
+            image: { type: String, default: null },
+            material: { type: String,  default: null},
+            style: { type: String,  default: null},
+            size: { type: String,  default: null},
             price: {
                 type: mongoose.Schema.Types.Decimal128,
-                get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+                get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+                min: 0,
+                default: 0,
+            },
+            expense: {
+                type: mongoose.Schema.Types.Decimal128,
+                get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+                min: 0,
+                default: 0,
             },
             inventory: {
                 type: Number,

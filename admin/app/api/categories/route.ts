@@ -21,8 +21,8 @@ export const GET = async (req: NextRequest) => {
 export const POST = async (req: NextRequest) => {
     try {
         const { title, description, image , parent} = await req.json();
-        if (!title || !description || !image) {
-            return new NextResponse("Title, Description and Image are required", { status: 400 })
+        if (!title) {
+            return new NextResponse("Title is required", { status: 400 })
         }
         await connectToDB();
 

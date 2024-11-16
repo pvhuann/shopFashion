@@ -30,7 +30,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 {value.map((url,index) => (
                     <div key={index} className="relative max-w-[200px] max-h-[200px]">
                         <div className="absolute top-0 right-0 z-10">
-                            <Button type="button" onClick={() => onRemove(url)} size="sm" className="bg-red-1 text-white relative group w-10 h-10 rounded-lg">
+                            <Button type="button" onClick={() => onRemove(url)}  className="bg-red-1 text-white relative group w-8 h-8 rounded-none rounded-tr-lg rounded-bl-lg">
                                 <X className="h-4 w-4 absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out" />
                             </Button>
                         </div>

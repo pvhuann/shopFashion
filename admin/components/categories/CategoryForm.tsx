@@ -184,8 +184,8 @@ import toast from "react-hot-toast";
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
-    description: z.string().trim().min(2).max(600),
-    image: z.string().url(),
+    description: z.string().trim().max(600).default(""),
+    image: z.string().nullable().optional(),
     parent: z.string().trim().nullable().optional(),
 })
 
@@ -302,7 +302,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                             </FormItem>
                         )}
                     />
-                    <div className="grid grid-cols-3 gap-8">
+                    
                         <FormField
                             control={form.control}
                             name="title"
@@ -320,8 +320,8 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                             control={form.control}
                             name="parent"
                             render={({ field }) => (
-                                <FormItem>
-                                    {/* <FormLabel>Parent Category</FormLabel> */}
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Parent Category</FormLabel>
                                     <FormControl>
                                         <select
                                             {...field}
@@ -345,7 +345,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                                 </FormItem>
                             )}
                         />
-                    </div>
+                    
                     <FormField
                         control={form.control}
                         name="description"

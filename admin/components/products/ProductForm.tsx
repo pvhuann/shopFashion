@@ -35,9 +35,11 @@ import { X } from "lucide-react"
 // import { VariantColumns } from "../variants/VariantColumns"
 
 const variantSchema = z.object({
-    color: z.string().min(1, "Color is required"),
+    color: z.string().nullable().optional(),
+    material: z.string().nullable().optional(),
+    size: z.string().nullable().optional(),
+    style: z.string().nullable().optional(),
     image: z.string().url("Invalid URL"),
-    size: z.string().min(1, "Size is required"),
     price: z.number().min(0, "Price must be at least 0"),
     inventory: z.number().min(0, "Inventory must be at least 0"),
     // sale: z.number().min(0).max(100, "Sale must be between 0 and 100"),
@@ -59,8 +61,9 @@ const formSchema = z.object({
     description: z.string().trim().min(2).max(600),
     media: z.array(z.string().url()),
     vendor: z.string(),
-    category: z.string(),
+    category: z.string().nullable(),
     collections: z.array(z.string()),
+    variants: z.array(variantSchema),
     tags: z.array(z.string()),
     sizes: z.array(z.string()),
     colors: z.array(z.string()),
@@ -69,13 +72,8 @@ const formSchema = z.object({
     inventory: z.coerce.number().min(0),
 })
 
-interface VariantProps{
-    color: string;
-    size:string;
-    image:string;
-    price:number;
-    inventory:number;
-    sale:number;
+interface VariantProps {
+    initialData?: VariantType | null,
 }
 
 interface ProductProps {
@@ -87,9 +85,32 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [collections, setCollections] = useState<CollectionType[]>([]);
     const [vendors, setVendors] = useState<VendorType[]>([]);
     const [categories, setCategories] = useState<CategoryType[]>([]);
+    const [selectedParentCategory, setSelectedParentCategory] = useState<string | null>(null);
     // const [variantSchema, setVariantSchema] = useState < VariantType>[]
     const router = useRouter();
 
+    const [colors, setColors] = useState<string[]>([]);
+    const [sizes, setSizes] = useState<string[]>([]);
+    const [styles, setStyles] = useState<string[]>([]);
+    const [materials, setMaterials] = useState<string[]>([]);
+    // const [sizes, setSizes] = useState<string[]>([]);
+    // const [sizes, setSizes] = useState<string[]>([]);
+
+
+
+    const formVariant = useForm<z.infer<typeof variantSchema>>({
+        resolver: zodResolver(variantSchema),
+        defaultValues: {
+            color: "",
+            material: "",
+            size: "",
+            style: "",
+            image: "",
+            price: 0,
+            inventory: 0,
+            // sale: 0,
+        }
+    });
 
     // create form
     const form = useForm<z.infer<typeof formSchema>>({
@@ -115,6 +136,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 inventory: 0,
             },
     })
+
 
 
     //get all collections
@@ -219,6 +241,24 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         form.setValue("media", [...form.getValues("media"), result.info.secure_url])
         console.log('Upload finished:', result.info.secure_url);
     };
+
+    const filteredCategories = categories.filter((category) => {
+        if (selectedParentCategory === null) {
+            return category.parent === null;
+        } else {
+            return category.parent === selectedParentCategory
+        }
+    });
+
+    const handleCategoryChange = (categoryId: string | null) => {
+        form.setValue("category", categoryId);
+    }
+
+    const handleParentCategoryChange = (parentId: string | null) => {
+        setSelectedParentCategory(parentId);
+        form.setValue("category", null);
+    }
+
 
 
 
@@ -400,12 +440,12 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 <hr />
                                 <CardContent className="mt-4 flex flex-col items-start gap-4">
                                     <div className="w-full">
+                                        <Label htmlFor="option" className="text-black ">OPTIONS</Label>
                                         <div className="flex gap-4">
-                                            {/* <Label htmlFor="option" className="text-black">OPTIONS</Label> */}
                                             <div className="w-1/3">
                                                 <Select>
-                                                    <SelectTrigger id="framework">
-                                                        <SelectValue placeholder="Select" />
+                                                    <SelectTrigger id="">
+                                                        <SelectValue placeholder="Select an option" />
                                                     </SelectTrigger>
                                                     <SelectContent position="popper" className="bg-white">
                                                         <SelectItem value="color">Color</SelectItem>
@@ -416,7 +456,35 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            <Input placeholder="Enter values" className="" />
+                                            {/* <Input placeholder="Enter values" className="" onKeyDown={handleKeyPress} /> */}
+                                            {/* <MultiTag
+                                                placeholder="Create tags"
+                                                value={field.value}
+                                                onChange={(tag) => field.onChange([...field.value, tag])}
+                                                onRemove={(tagRemove) => {
+                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                }}
+                                            /> */}
+                                            <FormField
+                                                control={form.control}
+                                                name="tags"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        {/* <FormLabel>Tags</FormLabel> */}
+                                                        <FormControl>
+                                                            <MultiTag
+                                                                placeholder="Enter tags"
+                                                                value={field.value}
+                                                                onChange={(tag) => field.onChange([...field.value, tag])}
+                                                                onRemove={(tagRemove) => {
+                                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage className="text-red-1" />
+                                                    </FormItem>
+                                                )}
+                                            />
                                         </div>
                                     </div>
                                     {/* <DataTable columns={VariantColumns} data={variantSchema} /> */}
@@ -519,6 +587,8 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                     />
 
                                     {/* product category */}
+
+                                    {/* parent category */}
                                     <FormField
                                         control={form.control}
                                         name="category"
@@ -530,13 +600,44 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                 </FormLabel>
                                                 <FormControl>
                                                     {/* <Input type="text" placeholder="price" {...field} onKeyDown={handleKeyPress} /> */}
-                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                    <Select
+                                                        onValueChange={(value) => handleParentCategoryChange(value)}
+                                                        value={selectedParentCategory || ""}>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select a parent category" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-white">
+                                                            {categories.filter(cat => cat.parent === null).map((category, index) => (
+                                                                <SelectItem key={index} value={category._id}>
+                                                                    {category.title}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* subcategory */}
+                                    <FormField
+                                        control={form.control}
+                                        name="category"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                {/* ... FormLabel and Button */}
+                                                <FormControl>
+                                                    <Select
+                                                        onValueChange={(value) => handleCategoryChange(value)} // Correct usage of onValueChange
+                                                        value={field.value || ""}
+                                                    >
                                                         <SelectTrigger>
                                                             <SelectValue placeholder="Select a category" />
                                                         </SelectTrigger>
                                                         <SelectContent className="bg-white">
-                                                            {categories.map((category, index) => (
-                                                                <SelectItem key={index} value={category._id}>
+                                                            {filteredCategories.map((category) => (
+                                                                <SelectItem key={category._id} value={category._id}>
                                                                     {category.title}
                                                                 </SelectItem>
                                                             ))}
@@ -604,7 +705,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                     </div>
 
                     <div className="flex gap-10 mt-10">
-                        <Button type="submit" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-md ">Submit</Button>
+                        <Button type="submit" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-md ">
+                            {initialData?._id ? "Update" : "Create"}
+                        </Button>
                         <Button type="button" className="bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-md " onClick={() => router.push("/products")}>Discard</Button>
                     </div>
                 </form>

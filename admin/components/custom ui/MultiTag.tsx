@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Input } from '../ui/input'
-import { Badge } from '../ui/badge';
 import { X } from 'lucide-react';
 
 
@@ -36,13 +35,13 @@ const MultiTag: React.FC<MultiTagProps> = ({ value, onChange, onRemove,placehold
                     }
                 }}
             />
-            <div className='flex'>
+            <div className={`${value.length === 0 ? 'hidden' : 'flex p-2 rounded-lg border gap-1 overflow-x-auto'}`}>
                 {
                     value.map((item, index) => (
-                        <Badge key={index} className='flex items-center gap-1 h-6 bg-grey-1 text-white'>
+                        <div key={index} className='flex items-center gap-1 h-6 bg-gray-200 text-black rounded-full p-2'>
                             <p>{item}</p>
-                            <X className='h-4 w-4 rounded-full md:hover:bg-red-1' onClick={() => onRemove(item)} />
-                        </Badge>
+                            <X className='h-3 w-3 rounded-full md:hover:bg-red-1' onClick={() => onRemove(item)} />
+                        </div>
                     ))
                 }
             </div>

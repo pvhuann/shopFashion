@@ -184,7 +184,7 @@ import toast from "react-hot-toast";
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
-    description: z.string().trim().max(600).default(""),
+    description: z.string().trim().max(600).optional(),
     image: z.string().nullable().optional(),
     parent: z.string().trim().nullable().optional(),
 })
@@ -213,7 +213,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? initialData :  {
             title: "",
-            description: "",
+            description: undefined,
             image: "",
             parent: null, // Default to top-level category
         },
@@ -236,7 +236,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
     }, []);
 
     // Handle form submission
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // Determine the request method (POST for create, PUT for update)
             const method = initialData?._id ? "PUT" : "POST";
@@ -249,7 +249,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(values),
             });
 
             if (res.ok) {
@@ -354,6 +354,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
                                     <Textarea
+                                        rows={6}
                                         placeholder="Category description"
                                         {...field}
                                     />

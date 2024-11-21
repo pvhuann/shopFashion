@@ -32,6 +32,7 @@ import { VariantColumns } from "../variants/VariantColumns"
 import { CldUploadWidget } from "next-cloudinary"
 import Image from "next/image"
 import { X } from "lucide-react"
+import VariantForm from "../variants/VariantForm"
 // import { VariantColumns } from "../variants/VariantColumns"
 
 const variantSchema = z.object({
@@ -96,6 +97,21 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     // const [sizes, setSizes] = useState<string[]>([]);
     // const [sizes, setSizes] = useState<string[]>([]);
 
+    const [options, setOptions] = useState<string[]>([]);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+    const handleAddOption = () => {
+        if (selectedOption) {
+            setOptions([...options, selectedOption]);
+            setSelectedOption(null);
+        }
+    }
+
+    const handleOptionChange = (option: string | null) => {
+        setSelectedOption(option);
+    }
+
+    const isOptionDisable = (option: string) => options.includes(option);
 
 
     const formVariant = useForm<z.infer<typeof variantSchema>>({
@@ -439,58 +455,88 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 </CardHeader>
                                 <hr />
                                 <CardContent className="mt-4 flex flex-col items-start gap-4">
+                                    {/* <VariantForm/>   */}
                                     <div className="w-full">
                                         <Label htmlFor="option" className="text-black ">OPTIONS</Label>
-                                        <div className="flex gap-4">
-                                            <div className="w-1/3">
-                                                <Select>
+                                        <div className="flex gap-4 w-full">
+                                            <div className="w-1/5">
+                                                <Select value={selectedOption || ""} onValueChange={handleOptionChange} >
                                                     <SelectTrigger id="">
                                                         <SelectValue placeholder="Select an option" />
                                                     </SelectTrigger>
                                                     <SelectContent position="popper" className="bg-white">
-                                                        <SelectItem value="color">Color</SelectItem>
-                                                        <SelectItem value="size">Size</SelectItem>
-                                                        <SelectItem value="style">Style</SelectItem>
-                                                        <SelectItem value="material">Material</SelectItem>
-                                                        <SelectItem value="image">Image</SelectItem>
+                                                        <SelectItem value="color" disabled={isOptionDisable("color")}>Color</SelectItem>
+                                                        <SelectItem value="size" disabled={isOptionDisable("size")}>Size</SelectItem>
+                                                        <SelectItem value="style" disabled={isOptionDisable("style")}>Style</SelectItem>
+                                                        <SelectItem value="material" disabled={isOptionDisable("material")}>Material</SelectItem>
+                                                        <SelectItem value="image" disabled={isOptionDisable("image")}>Image</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            {/* <Input placeholder="Enter values" className="" onKeyDown={handleKeyPress} /> */}
-                                            {/* <MultiTag
-                                                placeholder="Create tags"
-                                                value={field.value}
-                                                onChange={(tag) => field.onChange([...field.value, tag])}
-                                                onRemove={(tagRemove) => {
-                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                                }}
-                                            /> */}
-                                            <FormField
-                                                control={form.control}
-                                                name="tags"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        {/* <FormLabel>Tags</FormLabel> */}
-                                                        <FormControl>
-                                                            <MultiTag
-                                                                placeholder="Enter tags"
-                                                                value={field.value}
-                                                                onChange={(tag) => field.onChange([...field.value, tag])}
-                                                                onRemove={(tagRemove) => {
-                                                                    field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                                                                }}
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage className="text-red-1" />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                            <div className="flex-1">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="tags"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            {/* <FormLabel>Tags</FormLabel> */}
+                                                            <FormControl>
+                                                                <MultiTag
+                                                                    placeholder="Enter tags"
+                                                                    value={field.value}
+                                                                    onChange={(tag) => field.onChange([...field.value, tag])}
+                                                                    onRemove={(tagRemove) => {
+                                                                        field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage className="text-red-1" />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                     {/* <DataTable columns={VariantColumns} data={variantSchema} /> */}
                                     {/* <VariantColumns/> */}
 
-                                    <Button className="text-blue-1 p-0">+Add another option</Button>
+                                    {options.map((option, index) => (
+                                        <div key={index} className="w-full">
+                                            <div className="flex gap-4">
+                                                <div className="w-1/3">
+                                                    <Select disabled value={option}> {/* Display selected option */}
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder={option} />
+                                                        </SelectTrigger>
+                                                        {/*No need for SelectContent as it's disabled */}
+                                                    </Select>
+                                                </div>
+                                                {/* <FormField //FormField  for MultiTag
+                                                    control={form.control}
+                                                    name={`${option}s` as const} // Dynamic name
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormControl>
+                                                                <MultiTag
+                                                                    placeholder={`Enter ${option}s`}
+                                                                    value={field.value}
+                                                                    onChange={(tag) => field.onChange([...field.value, tag])}
+                                                                    onRemove={(tagRemove) => {
+                                                                        field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage className="text-red-1" />
+                                                        </FormItem>
+                                                    )}
+                                                /> */}
+
+                                            </div>
+
+                                        </div>
+                                    ))}
+
+                                    <Button type="button" className="text-blue-1 p-0" onClick={handleAddOption}>+Add another option</Button>
                                     <Button className="text-blue-1 p-0">Generate variants table</Button>
                                 </CardContent>
                             </Card>

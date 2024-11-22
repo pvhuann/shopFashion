@@ -13,7 +13,6 @@ const ProductSchema = new mongoose.Schema({
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        default: null,
     },
     media: {
         type: [String],

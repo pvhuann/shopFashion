@@ -62,7 +62,7 @@ const formSchema = z.object({
     description: z.string().trim().min(2).max(600),
     media: z.array(z.string().url()),
     vendor: z.string(),
-    category: z.string().nullable(),
+    category: z.string(),
     collections: z.array(z.string()),
     variants: z.array(variantSchema),
     tags: z.array(z.string()),

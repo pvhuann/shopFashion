@@ -62,7 +62,7 @@ const formSchema = z.object({
     description: z.string().trim().min(2).max(600),
     media: z.array(z.string().url()),
     vendor: z.string(),
-    category: z.string(),
+    category: z.string().nullable(),
     collections: z.array(z.string()),
     variants: z.array(variantSchema),
     tags: z.array(z.string()),
@@ -141,7 +141,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 description: "",
                 vendor: "",
                 media: [],
-                category: "",
+                category: null,
                 collections: [],
                 tags: [],
                 // variants: [],
@@ -258,13 +258,13 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         console.log('Upload finished:', result.info.secure_url);
     };
 
-    const filteredCategories = categories.filter((category) => {
-        if (selectedParentCategory === null) {
-            return category.parent === null;
-        } else {
-            return category.parent === selectedParentCategory
-        }
-    });
+    // const filteredCategories = categories.filter((category) => {
+    //     if (selectedParentCategory === null) {
+    //         return category.parent === null;
+    //     } else {
+    //         return category.parent === selectedParentCategory
+    //     }
+    // });
 
     const handleCategoryChange = (categoryId: string | null) => {
         form.setValue("category", categoryId);
@@ -274,6 +274,14 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         setSelectedParentCategory(parentId);
         form.setValue("category", null);
     }
+
+    const filteredCategories = categories.filter ((category)=> {
+        if(selectedParentCategory === null) {
+            return []
+        }else{
+            return category.parent === selectedParentCategory;
+        }
+    })
 
 
 
@@ -675,11 +683,12 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                 {/* ... FormLabel and Button */}
                                                 <FormControl>
                                                     <Select
+                                                        disabled= {selectedParentCategory === null}
                                                         onValueChange={(value) => handleCategoryChange(value)} // Correct usage of onValueChange
                                                         value={field.value || ""}
                                                     >
                                                         <SelectTrigger>
-                                                            <SelectValue placeholder="Select a category" />
+                                                            <SelectValue placeholder="Select a sub category" />
                                                         </SelectTrigger>
                                                         <SelectContent className="bg-white">
                                                             {filteredCategories.map((category) => (

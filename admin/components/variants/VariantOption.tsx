@@ -5,7 +5,7 @@ import MultiTag from '../custom ui/MultiTag'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form } from '../ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 
 
 const formOptionSchema = z.object({
@@ -20,7 +20,7 @@ const listOptions = Object.keys(formOptionSchema.shape);
 
 
 
-const VariantOption = ({params}: {params: {option: string, array: string[]}}) => {
+const VariantOption = ({ params }: { params: { option: string, array: string[] } }) => {
 
     const form = useForm<z.infer<typeof formOptionSchema>>({
         resolver: zodResolver(formOptionSchema),
@@ -29,10 +29,10 @@ const VariantOption = ({params}: {params: {option: string, array: string[]}}) =>
             material: [],
             size: [],
             style: [],
-            image: "",
+            image: '',
         }
     })
-    const ot =[]
+    const ot = []
 
     const [options, setOptions] = useState<string[]>([])
 
@@ -50,31 +50,50 @@ const VariantOption = ({params}: {params: {option: string, array: string[]}}) =>
 
 
     return (
-        <div className="w-full">
-                <Label htmlFor="option" className="text-black ">OPTIONS</Label>
-                <div className="flex gap-4 w-full">
-                    <div className="w-1/5">
-                        <Select value={selectedOption || ""} onValueChange={handleOptionChange} >
-                            <SelectTrigger id="">
-                                <SelectValue placeholder="Select an option" />
-                            </SelectTrigger>
-                            <SelectContent position="popper" className="bg-white">
-                                <SelectItem value={params.option} disabled={isOptionDisable(params.option)}>{params.option}</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="flex-1">
-                        <MultiTag
-                            placeholder={`Enter ${params.option}s`}
-                            value={params.array}
-                            onChange={(tag) => onChange([...params.array, tag])}
-                            onRemove={(tagRemove) => {
-                                field.onChange([...field.value.filter((item) => item !== tagRemove)])
-                            }}
-                        />
-                    </div>
-                </div>
+
+        <div className="flex gap-4 w-full">
+            <div className="w-1/5">
+                <Select value={selectedOption || ""} onValueChange={handleOptionChange} >
+                    <SelectTrigger id="">
+                        <SelectValue placeholder="Select an option" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" className="bg-white">
+                        <SelectItem value={params.option} disabled={isOptionDisable(params.option)}>{params.option}</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
+            <div className="flex-1">
+                {/* <MultiTag
+                    placeholder={`Enter ${params.option}s`}
+                    value={params.array}
+                    onChange={(tag) => field.onChange([...params.array, tag])}
+                    onRemove={(tagRemove) => {
+                        field.onChange([...field.value.filter((item) => item !== tagRemove)])
+                    }}
+                /> */}
+                <FormField
+                    control={form.control}
+                    name={params.option}
+                    render={({ field }) => (
+                        <FormItem>
+                            {/* <FormLabel>Tags</FormLabel> */}
+                            <FormControl>
+                                <MultiTag
+                                    placeholder={`Enter ${params.option}s`}
+                                    value={params.array}
+                                    onChange={(tag) => field.onChange([...params.array, tag])}
+                                    onRemove={(tagRemove) => {
+                                        field.onChange([...field.value.filter((item: string) => item !== tagRemove)])
+                                    }}
+                                />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                        </FormItem>
+                    )}
+                />
+            </div>
+        </div>
+
     )
 }
 

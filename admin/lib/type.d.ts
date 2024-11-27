@@ -30,7 +30,7 @@ type CategoryType={
 
 type VariantType= {
     color?: string,
-    image?: string,
+    image?: number,
     size?: string,
     material?:string,
     style?:string,

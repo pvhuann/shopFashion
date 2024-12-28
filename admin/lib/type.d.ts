@@ -1,5 +1,3 @@
-
-
 type CollectionType={
     _id: string,
     title: string,
@@ -9,13 +7,13 @@ type CollectionType={
     createdAt: Date,
     updatedAt: Date,
 }
-// type SubCategoryType = {
-//     _id: string,
-//     title: string,
-//     description: string,
-//     mainCategory?: CategoryType,
-//     products?: ProductType[],
-// }
+type SubCategoryType = {
+    _id: string,
+    title: string,
+    description: string,
+    mainCategory?: CategoryType,
+    products?: ProductType[],
+}
 
 type CategoryType={
     _id: string,
@@ -23,6 +21,7 @@ type CategoryType={
     description?: string,
     image?: string,
     parent?: string | null,
+    parentTitle?: string | null, // Add this line
     products?: ProductType[]| [],
     createdAt: Date,
     updatedAt: Date,

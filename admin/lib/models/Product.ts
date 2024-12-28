@@ -68,11 +68,15 @@ const ProductSchema = new mongoose.Schema({
     ],
     price: {
         type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+        min: 0,
+        default: 0,
     },
     expense: {
         type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) }
+        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+        min: 0,
+        default: 0,
     },
     inventory: {
         type: Number,

@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 
 
 interface MultiTagProps {
-    placeholder: string;
+    placeholder?: string;
     value: string[];
     onChange: (value: string) => void;
     onRemove: (value: string) => void;

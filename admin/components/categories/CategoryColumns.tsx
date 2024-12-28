@@ -20,15 +20,20 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {
         accessorKey: "parent",
         header: "Parent",
-        cell: async ({ row }) => (<p>{row.original?.parent !=null ? await getTitleCategory(row.original.parent) : "Top-level"}</p>),
-
+        // cell: async ({ row }) => {
+        //     const parentTitle = row.original.parent ? await getTitleCategory(row.original.parent) : "null";
+        //     return <p>{parentTitle}</p>;
+        // },
+        cell:({row})=> (<p>{row.original.parentTitle?? "null"}</p>),
     },
     {
         accessorKey: "image",
         header: "Image",
         cell: ({ row }) => (
             <Link href={row.original.image ?? ""}>
-                <Image src={row.original.image ?? ""} alt={row.original.title} width={100} height={100} className='w-[100px] h-[50px]' />
+                <Image src={row.original.image ?? ""} 
+                alt={row.original.title} 
+                width={100} height={100} className='w-[100px] h-[50px]' />
             </Link>
         ),
     },

@@ -8,23 +8,39 @@ import React, { useEffect, useState } from 'react'
 
 const Categories = () => {
 
-    const [loading, setLoading] = useState(true)
-    const [categories, setCategories] = useState([])
+    const [loading, setLoading] = useState(true);
+    const [categories, setCategories] = useState<CategoryType[]>([]);
+    const getTitleCategory = async (parentId:any) => {
+        try {
+            const res = await fetch(`api/categories/${parentId}`, {
+                method: "GET",
+            })
+            const data = await res.json();
+            return data.title;
+        } catch (error) {
+            console.log("Error loading parent category title", error);
+            return null;
+        }
+    }
 
     const getCategories = async () => {
         try {
             const res = await fetch("api/categories", {
                 method: "GET",
-                // headers: {
-                //     "Content-Type": "application/json",
-                // },
-                // credentials: "include",
-                // cache: "no-store",
             })
 
             const data = await res.json();
-            setCategories(data);
-            console.log(data);
+
+            // Fetch parent titles
+            const updatedData = await Promise.all(data.map(async (category:CategoryType) => {
+                if (category.parent) {
+                    category.parentTitle = await getTitleCategory(category.parent);
+                }
+                return category;
+            }));
+
+            setCategories(updatedData);
+            console.log(updatedData);
         } catch (error) {
             console.log("Error loading categories", error);
 

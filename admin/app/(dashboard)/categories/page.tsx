@@ -24,7 +24,7 @@ const Categories = () => {
 
             const data = await res.json();
             setCategories(data);
-            console.log("success");
+            console.log(data);
         } catch (error) {
             console.log("Error loading categories", error);
 

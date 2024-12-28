@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import Delete from '../custom ui/Delete'
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { getTitleCategory } from '@/lib/actions/actions'
 
 export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {
@@ -18,11 +18,17 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
         cell: ({ row }) => <p>{row.original.products?.length ?? 0}</p>,
     },
     {
+        accessorKey: "parent",
+        header: "Parent",
+        cell: async ({ row }) => (<p>{row.original?.parent !=null ? await getTitleCategory(row.original.parent) : "Top-level"}</p>),
+
+    },
+    {
         accessorKey: "image",
         header: "Image",
         cell: ({ row }) => (
-            <Link href={row.original.image}>
-                <Image src={row.original.image} alt={row.original.title} width={100} height={100} className='w-[100px] h-[50px]' />
+            <Link href={row.original.image ?? ""}>
+                <Image src={row.original.image ?? ""} alt={row.original.title} width={100} height={100} className='w-[100px] h-[50px]' />
             </Link>
         ),
     },

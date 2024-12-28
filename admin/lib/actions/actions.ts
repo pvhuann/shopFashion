@@ -1,6 +1,8 @@
+
 import Customer from "../models/Customer";
 import Orders from "../models/Orders";
 import { connectToDB } from "../mongoDB"
+import Category from "../models/Category";
 
 const getTotalSales = async () => {
     await connectToDB();
@@ -36,8 +38,16 @@ const getSalesPerMonth = async () => {
         // if i === 5 => month = "Jun"
         return { name: month, sales: salesPerMonth[i] || 0 }
     })
-
-
     return graphData;
 }
-export { getTotalSales, getTotalCustomers, getSalesPerMonth }
+
+const getTitleCategory = async (idTitle: string) => {
+        await connectToDB(); // Connect to the database
+        const data = await Category.findOne(
+            { _id: idTitle }, // Find the category by ID
+            // { title: 1, _id: 0 } // Projection: only retrieve the title field
+        );
+        return data.title // Return the title or null if not found
+};
+
+export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory }

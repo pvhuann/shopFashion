@@ -25,7 +25,7 @@ import Loader from "../custom ui/Loader"
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
-    description: z.string().trim().min(2).max(1000),
+    description: z.string().trim().min(2).max(600),
     image: z.string().url(),
 })
 
@@ -63,6 +63,15 @@ const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
                 toast.success(`Collection ${initialData ? "updated" : "created"} successfully`)
                 // window.location.href = "/collections";
                 router.push("/collections")
+            }else{
+                setLoading(false);
+                // toast.error("Something went wrong! Please try again");
+                const errorData= await res.json();
+                form.setError(errorData.error.fieldError, {
+                    type: "manual",
+                    message: errorData.error.message,
+                })
+                return;
             }
         } catch (error) {
             console.log("collection_POST", error);
@@ -71,9 +80,7 @@ const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
     }
 
     //block "Submit" when "Enter" is clicked
-    const handleKeyPress = (event:
-        | React.KeyboardEvent<HTMLInputElement>
-        | React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (event.key === "Enter") {
             event.preventDefault()
         }

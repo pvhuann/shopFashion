@@ -18,11 +18,12 @@ import {
 import { Input } from "@/components/ui/input"
 import Delete from "../custom ui/Delete"
 import { Button } from "@/components/ui/button"
+import Loader from "../custom ui/Loader"
 
 const formSchema = z.object({
     name: z.string().trim().min(2).max(100),
     email: z.string().email(),
-    phone: z.string().min(10).max(15),
+    phone: z.string().min(6).max(15),
     address: z.string().trim().min(2).max(600),
     // products: z.array(z.string()),
 })
@@ -32,8 +33,8 @@ interface VendorProps {
 }
 
 const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
-    const [loading, setLoading] = useState(false)
-    const router = useRouter()
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
     // const params = useParams()
 
 
@@ -55,17 +56,26 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
             const res = await fetch( url, {
                 method: 'POST',
                 body: JSON.stringify(values),
-            })
+            });
 
             if (res.ok) {
                 setLoading(false);
-                toast.success(`Vendor ${initialData ? "updated" : "created"} successfully`)
+                toast.success(`Vendor ${initialData ? "updated" : "created"} successfully`);
                 // window.location.href = "/collections";
-                router.push("/vendor")
+                router.push("/vendor");
+            }else{
+                setLoading(false);
+                const errorData= await res.json();
+                form.setError(errorData.error.fieldError,{
+                    type:"server",
+                    message:errorData.error.message
+                })
+                console.log(errorData);
+                return;
             }
         } catch (error) {
             console.log("Vendor_POST:", error);
-            toast.error("Something went wrong! Please try again")
+            toast.error("Something went wrong! Please try again");
         }
     }
 
@@ -78,7 +88,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         }
     }
 
-    return (
+    return loading ? <Loader/>: (
         <div className="">
 
             {initialData ? (

@@ -22,8 +22,8 @@ type CategoryType={
     title: string,
     description?: string,
     image?: string,
-    parent?: string |null ,
-    products?: ProductType[],
+    parent?: string | null,
+    products?: ProductType[]| [],
     createdAt: Date,
     updatedAt: Date,
 }

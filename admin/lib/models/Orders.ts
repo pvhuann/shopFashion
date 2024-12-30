@@ -12,12 +12,34 @@ const ordersSchema = new mongoose.Schema({
             product: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Product",
+                required: true,
             },
-            price:Number,
-            color: String,
-            size: String,
-            quantity: Number,
-        }
+            // Properties of the variant
+            variant: {
+                color: {
+                    type: String,
+                    default: null,
+                }, 
+                size: {
+                    type: String,
+                    default: null,
+                },
+                style: {
+                    type: String,
+                    default: null,
+                },
+                material: {
+                    type: String,
+                    default: null,
+                },
+                price: Number, //price at time order
+            }, 
+            quantity: {
+                type: Number,
+                min: 1,
+                required: true,
+            }, // quantity of the product in the order
+        },
     ],
 
     shippingAddress: {
@@ -30,15 +52,22 @@ const ordersSchema = new mongoose.Schema({
     },
     shippingRate: {
         type: String,
-    },
+    }, // shipping rates of the order
     totalAmount: {
         type: Number,
-    },
+        required: true,
+    }, // total amount of the order
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'completed', 'failed', 'refunded'],
+        default: 'pending',
+        required: true,
+    }, // payment status of the order
     createdAt: {
         type: Date,
         default: Date.now(),
     },
 });
 
-const Orders= mongoose.models.Orders || mongoose.model("Orders", ordersSchema);
+const Orders = mongoose.models.Orders || mongoose.model("Orders", ordersSchema);
 export default Orders;

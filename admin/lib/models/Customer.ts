@@ -5,14 +5,22 @@ const customerSchema = new mongoose.Schema({
     clerkId: {
         type: String,
         required: true,
+        unique: true,
     },
-    name: String,
-    email: String,
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+    },
     orders: {
         type: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Orders"
+                ref: "Orders",
             }
         ]
     },

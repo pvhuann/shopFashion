@@ -1,4 +1,4 @@
-import { min } from "date-fns";
+
 import mongoose from "mongoose";
 
 
@@ -12,7 +12,8 @@ const ProductSchema = new mongoose.Schema({
     },
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Vendor",
+        default:null,
     },
     media: {
         type: [String],
@@ -31,15 +32,15 @@ const ProductSchema = new mongoose.Schema({
 
         }
     ],
-    tags: {
-        type: [String],
-    },
-    sizes: {
-        type: [String],
-    },
-    colors: {
-        type: [String],
-    },
+    // tags: {
+    //     type: [String],
+    // },
+    // sizes: {
+    //     type: [String],
+    // },
+    // colors: {
+    //     type: [String],
+    // },
     variants: [
         {
             color: { type: String, default: null },
@@ -63,7 +64,12 @@ const ProductSchema = new mongoose.Schema({
                 type: Number,
                 min: 0,
                 default: 0,
-            }
+            },
+            availability_variant: {
+                type: Boolean,
+                required: true,
+                default: false,
+            },
         },
     ],
     price: {
@@ -83,19 +89,28 @@ const ProductSchema = new mongoose.Schema({
         default: 0,
         min: 0,
     },
+    availability: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     createdAt: {
         type: Date,
+        required: true,
         default: Date.now(),
     },
     updatedAt: {
         type: Date,
+        required: true,
         default: Date.now(),
     },
 
 }, {
-    toJSON: { getters: true }
+    toJSON: { getters: true },
+    toObject: { virtuals: true} // Add this line to make the virtual accessible when converting to plain JS
 }
-)
+);
+
 
 const Product = mongoose.models.Product || mongoose.model("Product", ProductSchema)
 export default Product

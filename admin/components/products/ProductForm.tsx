@@ -31,8 +31,9 @@ import { DataTable } from "../custom ui/DataTable"
 import { VariantColumns } from "../variants/VariantColumns"
 import { CldUploadWidget } from "next-cloudinary"
 import Image from "next/image"
-import { X } from "lucide-react"
+import { CircleHelp, X } from "lucide-react"
 import VariantForm from "../variants/VariantForm"
+import DynamicVariantsForm from "../variants/VariantForm"
 // import { VariantColumns } from "../variants/VariantColumns"
 
 const variantSchema = z.object({
@@ -60,6 +61,8 @@ const variantSchema = z.object({
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
     description: z.string().trim().min(2).max(600),
+    sku: z.string().trim().min(2).max(30),
+    weight: z.number().min(0.1),
     media: z.array(z.string().url()),
     vendor: z.string(),
     category: z.string().nullable(),
@@ -71,6 +74,7 @@ const formSchema = z.object({
     price: z.coerce.number().min(0.1),
     expense: z.coerce.number().min(0.1),
     inventory: z.coerce.number().min(0),
+    availability: z.boolean().nullable(),
 })
 
 interface VariantProps {
@@ -94,6 +98,8 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [sizes, setSizes] = useState<string[]>([]);
     const [styles, setStyles] = useState<string[]>([]);
     const [materials, setMaterials] = useState<string[]>([]);
+    const [availability, setAvailability] = useState<boolean>(initialData?.availability ?? false);
+    // const [sizes, setSizes] = useState<string[]);
     // const [sizes, setSizes] = useState<string[]>([]);
     // const [sizes, setSizes] = useState<string[]>([]);
 
@@ -134,7 +140,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         defaultValues: initialData
             ? {
                 ...initialData,
+                category: "",
                 collections: initialData.collections?.map((collection) => collection._id),
+                // vendor: initialData.vendor?.ma,
             }
             : {
                 title: "",
@@ -150,6 +158,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 price: 0,
                 expense: 0,
                 inventory: 0,
+                availability: false,
             },
     })
 
@@ -275,10 +284,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         form.setValue("category", null);
     }
 
-    const filteredCategories = categories.filter ((category)=> {
-        if(selectedParentCategory === null) {
+    const filteredCategories = categories.filter((category) => {
+        if (selectedParentCategory === null) {
             return []
-        }else{
+        } else {
             return category.parent === selectedParentCategory;
         }
     })
@@ -306,7 +315,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                         {/* left */}
                         <div className="space-y-10 w-2/3 max-lg:w-full">
                             {/* product information  */}
-                            <Card className="w-full mt-10">
+                            <Card className="w-full mt-10 hover:shadow-lg hover:shadow-blue-200 border-blue-200 border-2">
                                 <CardHeader>
                                     <CardTitle>Product information</CardTitle>
                                 </CardHeader>
@@ -318,7 +327,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         name="title"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Title</FormLabel>
+                                                <FormLabel className="flex items-center gap-1">
+                                                    <p>Title</p>
+                                                    <CircleHelp size={12} />
+                                                </FormLabel>
                                                 <FormControl>
                                                     <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
                                                 </FormControl>
@@ -326,6 +338,36 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                             </FormItem>
                                         )}
                                     />
+                                    <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
+                                        <FormField
+                                            control={form.control}
+                                            name="title"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>SKU</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="eg. 89622878" {...field} onKeyDown={handleKeyPress} />
+                                                    </FormControl>
+                                                    <FormMessage className="text-red-1" />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="title"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Weight(kg)</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="0.1" {...field} onKeyDown={handleKeyPress} />
+                                                    </FormControl>
+                                                    <FormMessage className="text-gray-400 text-[12px]">Used to calculate shipping rates at checkout and label prices during fulfillment.</FormMessage>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+
 
                                     {/* product code and product weight */}
                                     {/* <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
@@ -454,6 +496,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         </div> */}
 
                                 </CardContent>
+                            </Card>
+                            <Card>
+                                <DynamicVariantsForm />
                             </Card>
 
                             {/* product variant */}
@@ -600,6 +645,29 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         )}
                                     />
                                 </CardContent>
+                                <CardFooter className="border-t pt-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="availability"
+                                        render={({ field }) => (
+                                            <FormItem className="flex w-full items-center justify-between">
+                                                <FormLabel className="flex items-center gap-1">
+                                                    <p>Availability</p>
+                                                    <CircleHelp size={12} />
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Button
+                                                        className={`rounded-full min-w-[50px] h-8 flex items-center p-1  ${availability ? "justify-end bg-blue-500" : "justify-start bg-gray-200"}`}
+                                                        onClick={() => setAvailability(!availability)}
+                                                    >
+                                                        <span className="bg-white w-6 h-6 rounded-full " />
+                                                    </Button>
+                                                </FormControl>
+                                                <FormMessage className="text-red-1" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardFooter>
                             </Card>
 
                             {/* product organization */}
@@ -681,9 +749,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                         render={({ field }) => (
                                             <FormItem>
                                                 {/* ... FormLabel and Button */}
+                                                <FormLabel>Sub category</FormLabel>
                                                 <FormControl>
                                                     <Select
-                                                        disabled= {selectedParentCategory === null}
+                                                        disabled={selectedParentCategory === null}
                                                         onValueChange={(value) => handleCategoryChange(value)} // Correct usage of onValueChange
                                                         value={field.value || ""}
                                                     >
@@ -691,11 +760,16 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                             <SelectValue placeholder="Select a sub category" />
                                                         </SelectTrigger>
                                                         <SelectContent className="bg-white">
-                                                            {filteredCategories.map((category) => (
-                                                                <SelectItem key={category._id} value={category._id}>
-                                                                    {category.title}
-                                                                </SelectItem>
-                                                            ))}
+                                                            {filteredCategories.length === 0 ? (
+                                                                <SelectItem disabled value="null">No results</SelectItem> // Display "No results" if no categories
+
+                                                            ) : (
+                                                                filteredCategories.map((category) => (
+                                                                    <SelectItem key={category._id} value={category._id}>
+                                                                        {category.title}
+                                                                    </SelectItem>
+                                                                ))
+                                                            )}
                                                         </SelectContent>
                                                     </Select>
                                                 </FormControl>

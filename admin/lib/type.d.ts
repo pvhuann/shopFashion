@@ -36,6 +36,7 @@ type VariantType= {
     price: number,
     expense: number,
     inventory: number,
+    availability: boolean,
     // sale: number|0,
 }
 type VendorType= {
@@ -64,6 +65,7 @@ type ProductType= {
     price?: number,
     variants:[VariantType],
     inventory?: number,
+    availability: boolean,
     createdAt: Date,
     updatedAt : Date,
     // stock: number,

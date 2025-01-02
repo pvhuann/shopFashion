@@ -13,7 +13,7 @@ const ProductSchema = new mongoose.Schema({
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor",
-        default:null,
+        default: null,
     },
     media: {
         type: [String],
@@ -32,25 +32,20 @@ const ProductSchema = new mongoose.Schema({
 
         }
     ],
-    // tags: {
-    //     type: [String],
-    // },
-    // sizes: {
-    //     type: [String],
-    // },
-    // colors: {
-    //     type: [String],
-    // },
+    tags: {
+        type: [String],
+    },
     variants: [
         {
             color: { type: String, default: null },
             image: { type: String, default: null },
-            material: { type: String,  default: null},
-            style: { type: String,  default: null},
-            size: { type: String,  default: null},
+            material: { type: String, default: null },
+            style: { type: String, default: null },
+            size: { type: String, default: null },
             price: {
                 type: mongoose.Schema.Types.Decimal128,
                 get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+                required: true,
                 min: 0,
                 default: 0,
             },
@@ -72,28 +67,7 @@ const ProductSchema = new mongoose.Schema({
             },
         },
     ],
-    price: {
-        type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
-        min: 0,
-        default: 0,
-    },
-    expense: {
-        type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
-        min: 0,
-        default: 0,
-    },
-    inventory: {
-        type: Number,
-        default: 0,
-        min: 0,
-    },
-    availability: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
+
     createdAt: {
         type: Date,
         required: true,
@@ -107,9 +81,13 @@ const ProductSchema = new mongoose.Schema({
 
 }, {
     toJSON: { getters: true },
-    toObject: { virtuals: true} // Add this line to make the virtual accessible when converting to plain JS
-}
-);
+    toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS
+});
+
+ProductSchema.pre("save", function (next) {
+    this.updatedAt =new Date();
+    next();
+});
 
 
 const Product = mongoose.models.Product || mongoose.model("Product", ProductSchema)

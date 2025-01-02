@@ -33,10 +33,11 @@ type VariantType= {
     size?: string,
     material?:string,
     style?:string,
-    price: number,
-    expense: number,
-    inventory: number,
-    availability: boolean,
+    price?: number,
+    expense?: number,
+    inventory?: number,
+    availability?: boolean,
+    sale?:string,
     // sale: number|0,
 }
 type VendorType= {
@@ -100,6 +101,17 @@ type CartItemType={
     color: string,
     size: string,
     quantity: number,
+}
+
+type SaleType={
+    _id: string,
+    product: [ProductType],
+    timeStart: Date,
+    timeEnd: Date,
+    quantity: number,
+    totalAmount: number,
+    createdAt: Date,
+    updatedAt: Date,
 }
 
 

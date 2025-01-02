@@ -8,11 +8,11 @@ const userSchema = new mongoose.Schema({
     },
     wishList: {
         type: Array,
-        default: []
+        default: [],
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
     },
     updatedAt: {
         type: Date,

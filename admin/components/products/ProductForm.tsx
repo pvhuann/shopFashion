@@ -41,40 +41,29 @@ const variantSchema = z.object({
     material: z.string().nullable().optional(),
     size: z.string().nullable().optional(),
     style: z.string().nullable().optional(),
-    image: z.string().url("Invalid URL"),
-    price: z.number().min(0, "Price must be at least 0"),
-    inventory: z.number().min(0, "Inventory must be at least 0"),
-    // sale: z.number().min(0).max(100, "Sale must be between 0 and 100"),
+    image: z.string().url("Invalid URL").optional(),
+    price: z.coerce.number().min(0, "Price must be at least 0").optional(),
+    inventory: z.coerce.number().min(0, "Inventory must be at least 0").optional(),
+    sale: z.number().min(0).max(100, "Sale must be between 0 and 100").optional(),
 })
-
-// const productSchema = z.object({
-//     title: z.string().min(1, "Title is required").max(50, "Title must be at least 50"),
-//     description: z.string().min(1, "Description is required").max(500, "Description must be at least 500"),
-//     media: z.array(z.string().url()).nonempty("Media is required"),
-//     category: z.string().min(1, "Category is required").max(50, "Category must be at least 50"),
-//     // store: z.string().min(1, "Store is required"),
-//     totalInventory: z.number().min(0, "Total inventory must be at least 0"),
-//     mainImages: z.array(z.string().url()).nonempty("Main images are required"),
-//     variants: z.array(variantSchema).nonempty("At least one variant is required"),
-// })
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
     description: z.string().trim().min(2).max(600),
     sku: z.string().trim().min(2).max(30),
-    weight: z.number().min(0.1),
+    weight: z.coerce.number().min(0.1),
     media: z.array(z.string().url()),
     vendor: z.string(),
     category: z.string().nullable(),
     collections: z.array(z.string()),
     variants: z.array(variantSchema),
     tags: z.array(z.string()),
-    sizes: z.array(z.string()),
-    colors: z.array(z.string()),
+    // sizes: z.array(z.string()),
+    // colors: z.array(z.string()),
     price: z.coerce.number().min(0.1),
     expense: z.coerce.number().min(0.1),
     inventory: z.coerce.number().min(0),
-    availability: z.boolean().nullable(),
+    availability: z.boolean(),
 })
 
 interface VariantProps {
@@ -98,13 +87,14 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [sizes, setSizes] = useState<string[]>([]);
     const [styles, setStyles] = useState<string[]>([]);
     const [materials, setMaterials] = useState<string[]>([]);
-    const [availability, setAvailability] = useState<boolean>(initialData?.availability ?? false);
+    const [available, setAvailable] = useState<boolean>(initialData?.availability ?? false);
     // const [sizes, setSizes] = useState<string[]);
     // const [sizes, setSizes] = useState<string[]>([]);
     // const [sizes, setSizes] = useState<string[]>([]);
 
     const [options, setOptions] = useState<string[]>([]);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [availableListOptions, setAvailableListOptions] = useState<string[]>(['Colors', 'Sizes', 'Styles', 'Materials', 'Images']);
 
     const handleAddOption = () => {
         if (selectedOption) {
@@ -152,7 +142,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                 category: null,
                 collections: [],
                 tags: [],
-                // variants: [],
+                variants: [],
                 sizes: [],
                 colors: [],
                 price: 0,
@@ -523,6 +513,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                         <SelectItem value="style" disabled={isOptionDisable("style")}>Style</SelectItem>
                                                         <SelectItem value="material" disabled={isOptionDisable("material")}>Material</SelectItem>
                                                         <SelectItem value="image" disabled={isOptionDisable("image")}>Image</SelectItem>
+                                                        <SelectItem value="images" disabled={true}>Image</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
@@ -657,8 +648,8 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Button
-                                                        className={`rounded-full min-w-[50px] h-8 flex items-center p-1  ${availability ? "justify-end bg-blue-500" : "justify-start bg-gray-200"}`}
-                                                        onClick={() => setAvailability(!availability)}
+                                                        className={`rounded-full min-w-[50px] h-8 flex items-center p-1  ${available ? "justify-end bg-blue-500" : "justify-start bg-gray-200"}`}
+                                                        onClick={() => setAvailable(!available)}
                                                     >
                                                         <span className="bg-white w-6 h-6 rounded-full " />
                                                     </Button>

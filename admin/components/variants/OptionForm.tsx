@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import MultiTag from '../custom ui/MultiTag';
 import { SelectContent, SelectItem } from '../ui/select';
+import { Delete } from 'lucide-react';
 
 interface OptionsProps {
     value: string[],
@@ -33,6 +34,7 @@ const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOp
                     ))}
                 </SelectContent>
             </SelectContent>
+            <Delete size={16} className='bg-red-500'/>
             
         </>
 

@@ -15,9 +15,17 @@ const ProductSchema = new mongoose.Schema({
         ref: "Vendor",
         default: null,
     },
-    media: {
-        type: [String],
-    },
+    media: [
+        {
+            url:{
+                type: String,
+            },
+            type: {
+                type: String,
+                enum: ["image", "video"],
+            }
+        }
+    ],
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",

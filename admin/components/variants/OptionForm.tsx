@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import MultiTag from '../custom ui/MultiTag';
 import { SelectContent, SelectItem } from '../ui/select';
 import { Delete } from 'lucide-react';
+import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { useFormContext } from 'react-hook-form';
+import { Button } from '../ui/button';
 
 interface OptionsProps {
     value: string[],
@@ -13,7 +16,9 @@ const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOp
     const [options, setOptions] = useState<string[]>(arrayOptions);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-    const handleOptionChange= (option: string)=>{
+    const { control } = useFormContext();
+
+    const handleOptionChange = (option: string) => {
         setSelectedOption(option);
         onChange([...value, option]);
     }
@@ -21,21 +26,50 @@ const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOp
     const isOptionDisable = (option: string) => {
         return value.includes(option);
     }
+
     return (
         <>
             <div>OptionForm</div>
-            <SelectContent>
-                {/* <MultiTag value={value} onChange={onChange} onRemove={onRemove} placeholder='Add option' /> */}
+            <div>
                 <SelectContent>
-                    {options.map((option, index) => (
-                        <SelectItem key={index} onClick={() => handleOptionChange(option)} disabled={isOptionDisable(option)} value={''}>
-                            {option}
-                        </SelectItem>
-                    ))}
+                    {/* <MultiTag value={value} onChange={onChange} onRemove={onRemove} placeholder='Add option' /> */}
+                    <SelectContent>
+                        {options.map((option, index) => (
+                            <SelectItem key={index} onClick={() => handleOptionChange(option)} disabled={isOptionDisable(option)} value={''}>
+                                {option}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
                 </SelectContent>
-            </SelectContent>
-            <Delete size={16} className='bg-red-500'/>
-            
+                <div className="flex-1">
+                    <FormField
+                        control={control}
+                        name={`variantSchema.${selectedOption}`}
+                        render={({ field }) => (
+                            <FormItem>
+                                {/* <FormLabel>Tags</FormLabel> */}
+                                <FormControl>
+                                    <MultiTag
+                                        placeholder={`Enter ${selectedOption ?? "..."} values`}
+                                        value={field.value}
+                                        onChange={(tag) => field.onChange([...field.value, tag])}
+                                        onRemove={(tagRemove) => {
+                                            field.onChange([...field.value.filter((item: string) => item !== tagRemove)])
+                                        }}
+                                    />
+                                    {/* <Input
+                                    placeholder={`Enter ${selectedOption ?? "..."} values`}
+                                    value={}
+                                /> */}
+                                </FormControl>
+                                <FormMessage className="text-red-1" />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <Delete size={16} className='bg-red-500' />
+            </div>
+
         </>
 
     )

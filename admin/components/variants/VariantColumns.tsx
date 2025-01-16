@@ -1,51 +1,73 @@
 import { ColumnDef } from "@tanstack/react-table";
 // import { DataTable } from "@/components/custom-ui/DataTable"; // Điều chỉnh theo đúng đường dẫn
 import { Button } from "@/components/ui/button";
-import { DataTable } from "../custom ui/DataTable";
+import Image from "next/image";
 
-// Định nghĩa các cột cho bảng variants
-export const VariantColumns: ColumnDef<{ [key: string]: string | number }, any>[] = [
-    {
-        accessorKey: 'color', // Chỉ định tên của key trong mỗi item
-        header: 'Color',
-    },
-    {
-        accessorKey: 'size',
-        header: 'Size',
-    },
-    {
-        accessorKey: 'material',
-        header: 'Material',
-    },
-    {
-        accessorKey: 'style',
-        header: 'Style',
-    },
-    {
-        accessorKey: 'price',
-        header: 'Price',
-    },
-    {
-        accessorKey: 'action',
-        header: 'Action',
-        cell: ({ row }) => (
-            <Button variant="destructive" onClick={() => handleDelete(row.index)}>
-                Delete
-            </Button>
-        ),
-    },
-];
+// Hàm tạo các cột dựa trên dữ liệu
+export function getVariantColumns(data: VariantType[]): ColumnDef<VariantType>[] {
+    const keysInData = new Set(
+        data.flatMap((item) => Object.keys(item).filter((key) => item[key as keyof VariantType] !== undefined))
+    );
 
-const handleDelete = (index: number) => {
-    // Logic để xóa dòng, cập nhật lại state variants
-    alert(`Delete variant at index ${index}`);
-};
+    // Định nghĩa các cột nếu dữ liệu chứa các trường tương ứng
+    const columns: ColumnDef<VariantType>[] = [];
 
-// export const VariantColumns = ({ data }: { data: any[] }) => {
-//     return (
-//         <div className="space-y-4">
-//             <h2 className="text-lg font-semibold">Generated Variants</h2>
-//             <DataTable columns={variantColumns} data={data} />
-//         </div>
-//     );
-// };
+    if (keysInData.has("color")) {
+        columns.push({
+            accessorKey: "color",
+            header: "Color",
+        });
+    }
+
+    if (keysInData.has("image")) {
+        columns.push({
+            accessorKey: "image",
+            header: "Image",
+            cell: ({ row }) => <Image src={row.original.image??""} alt="Variant" width={50} height={50} />,
+        });
+    }
+
+    if (keysInData.has("size")) {
+        columns.push({
+            accessorKey: "size",
+            header: "Size",
+        });
+    }
+
+    if (keysInData.has("material")) {
+        columns.push({
+            accessorKey: "material",
+            header: "Material",
+        });
+    }
+
+    if (keysInData.has("style")) {
+        columns.push({
+            accessorKey: "style",
+            header: "Style",
+        });
+    }
+
+    if (keysInData.has("price")) {
+        columns.push({
+            accessorKey: "price",
+            header: "Price",
+        });
+    }
+
+    if (keysInData.has("inventory")) {
+        columns.push({
+            accessorKey: "inventory",
+            header: "Inventory",
+        });
+    }
+
+    if (keysInData.has("expense")) {
+        columns.push({
+            accessorKey: "expense",
+            header: "Expense",
+        });
+    }
+
+    return columns;
+}

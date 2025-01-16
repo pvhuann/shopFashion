@@ -37,8 +37,6 @@ type VariantType= {
     expense?: number,
     inventory?: number,
     availability?: boolean,
-    sale?:string,
-    // sale: number|0,
 }
 type VendorType= {
     _id: string,
@@ -54,22 +52,24 @@ type ProductType= {
     _id: string,
     title: string,
     description: string,
+    media:[MediaType],
+    weight?:number,
+    sku:string,
     vendor:string,
-    media:[string],
     category?:CategoryType,
     collections?:[CollectionType],
     tags?: [string],
-    weight?:number|0,
-    // sizes?: [string],
-    // colors?: [string],
-    expense?: number,
-    price?: number,
     variants:[VariantType],
     inventory?: number,
     availability: boolean,
     createdAt: Date,
     updatedAt : Date,
     // stock: number,
+}
+
+type MediaType= {
+    url: string,
+    type:"image"  | "video",
 }
 
 type OrderColumnType={
@@ -108,6 +108,10 @@ type SaleType={
     product: [ProductType],
     timeStart: Date,
     timeEnd: Date,
+    discountValue: number,
+    discountType: string,
+    orderThreshold: number,
+    isActive: boolean,
     quantity: number,
     totalAmount: number,
     createdAt: Date,

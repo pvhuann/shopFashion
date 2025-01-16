@@ -14,11 +14,14 @@ interface MultiTagProps {
 
 
 const MultiTag: React.FC<MultiTagProps> = ({ value, onChange, onRemove,placeholder }) => {
-    const [inputValue, setInputValue] = useState('')
+    const [inputValue, setInputValue] = useState<string>("");
 
     const addValue = (item: string) => {
-        onChange(item)
-        setInputValue("")
+        if(value.includes(item)){
+            return;
+        }
+        onChange(item);
+        setInputValue("");
     }
 
     return (

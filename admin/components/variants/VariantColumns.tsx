@@ -23,7 +23,7 @@ export function getVariantColumns(data: VariantType[]): ColumnDef<VariantType>[]
         columns.push({
             accessorKey: "image",
             header: "Image",
-            cell: ({ row }) => <Image src={row.original.image??""} alt="Variant" width={50} height={50} />,
+            // cell: ({ row }) => <Image src={row.original.image??""} alt="Variant" width={50} height={50} />,
         });
     }
 

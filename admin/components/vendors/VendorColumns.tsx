@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 
 export const VendorColumns: ColumnDef<VendorType>[] = [
@@ -34,6 +35,19 @@ export const VendorColumns: ColumnDef<VendorType>[] = [
     {
         header: "Updated At",
         accessorKey: "updatedAt"
+    },
+    {
+        header: "Action",
+        cell: ({ row }) => {
+            return (
+                <div className="flex">
+                    <Link href={`/vendors/edit-vendor/${row.original._id}`} className=''>
+                        <Button className=" text-black px-2 py-1 rounded-md" variant={"destructive"} size={"lg"}>Edit</Button>
+                    </Link>
+                    <Button className=" text-white px-2 py-1 rounded-md ml-2">Delete</Button>
+                </div>
+            );
+        },
     },
 
 ]

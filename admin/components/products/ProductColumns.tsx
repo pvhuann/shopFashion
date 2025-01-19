@@ -16,7 +16,7 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         cell: ({ row }) => (
             <div className='flex items-center gap-2'>
 
-                <Image src={row.original.media?.[0] ?? "/No_Image_Available.jpg"} alt="" width={100} height={0} className='' />
+                <Image src={row.original.media[0].url ?? "/No_Image_Available.jpg"} alt="" width={100} height={0} className='' />
                 <Link href={`/products/product-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
             </div>
         )
@@ -30,20 +30,6 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         header: "Category",
         accessorKey: "category",
-        // cell: ({ row }) => (
-        //     <Select>
-        //         <SelectTrigger id="framework">
-        //             <SelectValue placeholder="Select" />
-        //         </SelectTrigger>
-        //         <SelectContent position="popper" className="bg-white">
-        //             <SelectItem value="color">Color</SelectItem>
-        //             <SelectItem value="size">Size</SelectItem>
-        //             <SelectItem value="style">Style</SelectItem>
-        //             <SelectItem value="material">Material</SelectItem>
-        //             <SelectItem value="image">Image</SelectItem>
-        //         </SelectContent>
-        //     </Select>
-        // )
     },
     {
         header: "Vendor",
@@ -52,11 +38,12 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         header: "Price($)",
         accessorKey: "price",
-        cell: ({ row }) => <Input value={row.original.price} disabled={true} />
+        cell: ({ row }) => <Input value={row.original.variants[0].price ?? 0} disabled={true} />
     },
     {
         header: "Expense($)",
         accessorKey: "expense",
+        cell: ({ row }) => <Input value={row.original.variants[0].expense ?? 0} disabled={true} />
     },
     {
         header: "Variants",
@@ -75,15 +62,6 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
         header: "Updated At",
         accessorKey: "updatedAt"
     },
-    // {
-    //     accessorKey: "media",
-    //     header: "Media",
-    //     cell: ({ row }) => (
-    //         <Link href={row.original.media[0]}>
-    //             <Image src={row.original.media[0]} alt="" width={100} height={0} className='' />
-    //         </Link>
-    //     ),
-    // },
     {
         header: "Actions",
         id: "actions",

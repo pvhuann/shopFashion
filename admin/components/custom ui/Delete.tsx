@@ -23,24 +23,16 @@ interface DeleteProps {
 
 const Delete: React.FC<DeleteProps> = ({ id, title, item }) => {
 
+    // const arrOptions=["collections", "products", "categories","vendors","orders", "customers"];
     const onDelete = async () => {
         try {
-            // const itemType= item==="collection"? "collections" : ("product" ? "products": "categories")
-            let itemType;
-            if (item == "collection") {
-                itemType = "collections";
-            } else if (item == "products") {
-                itemType = "products";
-            } else {
-                itemType = "categories";
-            }
-            const res = await fetch(`/api/${itemType}/${id}`, {
+            const res = await fetch(`/api/${item}s/${id}`, {
                 method: "DELETE",
             })
 
             if (res.ok) {
-                window.location.href = (`/${itemType}`)
-                toast.success(`${item} deleted!`)
+                window.location.href = (`/${item}s`)
+                toast.success(`${item} deleted!`)v
             }
 
         } catch (error) {
@@ -51,8 +43,10 @@ const Delete: React.FC<DeleteProps> = ({ id, title, item }) => {
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger className='bg-red-1 text-white relative group w-10 h-10 rounded-xl'>
-                <Trash size={16} className='absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out' />
+            <AlertDialogTrigger className='flex items-center gap-1 p-2 bg-red-1 text-white relative group rounded-xl'>
+                {/* <Trash size={16} className='absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition duration-150 group-hover:ease-in-out' /> */}
+                <span>Delete</span>
+                <Trash size={16}/>
             </AlertDialogTrigger>
             <AlertDialogContent className='bg-white text-grey-1'>
                 <AlertDialogHeader>

@@ -252,12 +252,6 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         console.log('stage:', hasVideo);
     }
 
-    // useEffect(() => {
-    //     if (hasVideo) {
-    //         console.log('hasVideo:', hasVideo);
-    //     }
-    // }, [hasVideo]);
-
 
     const handleCategoryChange = (categoryId: string | null) => {
         form.setValue("category", categoryId);
@@ -471,15 +465,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                             </FormItem>
                                         )}
                                     />
-                                    {/* <div >
-                                            <Image src={form.getValues("media")[0]} alt="" width={100} height={100} className='' />
-                                        </div> */}
+                                
 
                                 </CardContent>
                             </Card>
-                            {/* <Card>
-                                <DynamicVariantsForm />
-                            </Card> */}
 
                             {/* product variant */}
                             <Card className="">

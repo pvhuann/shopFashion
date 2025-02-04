@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 import toast from "react-hot-toast"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useRouter } from "next/navigation"
@@ -19,13 +19,15 @@ import { Input } from "@/components/ui/input"
 import Delete from "../custom ui/Delete"
 import { Button } from "@/components/ui/button"
 import Loader from "../custom ui/Loader"
+import { DataTable } from "../custom ui/DataTable"
+import { ProductColumns } from "../products/ProductColumns"
 
 const formSchema = z.object({
     name: z.string().trim().min(2).max(100),
     email: z.string().email(),
     phone: z.string().min(6).max(15),
     address: z.string().trim().min(2).max(600),
-    // products: z.array(z.string()),
+    products: z.array(z.string()),
 })
 
 interface VendorProps {
@@ -34,19 +36,38 @@ interface VendorProps {
 
 const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
     const [loading, setLoading] = useState(false);
+    const [productsByVendor, setProductsByVendor] = useState<ProductType[]>([]);
     const router = useRouter();
-    // const params = useParams()
-
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData ? initialData : {
+        defaultValues: initialData ? {
+            ...initialData,
+            products:initialData.products?.map((product)=> product._id)
+        } : {
             name: "",
             email: "",
             phone: "",
             address: "",
+            products: [],
         },
     })
+
+    const getProducts = async()=> {
+        try {
+            const res = await fetch("/api/products", {
+                method: "GET",
+            });
+            const data = await res.json();
+            setProductsByVendor(data);
+            console.log(data);
+        } catch (error) {
+            console.log("VendorForm_getProducts:", error);          
+        }
+    }
+    useEffect(()=> {
+        getProducts();
+    },[])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         // console.log(values);
@@ -170,6 +191,11 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
 
                 </form>
             </Form>
+            {initialData?.products && (
+                <div>
+                    <DataTable columns={ProductColumns} data={productsByVendor} searchKey="product name" />
+                </div>
+            )}
         </div>
     )
 }

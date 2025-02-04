@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 
-
 interface SaleProps{
     initialData?: SaleType | null,
 }
@@ -27,7 +26,7 @@ const SaleForm:React.FC<SaleProps> = ({initialData}) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? initialData : {
-            product: [{id:"", name:""}],
+            product: [],
             timeStart: new Date(),
             timeEnd: new Date(),
             discountValue: 0,

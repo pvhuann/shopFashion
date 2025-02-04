@@ -48,7 +48,7 @@ type VendorType= {
     createdAt: Date,
     updatedAt: Date,
 }
-type ProductType= {
+type ProductType  = {
     _id: string,
     title: string,
     description: string,

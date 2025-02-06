@@ -70,7 +70,6 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
     },[])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // console.log(values);
         try {
             setLoading(true);
             const url = initialData ? `/api/vendors/${initialData._id}` : "/api/vendors"

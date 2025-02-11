@@ -19,7 +19,7 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
                 <Image src={row.original.media[0].url ?? "/No_Image_Available.jpg"} alt="" width={100} height={0} className='' />
                 <Link href={`/products/product-details/${row.original._id}`} className='hover:text-red-1'>{row.original.title}</Link>
             </div>
-        )
+        ),
 
     },
     {
@@ -38,17 +38,17 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         header: "Price($)",
         accessorKey: "price",
-        cell: ({ row }) => <Input value={row.original.variants[0].price ?? 0} disabled={true} />
+        cell: ({ row }) => <Input value={row.original.variants[0].price ?? 0} disabled={true} />,
     },
     {
         header: "Expense($)",
         accessorKey: "expense",
-        cell: ({ row }) => <Input value={row.original.variants[0].expense ?? 0} disabled={true} />
+        cell: ({ row }) => <Input value={row.original.variants[0].expense ?? 0} disabled={true} />,
     },
     {
         header: "Variants",
         accessorKey: "variants",
-        cell: ({ row }) =>  {row.original.variants.length}
+        cell: ({ row }) =>  {row.original.variants.length},
     },
     {
         header: "Inventory",
@@ -56,11 +56,11 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     },
     {
         header: "Created At",
-        accessorKey: "createdAt"
+        accessorKey: "createdAt",
     },
     {
         header: "Updated At",
-        accessorKey: "updatedAt"
+        accessorKey: "updatedAt",
     },
     {
         header: "Actions",

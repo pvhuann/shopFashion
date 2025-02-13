@@ -6,11 +6,8 @@ import LeftSideBar from "@/components/layout/LeftSideBar";
 import "../globals.css";
 import ToastProvider from "@/lib/ToastProvider";
 import { Input } from "@/components/ui/input";
-import { ArrowLeftToLine, BellDot, Link } from "lucide-react";
-import Image from "next/image";
+import {  BellDot } from "lucide-react";
 
-
-// const inter = Inter({ subsets: ["latin"] });
 
 const poppins = Poppins({
   subsets: ["latin"],

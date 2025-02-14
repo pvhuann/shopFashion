@@ -16,6 +16,7 @@ const VendorDetails = ({ params }: { params: { vendorId: string } }) => {
                     const data = await res.json()
                     setVendorDetails(data)
                     setProductsByVendor(data.products);
+                    document.title = `${data.name} | Vendors`;
                 }
             } catch (error) {
                 console.log("vendorDetails_GET", error);

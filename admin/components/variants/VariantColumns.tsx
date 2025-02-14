@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 // Hàm tạo các cột dựa trên dữ liệu
-export function getVariantColumns(data: VariantType[]): ColumnDef<VariantType>[] {
+export function VariantColumns(data: VariantType[]): ColumnDef<VariantType>[] {
     const keysInData = new Set(
         data.flatMap((item) => Object.keys(item).filter((key) => item[key as keyof VariantType] !== undefined))
     );

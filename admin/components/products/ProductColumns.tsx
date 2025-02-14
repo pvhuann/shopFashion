@@ -38,12 +38,12 @@ export const ProductColumns: ColumnDef<ProductType>[] = [
     {
         header: "Price($)",
         accessorKey: "price",
-        cell: ({ row }) => <Input value={row.original.variants[0].price ?? 0} disabled={true} />,
+        cell: ({ row }) => <Input value={row.original.variants[0]?.price ?? 0} disabled={true} />,
     },
     {
         header: "Expense($)",
         accessorKey: "expense",
-        cell: ({ row }) => <Input value={row.original.variants[0].expense ?? 0} disabled={true} />,
+        cell: ({ row }) => <Input value={row.original.variants[0]?.expense ?? 0} disabled={true} />,
     },
     {
         header: "Variants",

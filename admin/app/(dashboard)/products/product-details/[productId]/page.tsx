@@ -15,6 +15,7 @@ const ProductDetails = ({ params }: { params: { productId: string } }) => {
             const data = await res.json()
             setProductDetails(data)
             setLoading(false)
+            document.title = `${data.title} | Products`
         } catch (error) {
             console.log("productDetails_GET", error);
         }

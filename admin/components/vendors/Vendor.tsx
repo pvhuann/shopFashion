@@ -68,11 +68,11 @@ export default function Vendor () {
                     </div>
                     <Button type='button' onClick={() => router.push('/vendors/add-vendor')} className='bg-blue-600  px-4 py-2 rounded-lg text-white hover:shadow-lg hover:bg-blue-800'>+Add Vendor</Button>
                 </div>
-                {/* <div className='flex'>
+                <div className='flex'>
                         <Button>All products</Button>
                         <Button>Publish</Button>
                         <Button>Unpublish</Button>
-                </div> */}
+                </div>
                 <hr className='my-10' />
                 {loading ? <Loader /> : (
                     <DataTable columns={VendorColumns} data={vendors} hiddenSearchInput={false} searchKey='name' />

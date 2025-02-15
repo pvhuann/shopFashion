@@ -9,31 +9,30 @@ const CategoryDetails = ({ params }: { params: { categoryId: string } }) => {
     const [loading, setLoading] = useState(true);
     const [categoryDetails, setCategoryDetails] = useState<CategoryType | null>(null);
 
-    const getCategoryDetails = async () => {
-        try {
-            const res = await fetch(`/api/categories/${params.categoryId}`, {
-                method: 'GET',
-            })
-
-            if (res.ok) {
-                const data = await res.json();
-                setCategoryDetails(data);
-            }
-
-        } catch (error) {
-            console.log(error);
-
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
+        const getCategoryDetails = async () => {
+            try {
+                const res = await fetch(`/api/categories/${params.categoryId}`, {
+                    method: 'GET',
+                })
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setCategoryDetails(data);
+                }
+
+            } catch (error) {
+                console.log(error);
+
+            } finally {
+                setLoading(false);
+            }
+        }
         getCategoryDetails();
-    }, [])
+    }, [params.categoryId]);
 
 
-    return loading? <Loader/>: (
+    return loading ? <Loader /> : (
         <div>
             <p>Category details</p>
             <hr />

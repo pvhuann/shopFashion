@@ -32,11 +32,11 @@
 
 // export default ProductDetails
 
-import Loader from '@/components/custom ui/Loader';
+
 import ProductForm from '@/components/products/ProductForm';
 import { Metadata } from 'next';
 
-// 🛠️ Hàm fetch dữ liệu sản phẩm từ server
+// fetch product details from product endpoint by productId
 async function getProductDetails(productId: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, {
@@ -51,7 +51,7 @@ async function getProductDetails(productId: string) {
     }
 }
 
-// 🛠️ Generate metadata động
+// Generate metadata SEO
 export async function generateMetadata({ params }: { params: { productId: string } }): Promise<Metadata> {
     const product = await getProductDetails(params.productId);
     const title = product?.title ?? 'Unknown Product';
@@ -62,15 +62,14 @@ export async function generateMetadata({ params }: { params: { productId: string
             : 'Không tìm thấy sản phẩm.'
     };
 }
-
-// 🖼️ Giao diện chi tiết sản phẩm
+// product details page
 export default async function ProductDetails({ params }: { params: { productId: string } }) {
     const productDetails = await getProductDetails(params.productId);
 
     if (!productDetails) {
         return (
             <div className="flex items-center justify-center min-h-screen text-red-500">
-                <h1 className="text-2xl font-bold">⚠️ Không tìm thấy sản phẩm!</h1>
+                <h1 className="text-2xl font-bold">No found product!</h1>
             </div>
         );
     }

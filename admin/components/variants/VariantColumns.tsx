@@ -1,73 +1,48 @@
-import { ColumnDef } from "@tanstack/react-table";
-// import { DataTable } from "@/components/custom-ui/DataTable"; // Điều chỉnh theo đúng đường dẫn
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+'use client';
+import { ColumnDef } from '@tanstack/react-table';
+import Image from 'next/image';
 
-// Hàm tạo các cột dựa trên dữ liệu
 export function VariantColumns(data: VariantType[]): ColumnDef<VariantType>[] {
+    const columns: ColumnDef<VariantType>[] = [];
+
+    // Tạo danh sách các cột cần hiển thị
     const keysInData = new Set(
         data.flatMap((item) => Object.keys(item).filter((key) => item[key as keyof VariantType] !== undefined))
     );
 
-    // Định nghĩa các cột nếu dữ liệu chứa các trường tương ứng
-    const columns: ColumnDef<VariantType>[] = [];
+    // Danh sách cột cần kiểm tra
+    const columnConfigs: { key: keyof VariantType; header: string; isImage?: boolean }[] = [
+        { key: 'color', header: 'Color' },
+        { key: 'image', header: 'Image', isImage: true },
+        { key: 'size', header: 'Size' },
+        { key: 'material', header: 'Material' },
+        { key: 'style', header: 'Style' },
+        { key: 'price', header: 'Price' },
+        { key: 'inventory', header: 'Inventory' },
+        { key: 'expense', header: 'Expense' },
+    ];
 
-    if (keysInData.has("color")) {
-        columns.push({
-            accessorKey: "color",
-            header: "Color",
-        });
-    }
-
-    if (keysInData.has("image")) {
-        columns.push({
-            accessorKey: "image",
-            header: "Image",
-            // cell: ({ row }) => <Image src={row.original.image??""} alt="Variant" width={50} height={50} />,
-        });
-    }
-
-    if (keysInData.has("size")) {
-        columns.push({
-            accessorKey: "size",
-            header: "Size",
-        });
-    }
-
-    if (keysInData.has("material")) {
-        columns.push({
-            accessorKey: "material",
-            header: "Material",
-        });
-    }
-
-    if (keysInData.has("style")) {
-        columns.push({
-            accessorKey: "style",
-            header: "Style",
-        });
-    }
-
-    if (keysInData.has("price")) {
-        columns.push({
-            accessorKey: "price",
-            header: "Price",
-        });
-    }
-
-    if (keysInData.has("inventory")) {
-        columns.push({
-            accessorKey: "inventory",
-            header: "Inventory",
-        });
-    }
-
-    if (keysInData.has("expense")) {
-        columns.push({
-            accessorKey: "expense",
-            header: "Expense",
-        });
-    }
+    // Tạo cột dựa trên dữ liệu có sẵn
+    columnConfigs.forEach(({ key, header, isImage }) => {
+        if (keysInData.has(key)) {
+            columns.push({
+                accessorKey: key,
+                header,
+                cell: ({ row }) =>
+                    isImage && row.original[key] ? (
+                        <Image
+                            src={row.original[key] as string}
+                            alt={header}
+                            width={50}
+                            height={50}
+                            className="rounded-md"
+                        />
+                    ) : (
+                        row.original[key] ?? '—'
+                    ),
+            });
+        }
+    });
 
     return columns;
 }

@@ -97,14 +97,14 @@ async function getAllProducts() {
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch products");
-  return res.json();
+  return await res.json();
 }
 // Metadata động
 export const generateMetadata = async (): Promise<Metadata> => {
   const products = await getAllProducts();
   return {
     title: `Products | Admin Dashboard`,
-    description: `Danh sách tất cả sản phẩm (${products.length} sản phẩm).`,
+    description: `List of (${products.length} products).`,
   };
 };
 
@@ -114,31 +114,30 @@ export default async function ProductsPage() {
   if (!products.length) {
     return (
       <div className="flex items-center justify-center min-h-screen text-red-500">
-        <h1 className="text-2xl font-bold">⚠️ Không tìm thấy sản phẩm!</h1>
+        <h1 className="text-2xl font-bold">No products found!</h1>
       </div>
     );
   }
-
-  return (
+  else return (
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex flex-col gap-2 w-full">
-          {/* Tiêu đề & số lượng */}
+          {/* Title and quantity */}
           <div className="flex items-center gap-4">
             <h1 className="text-3xl font-bold text-black">🛒 Products</h1>
             <span className="px-2 py-1 text-lg font-semibold bg-gray-200 rounded-lg shadow">
               {products.length}
             </span>
           </div>
-          {/* Nút Export & Import */}
+          {/* Actions */}
           <ProductActions products={products} />
         </div>
       </div>
 
       <hr className="my-4" />
 
-      {/* Bảng dữ liệu sản phẩm */}
+      {/* Table vendor */}
       <DataTable columns={ProductColumns} data={products} hiddenSearchInput={false} searchKey="name" />
     </div>
   );

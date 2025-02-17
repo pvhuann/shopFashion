@@ -1,8 +1,9 @@
+'use client'
+
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Delete from "../custom ui/Delete";
-
 
 export const VendorColumns: ColumnDef<VendorType>[] = [
     {

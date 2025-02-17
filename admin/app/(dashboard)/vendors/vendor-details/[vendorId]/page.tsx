@@ -69,14 +69,13 @@ export default async function VendorDetails({ params }: { params: { vendorId: st
     if (!vendorDetails) {
         return (
             <div className="flex items-center justify-center min-h-screen text-red-500">
-                <h1 className="text-2xl font-bold">⚠️ No found vendor!</h1>
+                <h1 className="text-2xl font-bold">No vendor found!</h1>
             </div>
         );
     }
-
-    return (
+    else return (
         <div className="p-6">
-            <h1 className="text-3xl font-bold text-blue-600">🏢 {vendorDetails.name}</h1>
+            <h1 className="text-3xl font-bold text-blue-600"> {vendorDetails.name}</h1>
             <VendorForm initialData={vendorDetails} />
         </div>
     );

@@ -1,7 +1,5 @@
 
-
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -100,6 +98,8 @@ const DynamicVariantsForm = () => {
         setVariants(combinations);
     };
 
+    const variantColumns = VariantColumns(variants);
+
     return (
         <div className="space-y-4">
             {/* Option Groups */}
@@ -167,7 +167,7 @@ const DynamicVariantsForm = () => {
 
             {/* Display Variants Table */}
             {/* <VariantColumns data={variants} /> */}
-            <DataTable columns={VariantColumns} data={variants} />
+            <DataTable columns={variantColumns} data={variants} />
         </div>
     );
 };

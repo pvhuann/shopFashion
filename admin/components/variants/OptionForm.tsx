@@ -60,10 +60,10 @@ const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOp
                                             field.onChange([...field.value.filter((item: string) => item !== tagRemove)])
                                         }}
                                     />
-                                    <Input
+                                    {/* <Input
                                     placeholder={`Enter ${selectedOption ?? "..."} values`}
                                     value={}
-                                />
+                                /> */}
                                 </FormControl>
                                 <FormMessage className="text-red-1" />
                             </FormItem>

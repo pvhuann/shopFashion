@@ -38,6 +38,9 @@ type VariantType= {
     inventory?: number,
     availability?: boolean,
 }
+type VariantOptionType= {
+    
+}
 type VendorType= {
     _id: string,
     name: string,

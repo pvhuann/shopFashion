@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DataTable } from "../custom ui/DataTable";
 import { VariantColumns } from "./VariantColumns";
-// import { VariantColumns } from "./VariantColumns"; // Đảm bảo import đúng
 
 interface OptionGroup {
     id: number;

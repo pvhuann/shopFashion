@@ -4,26 +4,29 @@ import { SelectContent, SelectItem } from '../ui/select';
 import { Delete } from 'lucide-react';
 import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
 import { useFormContext } from 'react-hook-form';
-import { Button } from '../ui/button';
 
 interface OptionsProps {
     value: string[],
-    arrayOptions: string[],
+    arrayOptions: [
+        "colors",
+        "sizes",
+        "materials",
+        "style",
+    ],
     onChange: (value: string[]) => void,
     onRemove: (index: number) => void,
 }
 const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOptions }) => {
     const [options, setOptions] = useState<string[]>(arrayOptions);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
-
     const { control } = useFormContext();
 
-    const handleOptionChange = (option: string) => {
+    function handleOptionChange(option: string) {
         setSelectedOption(option);
         onChange([...value, option]);
     }
 
-    const isOptionDisable = (option: string) => {
+    function isOptionDisable(option: string) {
         return value.includes(option);
     }
 

@@ -35,15 +35,7 @@ const categorySchema = new mongoose.Schema({
             default: null, // Top-level products have no parent
         }
     ],
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    }
-})
+},{timestamps: true});
 
 const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
 export default Category

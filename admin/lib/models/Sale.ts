@@ -7,49 +7,27 @@ const saleSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        // required: true,
+        required: true,
     },
-    product: [
+    variant_id: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Product",
-            // required: true,
-            variants: [{
-                color: {
-                    type: String,
-                },
-                size: {
-                    type: String,
-                },
-                style: {
-                    type: String,
-                },
-                material: {
-                    type: String,
-                },
-                quantity: {
-                    type: Number,
-                    required: true,
-                },
-                price: {
-                    type: Number,
-                    required: true,
-                },
-            }]
+            ref: "Variant",
+            required: true,
         }
     ],
     discountValue: {
         type: Number,
         required: true,
     },
-    discountType:{
+    discountType: {
         type: String,
         required: true,
-        enum: ["percentage", "fixed","loyalty", "order_threshold"],
+        enum: ["percentage", "fixed", "loyalty", "order_threshold"],
     },
     orderThreshold: {
         type: Number,
-        default:0,
+        default: 0,
     },
     startDate: {
         type: Date,
@@ -59,23 +37,14 @@ const saleSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    isActive:{
+    isActive: {
         type: Boolean,
         required: true,
         default: false,
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now(),
-    },
-    updatedAt: {
-        type: Date,
-        required: true,
-        default: Date.now(),
-    }
 },
     {
+        timestamps: true,
         toJSON: { getters: true },
         toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS
     });

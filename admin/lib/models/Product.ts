@@ -5,6 +5,10 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
+    sku:{
+        type: String,
+        require: true,
+    },
     description: {
         type: String,
     },

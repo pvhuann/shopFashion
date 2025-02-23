@@ -58,7 +58,13 @@ export async function generateMetadata({ params }: { params: { vendorId: string 
         title: `${name} | Vendors | Admin Dashboard`,
         description: vendor
             ? `Vendor details: ${name}.`
-            : "No found vendor."
+            : "No found vendor.",
+        openGraph:{
+            title: `${name} | Vendors | Admin Dashboard`,
+            description: vendor
+                ? `Vendor details: ${name}.`
+                : "No found vendor.",
+        }
     };
 }
 

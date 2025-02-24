@@ -40,7 +40,9 @@ async function getVendorDetails(vendorId: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/${vendorId}`, {
             method: "GET",
-            cache: "no-store" // Disable cache
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
         if (!res.ok) throw new Error('Failed to fetch vendor details');
         return await res.json();

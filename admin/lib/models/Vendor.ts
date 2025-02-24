@@ -24,14 +24,8 @@ const vendorSchema = new mongoose.Schema({
             ref: "Product",
         },
     ],
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now(),
-    },
+},{
+    timestamps: true,
 })
 
 const Vendor = mongoose.models.Vendor || mongoose.model("Vendor", vendorSchema);

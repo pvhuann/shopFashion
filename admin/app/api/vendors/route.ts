@@ -1,6 +1,7 @@
 import Vendor from "@/lib/models/Vendor";
 import { connectToDB } from "@/lib/mongoDB";
 import { error } from "console";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -33,8 +34,9 @@ export const POST = async(req:NextRequest)=> {
         // create new vendor
         const newVendor= await Vendor.create({name, email, phone, address});
         await newVendor.save();
-
-        return NextResponse.json(newVendor, {status:200});
+        // revalidate path for re-fetching data from the server and updating the cache accordingly when the vendor is created
+        revalidatePath("/vendors");
+        return NextResponse.json({message:"Vendor created successfully", data:newVendor}, {status:200});
 
     } catch (error) {
         console.log("VENDOR_POST:", error);

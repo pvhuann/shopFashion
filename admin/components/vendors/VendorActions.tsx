@@ -43,7 +43,7 @@ export const VendorActions = ({ vendors }: VendorActionsProps) => {
             <Button
                 type="button"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:shadow-lg hover:bg-blue-800"
-                onClick={() => router.push("/products/add-product")}
+                onClick={() => router.push("/vendors/add-vendor")}
             >
                 + Add vendor
             </Button>

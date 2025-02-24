@@ -74,7 +74,8 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
             setLoading(true);
             const url = initialData ? `/api/vendors/${initialData._id}` : "/api/vendors"
             const res = await fetch( url, {
-                method: 'POST',
+                method: initialData ? "PATCH" : "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             });
 
@@ -82,7 +83,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                 setLoading(false);
                 toast.success(`Vendor ${initialData ? "updated" : "created"} successfully`);
                 // window.location.href = "/collections";
-                router.push("/vendor");
+                router.push("/vendors");
             }else{
                 setLoading(false);
                 const errorData= await res.json();
@@ -94,7 +95,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                 return;
             }
         } catch (error) {
-            console.log("Vendor_POST:", error);
+            console.log(`Vendor ${initialData ? "PATCH" : "POST"}`, error);
             toast.error("Something went wrong! Please try again");
         }
     }

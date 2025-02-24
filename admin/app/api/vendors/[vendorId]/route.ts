@@ -32,7 +32,6 @@ export const GET = async (req: NextRequest, { params }: { params: { vendorId: st
 // update vendor by id
 export const PATCH = async (req: NextRequest, { params }: { params: { vendorId: string } }) => {
     try {
-
         await connectToDB();
         // let vendor = await Vendor.findById(params.vendorId);
         const vendor = await Vendor.findById(params.vendorId);

@@ -72,27 +72,48 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
-            const url = initialData ? `/api/vendors/${initialData._id}` : "/api/vendors"
-            const res = await fetch( url, {
-                method: initialData ? "PATCH" : "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-            });
-
-            if (res.ok) {
-                setLoading(false);
-                toast.success(`Vendor ${initialData ? "updated" : "created"} successfully`);
-                // window.location.href = "/collections";
-                router.push("/vendors");
-            }else{
-                setLoading(false);
-                const errorData= await res.json();
-                form.setError(errorData.error.fieldError,{
-                    type:"server",
-                    message:errorData.error.message
+            // POST request to create a new vendor
+            if(initialData){
+                const res = await fetch("/api/products", {
+                    method:"POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(values),
                 })
-                console.log(errorData);
-                return;
+                if(res.ok){
+                    setLoading(false);
+                    toast.success("Product created successfully");
+                    router.push("/products");
+                }else{
+                    setLoading(false);
+                    const errorData= await res.json();
+                    form.setError(errorData.error.fieldError, {
+                        type:"server",
+                        message:errorData.error.message
+                    })
+                    console.log(errorData);
+                    return;
+                }
+            }else{
+                // PATCH request to update an existing vendor
+                const res = await fetch("/api/products", {
+                    method:"PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(values),
+                })
+                if(res.ok){
+                    setLoading(false);
+                    toast.success("Product updated successfully");
+                    router.push("/products");
+                }else{
+                    setLoading(false);
+                    const errorData= await res.json();
+                    form.setError(errorData.error.fieldError, {
+                        type:"server",
+                        message:errorData.error.message
+                    })
+                    console.log(errorData);
+                    return;
+                }
             }
         } catch (error) {
             console.log(`Vendor ${initialData ? "PATCH" : "POST"}`, error);

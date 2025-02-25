@@ -35,7 +35,10 @@ const categorySchema = new Schema({
             default: null, // Top-level products have no parent
         }
     ],
-},{timestamps: true});
+},{
+    collection: "categories",
+    timestamps: true
+});
 
 const Category = models.Category || model("Category", categorySchema);
 export default Category

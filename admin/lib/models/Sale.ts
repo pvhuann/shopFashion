@@ -44,6 +44,7 @@ const saleSchema = new Schema({
     },
 },
     {
+        collection: "sales",
         timestamps: true,
         toJSON: { getters: true },
         toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS

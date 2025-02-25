@@ -17,12 +17,13 @@ const customerSchema = new Schema({
     orders: {
         type: [
             {
-                type:Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: "Orders",
             }
         ]
     },
-},{
+}, {
+    collection: "customers",
     timestamps: true,
 });
 

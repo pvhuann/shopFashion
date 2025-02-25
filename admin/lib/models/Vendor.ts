@@ -24,6 +24,7 @@ const vendorSchema = new Schema({
         },
     ],
 },{
+    collection: "vendors",
     timestamps: true,
 })
 

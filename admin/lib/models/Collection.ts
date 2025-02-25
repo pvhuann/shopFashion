@@ -23,7 +23,9 @@ const  collectionSchema= new Schema({
             ref: "Product"
         }
     ],
-},{timestamps:true});
+},{
+    collection: "collections",
+    timestamps:true});
 
 const Collection= models.Collection || model("Collection", collectionSchema);
 export default Collection

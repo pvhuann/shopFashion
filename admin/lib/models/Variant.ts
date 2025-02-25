@@ -49,7 +49,10 @@ const VariantSchema = new Schema({
         required: true,
         default: false,
     },
-}, { timestamps: true });
+}, {
+    collection: "variants",
+    timestamps: true
+});
 
 const Variant = models.Variant || model("Variant", VariantSchema);
 export default Variant;

@@ -66,6 +66,8 @@ const ordersSchema = new Schema({
         type: Date,
         default: Date.now(),
     },
+},{
+    collection: 'orders',
 });
 
 const Orders = models.Orders || model("Orders", ordersSchema);

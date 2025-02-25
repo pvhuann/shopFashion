@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
-
-const userSchema = new mongoose.Schema({
+import { Schema ,models,model} from "mongoose"
+const userSchema = new Schema({
     clerkId: {
         type: String,
         required: true,
@@ -10,15 +9,9 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: [],
     },
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now(),
-    }
-})
+},{
+    timestamps: true,
+});
 
-const User = mongoose.models.User || mongoose.model("User", userSchema)
-export default User
+const User = models.User || model("User", userSchema);
+export default User;

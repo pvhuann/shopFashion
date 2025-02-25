@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-
-const vendorSchema = new mongoose.Schema({
+const vendorSchema = new Schema({
     name: {
         type: String,
         require: true,
@@ -20,7 +19,7 @@ const vendorSchema = new mongoose.Schema({
     },
     products: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Product",
         },
     ],
@@ -28,5 +27,5 @@ const vendorSchema = new mongoose.Schema({
     timestamps: true,
 })
 
-const Vendor = mongoose.models.Vendor || mongoose.model("Vendor", vendorSchema);
+const Vendor = models.Vendor || model("Vendor", vendorSchema);
 export default Vendor;

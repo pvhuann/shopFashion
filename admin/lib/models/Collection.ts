@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
-
-const  collectionSchema= new mongoose.Schema({
+import { model, models, Schema } from "mongoose";
+const  collectionSchema= new Schema({
     title: {
         type: String,
         required: true,
@@ -20,19 +19,11 @@ const  collectionSchema= new mongoose.Schema({
 
     products:[
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Product"
         }
     ],
-    createdAt: {
-        type:Date,
-        default: Date.now,
-    },
-    updatedAt:{
-        type: Date,
-        default: Date.now,
-    }
-})
+},{timestamps:true});
 
-const Collection= mongoose.models.Collection || mongoose.model("Collection", collectionSchema);
+const Collection= models.Collection || model("Collection", collectionSchema);
 export default Collection

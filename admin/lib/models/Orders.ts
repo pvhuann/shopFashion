@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-
-const ordersSchema = new mongoose.Schema({
+const ordersSchema = new Schema({
     customerClerkId: {
         type: String,
         required: true,
@@ -10,7 +9,7 @@ const ordersSchema = new mongoose.Schema({
     products: [
         {
             product: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: "Product",
                 required: true,
             },
@@ -69,5 +68,5 @@ const ordersSchema = new mongoose.Schema({
     },
 });
 
-const Orders = mongoose.models.Orders || mongoose.model("Orders", ordersSchema);
+const Orders = models.Orders || model("Orders", ordersSchema);
 export default Orders;

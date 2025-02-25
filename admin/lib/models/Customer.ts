@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-
-
-const customerSchema = new mongoose.Schema({
+import { model, models, Schema } from "mongoose";
+const customerSchema = new Schema({
     clerkId: {
         type: String,
         required: true,
@@ -19,20 +17,14 @@ const customerSchema = new mongoose.Schema({
     orders: {
         type: [
             {
-                type: mongoose.Schema.Types.ObjectId,
+                type:Schema.Types.ObjectId,
                 ref: "Orders",
             }
         ]
     },
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now(),
-    },
+},{
+    timestamps: true,
 });
 
-const Customer = mongoose.models.Customer || mongoose.model("Customer", customerSchema);
+const Customer = models.Customer || model("Customer", customerSchema);
 export default Customer; 

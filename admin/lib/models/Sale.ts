@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-const saleSchema = new mongoose.Schema({
+const saleSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -11,7 +11,7 @@ const saleSchema = new mongoose.Schema({
     },
     variant_id: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Variant",
             required: true,
         }
@@ -49,5 +49,5 @@ const saleSchema = new mongoose.Schema({
         toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS
     });
 
-const Sale = mongoose.models.Sale || mongoose.model("Sale", saleSchema);
+const Sale = models.Sale || model("Sale", saleSchema);
 export default Sale;

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-const categorySchema = new mongoose.Schema({
+const categorySchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -18,7 +18,7 @@ const categorySchema = new mongoose.Schema({
     },
 
     parent: { // Reference to the parent category (if any)
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Category", // Reference to itself
         default: null, // Top-level categories have no parent
     },
@@ -30,12 +30,12 @@ const categorySchema = new mongoose.Schema({
     // ],
     products: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref:"Product",
             default: null, // Top-level products have no parent
         }
     ],
 },{timestamps: true});
 
-const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
+const Category = models.Category || model("Category", categorySchema);
 export default Category

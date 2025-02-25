@@ -1,6 +1,6 @@
+import { model, models, Schema } from "mongoose";
 
-import mongoose from "mongoose";
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new Schema({
     title: {
         type: String,
         require: true,
@@ -13,7 +13,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
     },
     vendor: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Vendor",
         default: null,
     },
@@ -29,13 +29,13 @@ const ProductSchema = new mongoose.Schema({
         }
     ],
     category: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Category",
         default: null,
     },
     collections: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Collection",
             default: null,
         }
@@ -45,7 +45,7 @@ const ProductSchema = new mongoose.Schema({
     },
     variants: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Variant",
             default: null,
         },
@@ -62,5 +62,5 @@ ProductSchema.pre("save", function (next) {
 });
 
 
-const Product = mongoose.models.Product || mongoose.model("Product", ProductSchema)
+const Product = models.Product || model("Product", ProductSchema)
 export default Product

@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-const VariantSchema = new mongoose.Schema({
+const VariantSchema = new Schema({
     sku: {
         type: String,
         unique: true,
     },
     product_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Product",
         required: true,
     },
@@ -26,15 +26,15 @@ const VariantSchema = new mongoose.Schema({
         type: String,
     },
     price: {
-        type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+        type: Schema.Types.Decimal128,
+        get: (v: Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
         required: true,
         min: 0,
         default: 0,
     },
     expense: {
-        type: mongoose.Schema.Types.Decimal128,
-        get: (v: mongoose.Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
+        type: Schema.Types.Decimal128,
+        get: (v: Schema.Types.Decimal128) => { return parseFloat(v.toString()) },
         min: 0,
         default: 0,
     },
@@ -51,5 +51,5 @@ const VariantSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-const Variant = mongoose.models.Variant || mongoose.model("Variant", VariantSchema);
+const Variant = models.Variant || model("Variant", VariantSchema);
 export default Variant;

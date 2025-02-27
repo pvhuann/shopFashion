@@ -2,10 +2,9 @@
 import Collection from "@/lib/models/Collection";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
-import { Regex } from "lucide-react";
 import { NextRequest, NextResponse } from "next/server";
 
-
+const limiter= rateLimit
 //POST request collection
 export const POST = async(req:NextRequest)=> {
     try {
@@ -39,7 +38,7 @@ export const POST = async(req:NextRequest)=> {
 //GET all collections from the database 
 export const GET = async(req: NextRequest)=>{
     try {
-        await connectToDB()
+        await connectToDB();
         const collections= await Collection.find().sort({createdAt:'desc'})
         return NextResponse.json(collections,{status:200})
     } catch (error) {

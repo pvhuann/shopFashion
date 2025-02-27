@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getCollections } from '@/lib/actions/actions'
 
 const Collections = async () => {
-    const collections = await getCollections()
+    const collections = await getCollections();
     return (
         <div className='pt-6'>
             <div className='text-heading1-bold py-3 text-center'>Collections</div>

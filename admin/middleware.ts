@@ -1,8 +1,14 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)','/api/:path*'])
 
 export default clerkMiddleware((auth, request) => {
+    const response = NextResponse.next();
+    const origin = response.headers.get('origin');
+    if(request.nextUrl.pathname.startsWith("/api")){
+        
+    }
     if (!isPublicRoute(request)) {
         auth().protect()
     }

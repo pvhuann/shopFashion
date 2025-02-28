@@ -41,7 +41,7 @@ export default async function VendorPage() {
                     <div className="flex flex-col gap-2 w-full">
                         {/* Title and quantity */}
                         <div className="flex items-center gap-4">
-                            <h1 className="text-3xl font-bold text-black">🛒 Products</h1>
+                            <h1 className="text-3xl font-bold text-black">Vendors</h1>
                             <span className="px-2 py-1 text-lg font-semibold bg-gray-200 rounded-lg shadow">
                                 {vendors.length}
                             </span>

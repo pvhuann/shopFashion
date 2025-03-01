@@ -7,6 +7,9 @@ async function getAllVendors() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors`, {
             method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
             // cache: "no-store",
         })
         const data = await res.json();

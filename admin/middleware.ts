@@ -9,29 +9,29 @@ const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)', '/api/
 export default clerkMiddleware((auth, request) => {
     const response = NextResponse.next();
     const origin = response.headers.get('origin');
-    // Kiểm tra origin, chỉ cho phép shop-admin.com gọi API private
+    // check origin, otherwise it will be blocked by CORS
     if (request.nextUrl.pathname.startsWith("/api") && !request.nextUrl.pathname.startsWith("/api")) {
         if (origin !== allowedOrigins.admin) {
             return  NextResponse.json({ error: "Origin not allowed" }, { status: 403 });
         }
-        // Cấu hình CORS cho shop-admin.com (private API)
+        // config CORS for admin (private API)
         response.headers.set("Access-Control-Allow-Origin", allowedOrigins.admin);
         response.headers.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
         response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.headers.set("Access-Control-Allow-Credentials", "true");
     }
-    // Cấu hình CORS cho public API (shop-store.com)
+    // config CORS for store (public API)
     if (request.nextUrl.pathname.startsWith("/api")) {
         response.headers.set("Access-Control-Allow-Origin", allowedOrigins.store);
         response.headers.set("Access-Control-Allow-Methods", "GET");
         response.headers.set("Access-Control-Allow-Headers", "Content-Type");
         response.headers.set("Access-Control-Allow-Credentials", "true");
     }
-    // Xử lý preflight request (OPTIONS)
+    // handle preflight request for CORS
     if (request.method === "OPTIONS") {
         return NextResponse.json(null, { status: 204, headers: response.headers });
     }
-    // Bảo vệ route không public bằng Clerk
+    // protect private routes with Clerk
     if (!isPublicRoute(request)) {
         auth().protect();
     }

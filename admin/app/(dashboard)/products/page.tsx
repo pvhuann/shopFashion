@@ -94,6 +94,9 @@ import { ProductActions } from "@/components/products/ProductActions";
 async function getAllProducts() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
     method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch products");

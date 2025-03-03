@@ -1,19 +1,15 @@
+
 import { CldUploadWidget } from 'next-cloudinary';
-
 import { Plus, X } from "lucide-react";
-
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+
 
 interface ImageUploadProps {
     value: string[];
     onChange: (value: string) => void;
     onRemove: (value: string) => void;
 }
-
-
-
 const ImageUpload: React.FC<ImageUploadProps> = ({
     onChange,
     onRemove,

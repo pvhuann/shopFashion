@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { CldUploadWidget } from "next-cloudinary"
 import Image from "next/image"
 import { CircleHelp, X } from "lucide-react"
+import OptionForm from "../variants/OptionForm"
 // import DynamicVariantsForm from "../variants/VariantForm"
 
 const optionSchema = z.object({
@@ -95,6 +96,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [availableListOptions, setAvailableListOptions] = useState<string[]>(['Color', 'Size', 'Style', 'Material']);
 
+    const [optionForms, setOptionForms] = useState<number[]>([0]);
+    const [selectedOptions, setSelectedOptions] = useState<string[][]>([]);
+
     const handleAddOption = () => {
         setOptions([...options, selectedOption ?? ""]);
         console.log('handleAddOption', options);
@@ -105,6 +109,26 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         setSelectedOption(option);
     }
 
+    const handleAddOptionForm = () => {
+        setOptionForms([...optionForms, optionForms.length]);
+        setSelectedOptions([...selectedOptions, []]);
+    };
+
+    const handleOptionChangeForm = (index: number, options: string[]) => {
+        const newSelectedOptions = [...selectedOptions];
+        newSelectedOptions[index] = options;
+        setSelectedOptions(newSelectedOptions);
+    };
+
+    const handleOptionRemove = (formIndex: number, optionIndex: number) => {
+        const newSelectedOptions = [...selectedOptions];
+        newSelectedOptions[formIndex] = newSelectedOptions[formIndex].filter((_, i) => i !== optionIndex);
+        setSelectedOptions(newSelectedOptions);
+    };
+
+    const getAllSelectedOptions = () => {
+        return selectedOptions.flat();
+    };
 
     const formVariant = useForm<z.infer<typeof variantSchema>>({
         resolver: zodResolver(variantSchema),
@@ -478,9 +502,26 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
                                 <hr />
                                 <CardContent className="mt-4 flex flex-col items-start gap-4">
                                     <div className="w-full">
-                                        <Label htmlFor="option" className="text-black ">OPTIONS</Label>
+                                        <Label htmlFor="option" className="text-black">OPTIONS</Label>
+                                        {optionForms.map((_, index) => (
+                                            <div key={index} className="mb-4">
+                                                <OptionForm 
+                                                    value={selectedOptions[index] || []} 
+                                                    onChange={(options) => handleOptionChangeForm(index, options)}
+                                                    onRemove={(optionIndex) => handleOptionRemove(index, optionIndex)}
+                                                    arrayOptions={["colors", "sizes", "materials", "style"]}
+                                                    disabledOptions={getAllSelectedOptions()}
+                                                />
+                                            </div>
+                                        ))}
+                                        <Button 
+                                            type="button" 
+                                            className="text-blue-1 p-0" 
+                                            onClick={handleAddOptionForm}
+                                        >
+                                            +Add another option
+                                        </Button>
                                     </div>
-                                    <Button type="button" className="text-blue-1 p-0" onClick={handleAddOption}>+Add another option</Button>
                                     <Button className="text-blue-1 p-0">Generate variants table</Button>
                                 </CardContent>
                             </Card>

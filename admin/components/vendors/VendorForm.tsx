@@ -43,7 +43,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? {
             ...initialData,
-            products:initialData.products?.map((product)=> product._id)
+            products: initialData.products?.map((product) => product._id)
         } : {
             name: "",
             email: "",
@@ -53,63 +53,64 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         },
     })
 
-    const getProducts = async()=> {
-        try {
-            const res = await fetch("/api/products", {
-                method: "GET",
-            });
-            const data = await res.json();
-            setProductsByVendor(data);
-            console.log(data);
-        } catch (error) {
-            console.log("VendorForm_getProducts:", error);          
+    // get all products
+    useEffect(() => {
+        const getProducts = async () => {
+            try {
+                const res = await fetch("/api/products", {
+                    method: "GET",
+                });
+                const data = await res.json();
+                setProductsByVendor(data);
+                console.log(data);
+            } catch (error) {
+                console.log("VendorForm_getProducts:", error);
+            }
         }
-    }
-    useEffect(()=> {
         getProducts();
-    },[])
+    }, []);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
             // POST request to create a new vendor
-            if(initialData){
+            if (initialData) {
                 const res = await fetch("/api/products", {
-                    method:"POST",
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),
                 })
-                if(res.ok){
+                if (res.ok) {
                     setLoading(false);
                     toast.success("Product created successfully");
                     router.push("/products");
-                }else{
+                } else {
                     setLoading(false);
-                    const errorData= await res.json();
+                    const errorData = await res.json();
                     form.setError(errorData.error.fieldError, {
-                        type:"server",
-                        message:errorData.error.message
+                        type: "server",
+                        message: errorData.error.message
                     })
                     console.log(errorData);
                     return;
                 }
-            }else{
+            } else {
                 // PATCH request to update an existing vendor
                 const res = await fetch("/api/products", {
-                    method:"PATCH",
+                    method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),
                 })
-                if(res.ok){
+                if (res.ok) {
                     setLoading(false);
                     toast.success("Product updated successfully");
                     router.push("/products");
-                }else{
+                } else {
                     setLoading(false);
-                    const errorData= await res.json();
+                    const errorData = await res.json();
                     form.setError(errorData.error.fieldError, {
-                        type:"server",
-                        message:errorData.error.message
+                        type: "server",
+                        message: errorData.error.message
                     })
                     console.log(errorData);
                     return;
@@ -130,15 +131,15 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         }
     }
 
-    return loading ? <Loader/>: (
+    return loading ? <Loader /> : (
         <div className="">
 
             {initialData ? (
                 <div className=" flex justify-between items-center">
                     <div className="flex flex-col">
 
-                    <p className="">Vendors/ <span className="text-black">Vendor details</span></p>
-                    <p className="text-heading2-bold text-black">{initialData.name}</p>
+                        <p className="">Vendors/ <span className="text-black">Vendor details</span></p>
+                        <p className="text-heading2-bold text-black">{initialData.name}</p>
                     </div>
                     <Delete id={initialData._id} title={initialData.name} item="vendors" />
                     {/* <Button type="button">Delete</Button> */}
@@ -171,7 +172,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="Email" {...field}  onKeyDown={handleKeyPress} />
+                                    <Input type="email" placeholder="Email" {...field} onKeyDown={handleKeyPress} />
                                 </FormControl>
                                 <FormMessage className="text-red-1" />
                             </FormItem>

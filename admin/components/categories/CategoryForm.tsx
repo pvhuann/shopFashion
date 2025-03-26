@@ -224,6 +224,9 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
         const fetchCategories = async () => {
             try {
                 const res = await fetch("/api/categories");
+                if (!res.ok) {
+                    throw new Error("Failed to fetch categories");
+                }
                 const data = await res.json();
                 setAllCategories(data);
             } catch (error) {
@@ -231,7 +234,6 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
                 // Handle error (e.g., display an error message)
             }
         };
-
         fetchCategories();
     }, []);
 

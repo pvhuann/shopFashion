@@ -173,63 +173,63 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     });
     // const { handleSubmit, register, formState: { errors } } = form;
 
-    //get all collections
-    const getCollections = async () => {
-        try {
-            const res = await fetch('/api/collections', {
-                method: 'GET',
-            })
-            const data = await res.json()
-            setCollections(data)
-            setLoading(false)
-        } catch (error) {
-            console.log("collections_GET", error);
-            toast.error("Something went wrong! Please try again")
-        }
-    }
+    // get all collections
     useEffect(() => {
-        getCollections()
-    }, [])
+        const getCollections = async () => {
+            try {
+                const res = await fetch('/api/collections', {
+                    method: 'GET',
+                })
+                const data = await res.json()
+                setCollections(data)
+                setLoading(false)
+            } catch (error) {
+                console.log("collections_GET", error);
+                toast.error("Something went wrong! Please try again")
+            }
+        };
+        getCollections();
+    }, []);
 
     // get all vendors
-    const getVendors = async () => {
-        try {
-            const res = await fetch('/api/vendors', {
-                method: "GET",
-            })
-            const data = await res.json();
-            // const vendorNames = data.map((vendor: { name: string }) => vendor.name);
-            // const vendorNames = data.map((vendor: VendorType) => vendor.name);
-            setVendors(data);
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! Please try again")
-        }
-    }
     useEffect(() => {
-        getVendors()
-    }, [])
+        const getVendors = async () => {
+            try {
+                const res = await fetch('/api/vendors', {
+                    method: "GET",
+                })
+                const data = await res.json();
+                // const vendorNames = data.map((vendor: { name: string }) => vendor.name);
+                // const vendorNames = data.map((vendor: VendorType) => vendor.name);
+                setVendors(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+                toast.error("Something went wrong! Please try again")
+            }
+        };
+        getVendors();
+    }, []);
 
     // get all categories
-    const getCategories = async () => {
-        try {
-            const res = await fetch(`/api/categories`, {
-                method: "GET",
-            })
-            const data = await res.json();
-            // const vendorNames= data.map((vendor: {name:string})=> vendor.name);
-            // const categoryTitles = data.map((category: { title: string }) => category.title);
-            setCategories(data);
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong! Please try again")
-        }
-    }
     useEffect(() => {
-        getCategories()
-    }, [])
+        const getCategories = async () => {
+            try {
+                const res = await fetch(`/api/categories`, {
+                    method: "GET",
+                })
+                const data = await res.json();
+                // const vendorNames= data.map((vendor: {name:string})=> vendor.name);
+                // const categoryTitles = data.map((category: { title: string }) => category.title);
+                setCategories(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+                toast.error("Something went wrong! Please try again")
+            }
+        };
+        getCategories();
+    }, []);
 
     //handle submit form
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -252,7 +252,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
             console.log("collection_POST", error);
             toast.error("Something went wrong! Please try again")
         }
-    }
+    };
 
 
     //block "Submit" when "Enter" is clicked
@@ -262,7 +262,7 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         if (event.key === "Enter") {
             event.preventDefault()
         }
-    }
+    };
 
     const handleOnnSuccess = (result: any) => {
         const media = form.getValues("media");
@@ -274,17 +274,17 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         form.setValue("media", [...media, { url, type: typeMedia }])
         console.log('Upload finished:', { url, type: typeMedia });
         console.log('stage:', hasVideo);
-    }
+    };
 
 
     const handleCategoryChange = (categoryId: string | null) => {
         form.setValue("category", categoryId);
-    }
+    };
 
     const handleParentCategoryChange = (parentId: string | null) => {
         setSelectedParentCategory(parentId);
         form.setValue("category", null);
-    }
+    };
 
     const filteredCategories = categories.filter((category) => {
         if (selectedParentCategory === null) {
@@ -292,10 +292,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         } else {
             return category.parent === selectedParentCategory;
         }
-    })
+    });
 
-
-
+    // render form
     return loading ? <Loader /> : (
         <div className="">
             {initialData ? (

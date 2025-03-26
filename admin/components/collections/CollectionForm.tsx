@@ -34,11 +34,8 @@ interface CollectionProps {
 }
 
 const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
-    const [loading, setLoading] = useState(false)
-    const router = useRouter()
-    // const params = useParams()
-
-
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? initialData : {
@@ -49,7 +46,6 @@ const CollectionForm: React.FC<CollectionProps> = ({ initialData }) => {
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // console.log(values);
         try {
             setLoading(true);
             const url = initialData ? `/api/collections/${initialData._id}` : "/api/collections"

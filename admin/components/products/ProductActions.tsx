@@ -11,7 +11,7 @@ interface ProductActionsProps {
 
 export const ProductActions = ({ products }: ProductActionsProps) => {
     const router = useRouter();
-    //Xử lý xuất Excel
+    //handle export to excel
     const handleExportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(products);
         const wb = XLSX.utils.book_new();

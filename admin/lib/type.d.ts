@@ -7,6 +7,11 @@ type CollectionType={
     createdAt: Date,
     updatedAt: Date,
 }
+type CollectionIdTitleType={
+    _id: string,
+    title: string,
+}
+
 type SubCategoryType = {
     _id: string,
     title: string,
@@ -25,6 +30,10 @@ type CategoryType={
     products?: ProductType[]| [],
     createdAt: Date,
     updatedAt: Date,
+}
+type CategoryIdTitleType={
+    _id: string,
+    title: string,
 }
 
 type VariantType= {
@@ -51,6 +60,12 @@ type VendorType= {
     createdAt: Date,
     updatedAt: Date,
 }
+
+type VendorIdNameType={
+    _id: string,
+    name: string,
+}
+
 type ProductType  = {
     _id: string,
     title: string,

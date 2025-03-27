@@ -80,9 +80,9 @@ interface ProductProps {
 const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [hasVideo, setHasVideo] = useState<boolean>(false);
-    const [collections, setCollections] = useState<CollectionType[]>([]);
-    const [vendors, setVendors] = useState<VendorType[]>([]);
-    const [categories, setCategories] = useState<CategoryType[]>([]);
+    const [collections, setCollections] = useState<CollectionIdTitleType[]>([]);
+    const [vendors, setVendors] = useState<VendorIdNameType[]>([]);
+    const [categories, setCategories] = useState<CategoryIdTitleType[]>([]);
     const [selectedParentCategory, setSelectedParentCategory] = useState<string | null>(null);
     const router = useRouter();
 
@@ -173,16 +173,17 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     });
     // const { handleSubmit, register, formState: { errors } } = form;
 
-    // get all collections
+    // get all collections(id, title)
     useEffect(() => {
         const getCollections = async () => {
             try {
-                const res = await fetch('/api/collections', {
+                const res = await fetch('/api/collections?data=id-title', {
                     method: 'GET',
+
                 })
-                const data = await res.json()
-                setCollections(data)
-                setLoading(false)
+                const data = await res.json();
+                setCollections(data);
+                setLoading(false);
             } catch (error) {
                 console.log("collections_GET", error);
                 toast.error("Something went wrong! Please try again")
@@ -195,12 +196,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     useEffect(() => {
         const getVendors = async () => {
             try {
-                const res = await fetch('/api/vendors', {
+                const res = await fetch('/api/vendors?data=id-name', {
                     method: "GET",
                 })
                 const data = await res.json();
-                // const vendorNames = data.map((vendor: { name: string }) => vendor.name);
-                // const vendorNames = data.map((vendor: VendorType) => vendor.name);
                 setVendors(data);
                 setLoading(false);
             } catch (error) {
@@ -215,12 +214,10 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const res = await fetch(`/api/categories`, {
+                const res = await fetch(`/api/categories?data=id-title`, {
                     method: "GET",
                 })
                 const data = await res.json();
-                // const vendorNames= data.map((vendor: {name:string})=> vendor.name);
-                // const categoryTitles = data.map((category: { title: string }) => category.title);
                 setCategories(data);
                 setLoading(false);
             } catch (error) {

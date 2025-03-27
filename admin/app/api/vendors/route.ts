@@ -51,7 +51,13 @@ export const GET = async (req: NextRequest) => {
     try {
 
         await connectToDB();
-        const vendor = await Vendor.find().sort({ createdAt: "desc" });
+        const {searchParams} = new URL(req.url);
+        const data = searchParams.get("data");
+        let query = Vendor.find().sort({ createdAt: "desc" });
+        if(data ==="id-name"){
+            query = query.select("_id name");
+        }
+        const vendor = await query.exec();
         if (!vendor) {
             return NextResponse.json({ error: "No vendors found" }, { status: 404 });
         }
@@ -63,6 +69,6 @@ export const GET = async (req: NextRequest) => {
         return res;
     } catch (error) {
         console.log("VENDOR_GET:", error);
-        return new NextResponse("Internal Server Error", { status: 500 })
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

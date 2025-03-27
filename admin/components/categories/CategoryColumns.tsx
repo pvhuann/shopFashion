@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table'
 import Delete from '../custom ui/Delete'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getTitleCategory } from '@/lib/actions/actions'
 
 export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {

@@ -39,11 +39,19 @@ export const POST = async(req:NextRequest)=> {
 export const GET = async(req: NextRequest)=>{
     try {
         await connectToDB();
-        const collections= await Collection.find().sort({createdAt:'desc'})
+        const {searchParams} = new URL(req.url);
+        const data = searchParams.get("data");
+        let query= Collection.find().sort({createdAt:'desc'});
+        if(data ==="id"){
+            query = query.select("_id");
+        }
+        else if(data ==="id-title"){
+            query = query.select("_id title");
+        }
+        const collections= await query.exec();
         return NextResponse.json(collections,{status:200})
     } catch (error) {
         console.log("Collections_GET",error);
-        return new NextResponse("Internal Server Error", {status:500})
-        
+        return NextResponse.json({error:{message:"Internal Server Error"}}, {status:500});
     }
 }

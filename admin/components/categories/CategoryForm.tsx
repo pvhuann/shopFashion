@@ -174,13 +174,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-// import ImageUpload from "@/components/ui/image-upload";
-// import { categorySchema } from "@/lib/validations/category";
-// import { useToaster } from "react-hot-toast";
 import ImageUpload from "../custom ui/ImageUpload";
 import toast from "react-hot-toast";
-// import { useToast } from "@/hooks/use-toast";
-// import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
     title: z.string().trim().min(2).max(30),
@@ -188,15 +183,6 @@ const formSchema = z.object({
     image: z.string().nullable().optional(),
     parent: z.string().trim().nullable().optional(),
 })
-
-// Define the shape of your category data
-// interface CategoryData {
-//     _id?: string;
-//     title: string;
-//     description: string;
-//     image: string;
-//     parent: string | null; // _id of the parent category (or null if top-level)
-// }
 
 interface CategoryProps {
     initialData?: CategoryType | null;
@@ -206,7 +192,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
     const router = useRouter();
 
     // State to manage all categories (for the parent category dropdown)
-    const [allCategories, setAllCategories] = useState<CategoryType[] | []>([]);
+    const [allCategories, setAllCategories] = useState<CategoryIdTitleType[] | []>([]);
 
     // Form setup using react-hook-form and Zod for validation
     const form = useForm<CategoryType>({
@@ -223,7 +209,7 @@ const CategoryForm: React.FC<CategoryProps> = ({ initialData }) => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("/api/categories");
+                const res = await fetch("/api/categories?data=id-title");
                 if (!res.ok) {
                     throw new Error("Failed to fetch categories");
                 }

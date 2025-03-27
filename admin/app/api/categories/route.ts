@@ -6,10 +6,14 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
     try {
         await connectToDB()
-
-        const categories = await Category.find({})
-        if (!categories) { return new NextResponse("Categories not found", { status: 404 }) }
-
+        const {searchParams} = new URL(req.url);
+        const data = searchParams.get("data");
+        let query = Category.find().sort({createdAt:"desc"});
+        if(data ==="id-title"){
+            query = query.select("_id title"); 
+        }
+        const categories = await query.exec();
+        if (!categories) { return NextResponse.json({ message: "No categories found" }, { status: 404 }) };
         const res=  NextResponse.json((categories), { status: 200 });
         res.headers.set("Access-Control-Allow-Origin", "http://localhost:4000");
         res.headers.set("Access-Control-Allow-Methods", "GET");
@@ -18,7 +22,7 @@ export const GET = async (req: NextRequest) => {
         return res;
     } catch (error) {
         console.log("categories_GET:", error);
-        return new NextResponse("Internal Server Error", { status: 500 })
+        return NextResponse.json({error:"Internal Server Error"}, { status: 500 });
 
     }
 }

@@ -7,7 +7,7 @@ import { X } from 'lucide-react'
 
 
 interface MultiSelectProps {
-    collections: CollectionType[],
+    collections: CollectionIdTitleType[],
     value: string[],
     onChange: (value: string) => void,
     onRemove: (value: string) => void,
@@ -17,7 +17,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ collections, value, onChange,
 
     const [isShow, setIsShow] = useState(false)
     const [inputValue, setInputValue] = useState("")
-    let selected: CollectionType[];
+    let selected: CollectionIdTitleType[];
 
     if (value.length === 0) {
         selected = []

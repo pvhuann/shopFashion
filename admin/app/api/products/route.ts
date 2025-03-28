@@ -72,15 +72,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
     try {
-        await connectToDB()
-        const products = await Product.find()
-            .sort({ createdAt: 'desc' })
-            .populate({ path: "collections", model: Collection });
-
-        return NextResponse.json(products, { status: 200 })
+        await connectToDB();
+        const products = await Product.find().sort({ createdAt: 'desc' }).populate({ path: "collections", model: Collection });
+        return NextResponse.json(products, { status: 200 });
     } catch (error) {
         console.log("Products_GET", error);
-        return new NextResponse("Internal Server Error", { status: 500 })
+        return NextResponse.json({error: "Internal Server Error"}, { status: 500 });
     }
 }
 

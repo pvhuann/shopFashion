@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import MultiTag from '../custom ui/MultiTag';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Delete } from 'lucide-react';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useFormContext } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Plus } from 'lucide-react';
+import { Delete} from 'lucide-react';
 
 interface OptionsProps {
     value: string[],
@@ -77,21 +76,13 @@ const OptionForm: React.FC<OptionsProps> = ({ value, onChange, onRemove, arrayOp
                             }
                         }}
                     />
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={handleAddValue}
-                    >
-                        <Plus className="h-4 w-4" />
-                    </Button>
                 </div>
                 <Button 
                     variant="destructive" 
                     size="icon"
                     onClick={() => onRemove(value.indexOf(selectedOption || ""))}
                 >
-                    <Delete className="h-4 w-4" />
+                    <Delete className="h-4 w-4 text-red-1" />
                 </Button>
             </div>
 

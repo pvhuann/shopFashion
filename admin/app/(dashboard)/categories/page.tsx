@@ -7,10 +7,9 @@ import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
 
 const Categories = () => {
-
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<CategoryType[]>([]);
-    const getTitleCategory = async (parentId:any) => {
+    const getTitleCategory = async (parentId:string) => {
         try {
             const res = await fetch(`api/categories/${parentId}`, {
                 method: "GET",
@@ -23,35 +22,29 @@ const Categories = () => {
         }
     }
 
-    const getCategories = async () => {
-        try {
-            const res = await fetch("api/categories", {
-                method: "GET",
-            })
-
-            const data = await res.json();
-
-            // Fetch parent titles
-            const updatedData = await Promise.all(data.map(async (category:CategoryType) => {
-                if (category.parent) {
-                    category.parentTitle = await getTitleCategory(category.parent);
-                }
-                return category;
-            }));
-
-            setCategories(updatedData);
-            console.log(updatedData);
-        } catch (error) {
-            console.log("Error loading categories", error);
-
-        } finally {
-            setLoading(false)
-        }
-    }
-
     useEffect(() => {
-        getCategories()
-    }, [])
+        const getCategories = async () => {
+            try {
+                const res = await fetch("api/categories", {
+                    method: "GET",
+                })
+                const data = await res.json();
+                // Fetch parent titles
+                const updatedData = await Promise.all(data.map(async (category:CategoryType) => {
+                    if (category.parent) {
+                        category.parentTitle = await getTitleCategory(category.parent);
+                    }
+                    return category;
+                }));
+                setCategories(updatedData);
+            } catch (error) {
+                console.log("Error loading categories", error);
+            } finally {
+                setLoading(false)
+            }
+        }
+        getCategories();
+    }, []);
 
     return loading ? <Loader /> : (
         <div>

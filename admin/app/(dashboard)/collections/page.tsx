@@ -9,30 +9,26 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Collections = () => {
-    const [loading, setLoading] = useState(true)
-    const [collections, setCollections] = useState([])
-    const router= useRouter()
-
-    const getCollections = async () => {
-        try {
-            const res = await fetch('/api/collections', {
-                method: 'GET',
-            })
-
-            const data = await res.json();
-            setCollections(data);
-            console.log(collections);
-            
-        } catch (error) {
-            console.log("Collections_GET", error);
-            
-        }finally{
-            setLoading(false);
-        }
-    }
-
+    const [loading, setLoading] = useState(true);
+    const [collections, setCollections] = useState<CollectionType[]>([]);
+    const router= useRouter();
     useEffect(()=>{
-        getCollections()       
+        const getCollections = async () => {
+            try {
+                const res = await fetch('/api/collections', {
+                    method: 'GET',
+                })
+    
+                const data = await res.json();
+                setCollections(data);
+            } catch (error) {
+                console.log("Collections_GET", error);
+                
+            }finally{
+                setLoading(false);
+            }
+        }
+        getCollections();       
     },[]);
 
 

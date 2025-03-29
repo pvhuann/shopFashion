@@ -92,7 +92,7 @@ import { ProductColumns } from "@/components/products/ProductColumns";
 import { ProductActions } from "@/components/products/ProductActions";
 // Lấy tất cả sản phẩm từ server
 async function getAllProducts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+  const res = await fetch(`${process.env.INTERNAL_API_URL}/products`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

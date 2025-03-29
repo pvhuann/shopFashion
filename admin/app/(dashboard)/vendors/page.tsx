@@ -1,16 +1,16 @@
 
+import ActionsItemButton from '@/components/custom ui/ActionsItemButton';
 import { DataTable } from '@/components/custom ui/DataTable';
-import { VendorActions } from '@/components/vendors/VendorActions';
 import { VendorColumns } from '@/components/vendors/VendorColumns';
 import { Metadata } from 'next';
 async function getAllVendors() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors`, {
+        const res = await fetch(`${process.env.INTERNAL_API_URL}/vendors`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-            // cache: "no-store",
+            cache: "no-store",
         })
         const data = await res.json();
         return data;
@@ -50,7 +50,7 @@ export default async function VendorPage() {
                             </span>
                         </div>
                         {/* Actions */}
-                        <VendorActions vendors={vendors} />
+                        <ActionsItemButton itemType="vendors" basePath="vendor" arrayItem={vendors} />
                     </div>
                 </div>
 

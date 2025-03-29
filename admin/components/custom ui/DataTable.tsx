@@ -1,5 +1,4 @@
 "use client"
-
 import {
     ColumnDef,
     flexRender,
@@ -12,7 +11,6 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
 } from "@tanstack/react-table"
-
 import {
     Table,
     TableBody,
@@ -21,13 +19,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
 import { Input } from "../ui/input"
-
-import React, { useState } from "react"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { ChevronDown } from "lucide-react"
+import { useState } from "react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -42,19 +38,16 @@ export function DataTable<TData, TValue>({
     searchKey,
     hiddenSearchInput,
 }: DataTableProps<TData, TValue>) {
-
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] =useState<ColumnFiltersState>(
         []
     )
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
-
-
+        useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] =useState({})
 
     const table = useReactTable({
-        data,
+        data: data??[],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -137,7 +130,7 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {(table.getRowModel().rows?.length ?? 0 ) > 0 ?(
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -152,7 +145,7 @@ export function DataTable<TData, TValue>({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                <TableCell colSpan={columns?.length?? 1} className="h-24 text-center">
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -162,8 +155,8 @@ export function DataTable<TData, TValue>({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredSelectedRowModel().rows?.length?? 0} of{" "}
+                    {table.getFilteredRowModel().rows?.length?? 0} row(s) selected.
                 </div>
                 <div className="space-x-2">
                     <Button

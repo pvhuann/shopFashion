@@ -1,5 +1,3 @@
-
-
 const Loader = () => {
     return (
         <div className="flex items-center justify-center h-full w-full">
@@ -7,5 +5,4 @@ const Loader = () => {
         </div>
     )
 }
-
 export default Loader

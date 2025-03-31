@@ -100,9 +100,10 @@ async function getAllProducts() {
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch products");
-  return await res.json();
+  const data = await res.json();
+  return data;
 }
-// Metadata động
+// Metadata of the page
 export const generateMetadata = async (): Promise<Metadata> => {
   const products = await getAllProducts();
   return {
@@ -123,12 +124,11 @@ export default async function ProductsPage() {
   }
   else return (
     <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      {/* Header */}  
         <div className="flex flex-col gap-2 w-full">
           {/* Title and quantity */}
           <div className="flex items-center gap-4">
-            <h1 className="text-3xl font-bold text-black">🛒 Products</h1>
+            <h1 className="text-3xl font-bold text-black">Products</h1>
             <span className="px-2 py-1 text-lg font-semibold bg-gray-200 rounded-lg shadow">
               {products.length}
             </span>
@@ -136,10 +136,7 @@ export default async function ProductsPage() {
           {/* Actions */}
           <ProductActions products={products} />
         </div>
-      </div>
-
       <hr className="my-4" />
-
       {/* Table vendor */}
       <DataTable columns={ProductColumns} data={products} hiddenSearchInput={false} searchKey="name" />
     </div>

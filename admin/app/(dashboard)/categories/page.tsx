@@ -89,8 +89,7 @@ const Categories = async () => {
     // console.log("Categories data:", categories);
     return (
         <div className="p-6">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            {/* Header */}      
                 <div className="flex flex-col gap-2 w-full">
                     {/* Title and quantity */}
                     <div className="flex items-center gap-4">
@@ -102,10 +101,7 @@ const Categories = async () => {
                     {/* Actions */}
                     <ActionsItemButton itemType="categories" basePath="category" arrayItem={categories} />
                 </div>
-            </div>
-
             <hr className="my-4" />
-
             {/* Table vendor */}
             <DataTable columns={CategoryColumns} data={categories} hiddenSearchInput={false} searchKey="name" />
         </div>

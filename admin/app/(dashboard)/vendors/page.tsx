@@ -3,19 +3,22 @@ import ActionsItemButton from '@/components/custom ui/ActionsItemButton';
 import { DataTable } from '@/components/custom ui/DataTable';
 import { VendorColumns } from '@/components/vendors/VendorColumns';
 import { Metadata } from 'next';
-async function getAllVendors() {
+const getAllVendors = async()=> {
     try {
-        const res = await fetch(`${process.env.INTERNAL_API_URL}/vendors`, {
+        const res = await fetch(`${process.env.INTERNAL_API_URL}}/vendors`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
             cache: "no-store",
         })
-        const data = await res.json();
+        if (!res.ok) throw new Error("Failed to fetch vendors");
+        const data:VendorType[] = await res.json();
+        console.log(data);
         return data;
     } catch (error) {
         console.log("vendors_GET", error);
+        return [];
     }
 }
 
@@ -23,24 +26,16 @@ export const generateMetadata = async (): Promise<Metadata> => {
     const vendors = await getAllVendors();
     return {
         title: "Vendors | Admin Dashboard",
-        description: `List of ${vendors.length} vendors`,
+        description: `List of ${vendors?.length ?? 0} vendors`,
     }
 }
 
 export default async function VendorPage() {
     const vendors = await getAllVendors();
-    if (!vendors.length) {
         return (
-            <div className="flex items-center justify-center min-h-screen text-red-500">
-                <h1 className="text-2xl font-bold">No vendors found!</h1>
-            </div>
-        );
-    }
-    else return (
-        <>
-            <div className="p-6">
-                {/* Header */}
-                <div className="flex justify-between items-center mb-6">
+            <>
+                <div className="p-6">
+                    {/* Header */}
                     <div className="flex flex-col gap-2 w-full">
                         {/* Title and quantity */}
                         <div className="flex items-center gap-4">
@@ -52,14 +47,12 @@ export default async function VendorPage() {
                         {/* Actions */}
                         <ActionsItemButton itemType="vendors" basePath="vendor" arrayItem={vendors} />
                     </div>
+                    <hr className="my-4" />
+
+                    {/* Table vendor */}
+                    <DataTable columns={VendorColumns} data={vendors} hiddenSearchInput={false} searchKey="name" />
                 </div>
-
-                <hr className="my-4" />
-
-                {/* Table vendor */}
-                <DataTable columns={VendorColumns} data={vendors} hiddenSearchInput={false} searchKey="name" />
-            </div>
-        </>
-    )
+            </>
+        )
 }
 

@@ -1,6 +1,5 @@
 import Vendor from "@/lib/models/Vendor";
 import { connectToDB } from "@/lib/mongoDB";
-import { error } from "console";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -46,22 +45,21 @@ export const POST = async (req: NextRequest) => {
 }
 
 
-// get all vendors
+// get vendors
 export const GET = async (req: NextRequest) => {
     try {
-
         await connectToDB();
         const {searchParams} = new URL(req.url);
-        const data = searchParams.get("data");
         let query = Vendor.find().sort({ createdAt: "desc" });
+        const data = searchParams.get("data");
         if(data ==="id-name"){
             query = query.select("_id name");
         }
-        const vendor = await query.exec();
-        if (!vendor) {
-            return NextResponse.json({ error: "No vendors found" }, { status: 404 });
+        const vendors:VendorType[] = await query.exec();
+        if (!vendors) {
+            return NextResponse.json({message: "No vendors found"}, { status: 404 });
         }
-        const res = NextResponse.json(vendor, { status: 200 });
+        const res = NextResponse.json(vendors, { status: 200 });
         res.headers.set("Access-Control-Allow-Origin", "http://localhost:4000");
         res.headers.set("Access-Control-Allow-Methods", "GET");
         res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");

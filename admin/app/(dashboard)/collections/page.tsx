@@ -69,13 +69,22 @@ const Collections = async () => {
     const collections = await getCollections();
     console.log("collections", collections);
     return (
-        <div className='p-10'>
-            <div className='flex justify-between items-center  mb-4'>
-                {/* <p className='text-heading2-bold'>Collections</p> */}
-                <ActionsItemButton itemType="collections" basePath="collection" arrayItem={collections} />
-            </div>
-            <hr />
-            <DataTable columns={CollectionColumns} data={collections} hiddenSearchInput={false} searchKey='title' />
+        <div className="p-6">
+            {/* Header */}
+                <div className="flex flex-col gap-2 w-full">
+                    {/* Title and quantity */}
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-3xl font-bold text-black">Collections</h1>
+                        <span className="px-2 py-1 text-lg font-semibold bg-gray-200 rounded-lg shadow">
+                            {collections.length}
+                        </span>
+                    </div>
+                    {/* Actions */}
+                    <ActionsItemButton itemType="collections" basePath="collection" arrayItem={collections} />
+                </div>
+            <hr className="my-4" />
+            {/* Table vendor */}
+            <DataTable columns={CollectionColumns} data={collections} hiddenSearchInput={false} searchKey="name" />
         </div>
     )
 }

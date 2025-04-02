@@ -3,6 +3,7 @@
 import { CollectionColumns } from "@/components/collections/CollectionColumns";
 import ActionsItemButton from "@/components/custom ui/ActionsItemButton";
 import { DataTable } from "@/components/custom ui/DataTable";
+import { Metadata } from "next";
 
 // import { CollectionColumns } from '@/components/collections/CollectionColumns'
 // import { DataTable } from '@/components/custom ui/DataTable'
@@ -65,9 +66,16 @@ const getCollections = async () => {
     }
 }
 
+export const generateMetadata = async () : Promise<Metadata> => {
+    const collections = await getCollections();
+    return {
+        title: "Collections | Admin Dashboard",
+        description: `List of ${collections?.length ?? 0} collections`,
+    }
+}
+
 const Collections = async () => {
     const collections = await getCollections();
-    console.log("collections", collections);
     return (
         <div className="p-6">
             {/* Header */}

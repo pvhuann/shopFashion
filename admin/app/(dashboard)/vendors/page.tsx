@@ -5,7 +5,7 @@ import { VendorColumns } from '@/components/vendors/VendorColumns';
 import { Metadata } from 'next';
 const getAllVendors = async()=> {
     try {
-        const res = await fetch(`${process.env.INTERNAL_API_URL}}/vendors`, {
+        const res = await fetch(`${process.env.INTERNAL_API_URL}/vendors`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -14,7 +14,6 @@ const getAllVendors = async()=> {
         })
         if (!res.ok) throw new Error("Failed to fetch vendors");
         const data:VendorType[] = await res.json();
-        console.log(data);
         return data;
     } catch (error) {
         console.log("vendors_GET", error);

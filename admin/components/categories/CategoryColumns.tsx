@@ -19,11 +19,15 @@ export const CategoryColumns: ColumnDef<CategoryType>[] = [
     {
         accessorKey: "parent",
         header: "Parent",
-        // cell: async ({ row }) => {
-        //     const parentTitle = row.original.parent ? await getTitleCategory(row.original.parent) : "null";
-        //     return <p>{parentTitle}</p>;
-        // },
-        cell:({row})=> (<p>{row.original.parentTitle?? "null"}</p>),
+        // cell:({row})=> (
+        //     <Link href={`/categories/category-details/${row.original.parent}`} className='hover:text-red-1'>
+        //         <p>{row.original.parent ?? "null"}</p>
+        //     </Link>
+        // ),
+        cell: ({ row }) => {
+            const parent = row.original.parentTitle ?? "null"
+            return <p>{parent}</p>
+        }
     },
     {
         accessorKey: "image",

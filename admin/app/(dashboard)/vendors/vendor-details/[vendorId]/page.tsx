@@ -36,16 +36,18 @@ import VendorForm from "@/components/vendors/VendorForm";
 import { Metadata } from "next";
 
 // fetch vendor details from vendor endpoint by vendorId
-async function getVendorDetails(vendorId: string) {
+async function getVendorDetails(vendorId: string): Promise<VendorType | null> {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/${vendorId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
+            cache: "no-store",
         });
         if (!res.ok) throw new Error('Failed to fetch vendor details');
-        return await res.json();
+        const data : VendorType = await res.json();
+        return data;
     } catch (error) {
         console.error("vendorDetails_GET", error);
         return null;

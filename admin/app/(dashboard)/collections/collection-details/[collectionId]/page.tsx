@@ -61,6 +61,7 @@ const getCollectionDetails = async (collectionId: string): Promise<CollectionTyp
             method: "GET",
             cache: "no-store",
         });
+        if (!res.ok) throw new Error('Failed to fetch collection details');
         const data: CollectionType = await res.json();
         return data;
     } catch (error) {

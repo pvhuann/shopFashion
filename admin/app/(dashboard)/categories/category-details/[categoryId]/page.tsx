@@ -44,6 +44,7 @@ const getCategoryDetails = async (categoryId : string): Promise<CategoryType | n
             method: "GET",
             cache: "no-store",
         });
+        if (!res.ok) throw new Error('Failed to fetch category details');
         const data : CategoryType = await res.json();
         return data;
     } catch (error) {

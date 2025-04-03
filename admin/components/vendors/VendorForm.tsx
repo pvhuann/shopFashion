@@ -53,11 +53,11 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
         },
     })
 
-    // get all products
+    // get all products by vendor
     useEffect(() => {
-        const getProducts = async () => {
+        const getProductsByVendor = async ( {productId : string}) => {
             try {
-                const res = await fetch("/api/products", {
+                const res = await fetch(`api/products/`, {
                     method: "GET",
                 });
                 const data = await res.json();
@@ -67,7 +67,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                 console.log("VendorForm_getProducts:", error);
             }
         }
-        getProducts();
+        getProductsByVendor();
     }, []);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {

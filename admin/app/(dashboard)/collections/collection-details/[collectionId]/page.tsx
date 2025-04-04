@@ -52,6 +52,8 @@
 
 
 import CollectionForm from "@/components/collections/CollectionForm";
+import { DataTable } from "@/components/custom ui/DataTable";
+import { ProductColumns } from "@/components/products/ProductColumns";
 import { Metadata } from "next";
 
 // get collection details from the server
@@ -67,6 +69,22 @@ const getCollectionDetails = async (collectionId: string): Promise<CollectionTyp
     } catch (error) {
         console.log("CollectionDetails_GET", error);
         return null;
+    }
+}
+
+//get products in collection
+const getProductsInCollection = async (productIds: string[]): Promise<ProductType[] | []> => {
+    try {
+        const res = await fetch(`${process.env.INTERNAL_API_URL}/products?data=${productIds.join(",")}`, {
+            method: "GET",
+            cache: "no-store",
+        })
+        if (!res.ok) throw new Error('Failed to fetch products in collection');
+        const data: ProductType[] = await res.json();
+        return data;
+    } catch (error) {
+        console.log("getProductsByCollection", error);
+        return [];
     }
 }
 
@@ -89,6 +107,12 @@ export const generateMetadata = async ({ params }: { params: { collectionId: str
 // This component fetches the collection details and displays the form and products in the collection
 const CollectionDetails = async ({params} : {params : {collectionId :string}}) => {
     const collectionDetails = await getCollectionDetails(params.collectionId);
+    const productsInCollection: ProductType[] = [];
+    if (collectionDetails && collectionDetails.products && collectionDetails.products.length > 0) {
+        const productIds : string[] = collectionDetails.products.map((product) => product._id);
+        const products : ProductType[] = await getProductsInCollection(productIds);
+        productsInCollection.push(...products);
+    }
     if (!collectionDetails) {
         return (
             <div className='flex items-center justify-center min-h-screen text-red-500'>
@@ -100,11 +124,11 @@ const CollectionDetails = async ({params} : {params : {collectionId :string}}) =
         <div>
             <CollectionForm initialData={collectionDetails} />
             <div className='px-10'>
-                {/* <DataTable
-                    columns={ProductInCollectionColumns}
-                    data={collectionDetails.products}
+                <DataTable
+                    columns={ProductColumns}
+                    data={productsInCollection}
                     searchKey='title'
-                    hiddenSearchInput={false} /> */}
+                    hiddenSearchInput={false} />
             </div>
         </div>
     )

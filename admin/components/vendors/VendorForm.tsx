@@ -5,7 +5,7 @@ import toast from "react-hot-toast"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 import {
     Form,
@@ -36,6 +36,7 @@ interface VendorProps {
 
 const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
     const [loading, setLoading] = useState(false);
+    const [productIds, setProductIds] = useState<string[]>([]);
     const [productsByVendor, setProductsByVendor] = useState<ProductType[]>([]);
     const router = useRouter();
 
@@ -52,24 +53,36 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
             products: [],
         },
     })
+    useEffect(()=> {
+        if(initialData?.products && initialData.products.length>0){
+            const ids = initialData.products.map((product) => product._id)
+            setProductIds(ids);
+        }
+    },[initialData?.products]);
 
     // get all products by vendor
-    useEffect(() => {
-        const getProductsByVendor = async ( {productId : string}) => {
-            try {
-                const res = await fetch(`api/products/`, {
-                    method: "GET",
-                });
-                const data = await res.json();
-                setProductsByVendor(data);
-                console.log(data);
-            } catch (error) {
-                console.log("VendorForm_getProducts:", error);
+    useEffect (()=> {
+        const getProductsByVendor = async () => {
+            if(productIds.length >0) {
+                try {
+                    const res = await fetch(`api/products?data=${productIds.join(",")}`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                        cache: "no-store",
+                    })
+                    if(!res.ok){
+                        throw new Error("Failed to fetch products");
+                    }
+                    const data = await res.json();
+                    setProductsByVendor(data);
+                } catch (error) {
+                    console.log("getProductsByVendor", error);
+                    toast.error("Something went wrong! Please try again");
+                }
             }
         }
         getProductsByVendor();
-    }, []);
-
+    },[productIds]);
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
@@ -133,7 +146,6 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
 
     return loading ? <Loader /> : (
         <div className="">
-
             {initialData ? (
                 <div className=" flex justify-between items-center">
                     <div className="flex flex-col">
@@ -151,6 +163,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
             <hr className="text-black my-4" />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {/* input name vendor */}
                     <FormField
                         control={form.control}
                         name="name"
@@ -164,7 +177,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                             </FormItem>
                         )}
                     />
-
+                    {/* input email vendor */}
                     <FormField
                         control={form.control}
                         name="email"
@@ -178,7 +191,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                             </FormItem>
                         )}
                     />
-
+                    {/* input phone vendor */}
                     <FormField
                         control={form.control}
                         name="phone"
@@ -192,7 +205,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
                             </FormItem>
                         )}
                     />
-
+                    {/* input address vendor */}
                     <FormField
                         control={form.control}
                         name="address"
@@ -213,6 +226,7 @@ const VendorForm: React.FC<VendorProps> = ({ initialData }) => {
 
                 </form>
             </Form>
+            {/* table products by vendor */}
             {initialData?.products && (
                 <div>
                     <DataTable columns={ProductColumns} data={productsByVendor} searchKey="product name" />

@@ -56,7 +56,7 @@ type VendorType= {
     email: string,
     phone: string,
     address: string,
-    products?: ProductType[],
+    products: ProductType[]| [],
     createdAt: Date,
     updatedAt: Date,
 }

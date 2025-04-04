@@ -1,6 +1,7 @@
 // import mongoose from "mongoose";
 import { set,connect } from "mongoose";
 
+
 let isConnected: boolean = false;
 
 export const connectToDB = async (): Promise<void> => {
@@ -12,8 +13,8 @@ export const connectToDB = async (): Promise<void> => {
     try {
         await connect(process.env.MONGODB_URL || "", {
             dbName: "Shop_Admin",
-            serverSelectionTimeoutMS: 20000, // 20 giây
-            connectTimeoutMS: 20000, // 20 giây
+            serverSelectionTimeoutMS: 10000, 
+            connectTimeoutMS: 10000, 
         })
         isConnected = true;
         console.log("Mongodb is connected");

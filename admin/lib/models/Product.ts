@@ -54,13 +54,13 @@ const ProductSchema = new Schema({
     collection: "products",
     timestamps: true,
     toJSON: { getters: true },
-    toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS
+    // toObject: { virtuals: true } // Add this line to make the virtual accessible when converting to plain JS
 });
 
-ProductSchema.pre("save", function (next) {
-    this.updatedAt =new Date();
-    next();
-});
+// ProductSchema.pre("save", function (next) {
+//     this.updatedAt =new Date();
+//     next();
+// });
 
 
 const Product = models.Product || model("Product", ProductSchema)

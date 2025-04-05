@@ -70,7 +70,7 @@ type ProductType  = {
     _id: string,
     title: string,
     description: string,
-    media:[MediaType],
+    media: MediaType[],
     weight?:number,
     sku:string,
     vendor:string,

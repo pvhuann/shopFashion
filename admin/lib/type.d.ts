@@ -34,6 +34,7 @@ type CategoryType={
 type CategoryIdTitleType={
     _id: string,
     title: string,
+    parent: string | null,
 }
 
 type VariantType= {

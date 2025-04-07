@@ -67,7 +67,7 @@ import { DataTable } from '@/components/custom ui/DataTable';
 import { Metadata } from 'next';
 const getTitleCategory = async (parentId: string) : Promise<string | null> => {
     try {
-        const res = await fetch(`${process.env.INTERNAL_API_URL}}/categories/${parentId}`, {
+        const res = await fetch(`${process.env.INTERNAL_API_URL}/categories/${parentId}`, {
             method: "GET",
             cache: "no-store",
         })
@@ -108,6 +108,8 @@ export const generateMetadata = async():Promise<Metadata> => {
         description:`List of ${categories?.length ?? 0} categories`,
     }
 }
+
+export const revalidate = 3600; // Revalidate every 0 seconds (always fresh data)
 
 const Categories = async () => {
     const categories = await getCategories();

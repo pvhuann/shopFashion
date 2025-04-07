@@ -1,6 +1,6 @@
 
 import Collection from "@/lib/models/Collection";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 

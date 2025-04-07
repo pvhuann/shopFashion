@@ -1,6 +1,6 @@
 import Category from "@/lib/models/Category";
 import Product from "@/lib/models/Product";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
 

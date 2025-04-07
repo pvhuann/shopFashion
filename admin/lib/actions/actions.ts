@@ -1,6 +1,6 @@
 import Customer from "../models/Customer";
 import Orders from "../models/Orders";
-import { connectToDB } from "../mongoDB"
+import { connectToDB } from "../db/init.mongoDB"
 import Category from "../models/Category";
 
 const getTotalSales = async () => {

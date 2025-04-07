@@ -1,7 +1,7 @@
 import Customer from "@/lib/models/Customer";
 import Orders from "@/lib/models/Orders";
 import Product from "@/lib/models/Product";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, { params }: { params: { orderId: string } }) => {

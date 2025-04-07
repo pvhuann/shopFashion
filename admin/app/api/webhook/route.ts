@@ -1,7 +1,7 @@
 import Customer from '@/lib/models/Customer';
 import Orders from '@/lib/models/Orders';
 import Product from '@/lib/models/Product';
-import { connectToDB } from '@/lib/mongoDB';
+import { connectToDB } from '@/lib/db/init.mongoDB';
 import { stripe } from '@/lib/stripe';
 
 import { NextRequest, NextResponse } from 'next/server';

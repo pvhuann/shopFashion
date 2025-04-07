@@ -1,5 +1,5 @@
 import Customer from "@/lib/models/Customer";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import { format} from 'date-fns';
 import Orders from "@/lib/models/Orders";

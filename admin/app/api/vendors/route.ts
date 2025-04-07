@@ -1,5 +1,5 @@
 import Vendor from "@/lib/models/Vendor";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 

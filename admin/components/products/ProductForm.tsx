@@ -283,9 +283,9 @@ const ProductForm: React.FC<ProductProps> = ({ initialData }) => {
         form.setValue("category", null);
     };
 
-    const filteredCategories = categories.filter((category:CategoryIdTitleType) => {
+    const filteredCategories = categories.filter((category) => {
         if (selectedParentCategory === null) {
-            return []
+            return [];
         } else {
             return category.parent === selectedParentCategory;
         }

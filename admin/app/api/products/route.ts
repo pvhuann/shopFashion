@@ -1,6 +1,6 @@
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
-import { connectToDB } from "@/lib/mongoDB";
+import { connectToDB } from "@/lib/db/init.mongoDB";
 import redis from "@/lib/redis/connectRedis";
 import { getAllProducts } from "@/lib/redis/redisUtils";
 import { auth } from "@clerk/nextjs/server";

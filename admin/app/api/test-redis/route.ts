@@ -1,12 +1,14 @@
-import redis from "@/lib/redis/connectRedis";
+
+import { getRedisClient } from "@/lib/db/init.redis";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest, response:NextResponse) {
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key") || "defaultKey";
     const value = searchParams.get("value") || "defaultValue";
-
+    
     try {
+        const redis = await getRedisClient();
         // Assuming redis is already imported and configured
         await redis.set(key, value);
         const result = await redis.get(key);

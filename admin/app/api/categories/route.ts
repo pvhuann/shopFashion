@@ -1,52 +1,98 @@
 import Category from "@/lib/models/Category";
 import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
+import { getRedisClient } from "@/lib/db/init.redis";
 
-
-export const GET = async (req: NextRequest) => {
+const setCorsHeaders = (res: NextResponse) => {
+    res.headers.set("Access-Control-Allow-Origin", process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:4000");
+    res.headers.set("Access-Control-Allow-Methods", "GET");
+    res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.headers.set("Access-Control-Allow-Credentials", "true");
+    return res;
+}
+// time to live cache
+const CATEGORIES_CACHE_TTL = 60 * 60 * 24; // 1 day in seconds
+export const GET = async (req: NextRequest, res: NextResponse) => {
+    const { searchParams } = new URL(req.url);
+    const data = searchParams.get("data");
+    const cacheSuffix = data === "id-title" ? "id-title" : "all";
+    const cacheKey = `categories:${cacheSuffix}`;
+    let redis;
+    // Get data from redis cache
     try {
-        await connectToDB()
-        const {searchParams} = new URL(req.url);
-        const data = searchParams.get("data");
-        let query = Category.find().sort({createdAt:"desc"});
-        if(data ==="id-title"){
-            query = query.select("_id title"); 
+        redis = await getRedisClient();
+        const cachedData = await redis.get(cacheKey);
+        if (cachedData) {
+            console.log("Redis cache hit:", cacheKey);
+            const categories = JSON.parse(cachedData);
+            res = NextResponse.json(categories, { status: 200 });
+            return setCorsHeaders(res);
+        }
+        // if no cache, get data from database
+        console.log("Redis cache miss:", cacheKey);
+    } catch (redisError) {
+        console.error("Redis error:", redisError);
+        redis = null;
+    }
+
+    // If redis is not available, fallback to database
+    try {
+        await connectToDB();
+        let query ;
+        if (data === "id-title") {
+            query = Category.find({}, { _id: 1, title: 1 }).sort({ title: 1 });
+        } else {
+            query = Category.find().sort({ title: 1 });
         }
         const categories = await query.exec();
-        if (!categories) { return NextResponse.json({ message: "No categories found" }, { status: 404 }) };
-        const res=  NextResponse.json((categories), { status: 200 });
-        res.headers.set("Access-Control-Allow-Origin", "http://localhost:4000");
-        res.headers.set("Access-Control-Allow-Methods", "GET");
-        res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        res.headers.set("Access-Control-Allow-Credentials", "true");
-        return res;
+        if (!categories || categories.length === 0) {
+            res = NextResponse.json({ message: "No categories found" }, { status: 404 })
+            return setCorsHeaders(res);
+        }
+        // Set data to redis cache
+        if(redis){
+            try {
+                await redis.set(cacheKey, JSON.stringify(categories), {
+                    EX: CATEGORIES_CACHE_TTL,
+                    NX: true, // Only set the key if it does not already exist
+                });
+                console.log(`Redis cache set for ${cacheKey} with TTL ${CATEGORIES_CACHE_TTL} seconds`);
+            } catch (error) {
+                console.error("Error setting cache:", error);
+            }
+        }
+        // return data from mongodb
+        res = NextResponse.json((categories), { status: 200 });
+        return setCorsHeaders(res);
     } catch (error) {
         console.log("categories_GET:", error);
-        return NextResponse.json({error:"Internal Server Error"}, { status: 500 });
-
+        res = NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return setCorsHeaders(res);
     }
 }
 
-export const POST = async (req: NextRequest) => {
+
+export const POST = async (req: NextRequest, res: NextResponse) => {
     try {
-        const { title, description, image , parent} = await req.json();
+        const { title, description, image, parent } = await req.json();
         if (!title) {
-            return new NextResponse("Title is required", { status: 400 })
+            res = NextResponse.json({ message: "Title is required" }, { status: 400 });
+            return setCorsHeaders(res);
         }
         await connectToDB();
 
-        const existingCategory = await Category.findOne({ title , parent})
+        const existingCategory = await Category.findOne({ title, parent });
         if (existingCategory) {
-            return new NextResponse("Category already exists", { status: 400 })
+            res = NextResponse.json({ message: "Category already exists" }, { status: 400 });
+            return setCorsHeaders(res);
         }
-
-        const newCategory = await Category.create({ title, description, image, parent })
-        await newCategory.save()
-        return new NextResponse(JSON.stringify(newCategory), { status: 200 })
-
+        const newCategory = await Category.create({ title, description, image, parent });
+        await newCategory.save();
+        res = NextResponse.json(JSON.stringify(newCategory), { status: 200 });
+        return setCorsHeaders(res);
     } catch (error) {
         console.log("categories_POST:", error);
-        return new NextResponse("Internal Server Error", { status: 500 })
-
-    }
+        res = NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return setCorsHeaders(res);
+    } 
 }

@@ -1,7 +1,9 @@
+
 import Customer from "../models/Customer";
 import Orders from "../models/Orders";
 import { connectToDB } from "../db/init.mongoDB"
 import Category from "../models/Category";
+import { getRedisClient } from '../db/init.redis';
 
 const getTotalSales = async () => {
     await connectToDB();
@@ -49,4 +51,14 @@ const getTitleCategory = async (idTitle: string) => {
     return data?.title ?? null;
 }
 
-export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory }
+const deleteKeyRedisCache = async (key: string) => {
+    try {
+        const redis = await getRedisClient();
+        await redis.del(key); // Delete the key from Redis cache
+        console.log(`Redis cache invalidated for ${key}`);
+    } catch (error) {
+        console.error("Error deleting key from Redis cache:", error);
+    }
+}
+
+export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory,deleteKeyRedisCache }

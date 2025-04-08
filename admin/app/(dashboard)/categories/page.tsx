@@ -69,6 +69,11 @@ const getTitleCategory = async (parentId: string) : Promise<string | null> => {
     try {
         const res = await fetch(`${process.env.INTERNAL_API_URL}/categories/${parentId}`, {
             method: "GET",
+            headers:{
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            credentials: "include",
             cache: "no-store",
         })
         const data : CategoryType = await res.json();
@@ -82,6 +87,11 @@ const getCategories = async () : Promise<CategoryType[]> => {
     try {
         const res = await fetch(`${process.env.INTERNAL_API_URL}/categories`, {
             method: "GET",
+            headers:{
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            credentials: "include",
             cache: "no-store",
         })
         const data: CategoryType[] = await res.json();
@@ -109,7 +119,7 @@ export const generateMetadata = async():Promise<Metadata> => {
     }
 }
 
-export const revalidate = 3600; // Revalidate every 0 seconds (always fresh data)
+export const revalidate = 3600; // Revalidate every hour
 
 const Categories = async () => {
     const categories = await getCategories();

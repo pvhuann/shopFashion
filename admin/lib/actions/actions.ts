@@ -51,7 +51,7 @@ const getTitleCategory = async (idTitle: string) => {
     return data?.title ?? null;
 }
 
-const deleteKeyRedisCache = async (key: string) => {
+const invalidateKeyRedisCache = async (key: string) => {
     try {
         const redis = await getRedisClient();
         await redis.del(key); // Delete the key from Redis cache
@@ -61,4 +61,4 @@ const deleteKeyRedisCache = async (key: string) => {
     }
 }
 
-export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory,deleteKeyRedisCache }
+export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory,invalidateKeyRedisCache }

@@ -3,7 +3,7 @@ import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import setCorsHeaders from "@/lib/cors";
-import { deleteKeyRedisCache } from "@/lib/actions/actions";
+import { invalidateKeyRedisCache } from "@/lib/actions/actions";
 
 
 
@@ -30,7 +30,7 @@ export const PUT = async (req: NextRequest, res: NextResponse, { params }: { par
         await category.save()
         res = NextResponse.json(JSON.stringify(category), { status: 200 });
         // update redis cache
-        await deleteKeyRedisCache(`categories:all`);
+        await invalidateKeyRedisCache(`categories:all`);
         // try {
         //     const redis = await getRedisClient();
         //     const cacheKey = `categories:all`;
@@ -58,7 +58,7 @@ export const DELETE = async (req: NextRequest, res: NextResponse, { params }: { 
         }
         await Product.updateMany({ category: params.categoryId }, { $pull: { category: params.categoryId } });
         // update redis cache
-        await deleteKeyRedisCache(`categories:all`);
+        await invalidateKeyRedisCache(`categories:all`);
         res = NextResponse.json({ message: "Category deleted" }, { status: 200 });
         return setCorsHeaders(res, "DELETE"); 
     } catch (error) {

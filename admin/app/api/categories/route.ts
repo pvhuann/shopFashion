@@ -3,7 +3,7 @@ import { connectToDB } from "@/lib/db/init.mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import { getRedisClient } from "@/lib/db/init.redis";
 import { setCorsHeaders } from "@/lib/cors";
-import { deleteKeyRedisCache } from "@/lib/actions/actions";
+import { invalidateKeyRedisCache } from "@/lib/actions/actions";
 // time to live cache
 const CATEGORIES_CACHE_TTL = 60 * 60 * 24; // 1 day in seconds
 export const GET = async (req: NextRequest, res: NextResponse) => {
@@ -84,7 +84,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         await newCategory.save();
         res = NextResponse.json(JSON.stringify(newCategory), { status: 201 });
         // Invalidate the cache for categories
-        await deleteKeyRedisCache(`categories:all`);
+        await invalidateKeyRedisCache(`categories:all`);
         // try {
         //     const redis = await getRedisClient();
         //     const cacheKey = `categories:all`;

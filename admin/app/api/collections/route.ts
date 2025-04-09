@@ -4,7 +4,7 @@ import { connectToDB } from "@/lib/db/init.mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import setCorsHeaders from "@/lib/cors";
-import { getRedisClient } from "@/lib/db/init.redis";
+import { getDataFromRedisCache, invalidateKeyRedisCache, setDataToRedisCache } from "@/lib/actions/actions";
 
 const COLLECTIONS_CACHE_TTL = 60 * 60 * 24; // 1 day in seconds
 // const limiter= rateLimit;
@@ -28,9 +28,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             res = NextResponse.json({ error: { message: "Collection title already exists", fieldError: "title" } }, { status: 400 });
             return setCorsHeaders(res, "POST");
         }
-
         const newCollection = await Collection.create({ title, description, image });
         await newCollection.save();
+        await invalidateKeyRedisCache("collections:all");
         res = NextResponse.json(newCollection, { status: 200 });
         return setCorsHeaders(res, "POST");
     } catch (error) {
@@ -47,23 +47,12 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
         const data = searchParams.get("data");
         const cacheSuffix = data === "id-title" ? "id-title" : "all";
         const cacheKey = `collections:${cacheSuffix}`;
-        let redis;
         // get data from redis cache
-        try {
-            redis = await getRedisClient();
-            const cachedData = await redis.get(cacheKey);
-            if (cachedData) {
-                console.log("Redis cache hit: ", cacheKey);
-                const collections = JSON.parse(cachedData);
-                res = NextResponse.json(collections, { status: 200 });
-                return setCorsHeaders(res, "GET");
-            }
-            console.log("Redis cache miss: ", cacheKey);
-        } catch (error) {
-            console.log("Redis error: ", error);
-            redis = null;
+        const {cachedData, redis} = await getDataFromRedisCache(cacheKey);
+        if(cachedData){
+            res = NextResponse.json(cachedData, { status: 200 });
+            return setCorsHeaders(res, "GET");
         }
-
         //if redis is not available get data from database and set data to redis cache
         try {
             await connectToDB();
@@ -77,22 +66,12 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
                 query = Collection.find({ _id: 1, title: 1 }).sort({ createdAt: 'desc' });
             }
             const collections = await query.exec();
+            // set data to redis cache
+            await setDataToRedisCache(redis, cacheKey, COLLECTIONS_CACHE_TTL,true,collections);
             // if not found or collections list is empty
             if(!collections || collections.length ===0){
                 res = NextResponse.json({ message: "No collections found" }, { status: 404 });
                 return setCorsHeaders(res, "GET");
-            }
-            // set data to redis cache
-            if(redis){
-                try {
-                    await redis.set(cacheKey, JSON.stringify(collections), {
-                        EX: COLLECTIONS_CACHE_TTL, // 1 day in seconds
-                        NX: true,
-                    });
-                    console.log(`Redis cache set for ${cacheKey} with ${COLLECTIONS_CACHE_TTL} seconds`);
-                } catch (error) {
-                    console.log("Error setting cache: ", error);
-                }
             }
             res = NextResponse.json(collections, { status: 200 });
             return setCorsHeaders(res, "GET");

@@ -9,7 +9,6 @@ import { invalidateKeyRedisCache } from "@/lib/actions/actions";
 
 // update category
 export const PUT = async (req: NextRequest, res: NextResponse, { params }: { params: { categoryId: string } }) => {
-
     try {
         await connectToDB();
         let category = await Category.findById(params.categoryId);
@@ -31,14 +30,6 @@ export const PUT = async (req: NextRequest, res: NextResponse, { params }: { par
         res = NextResponse.json(JSON.stringify(category), { status: 200 });
         // update redis cache
         await invalidateKeyRedisCache(`categories:all`);
-        // try {
-        //     const redis = await getRedisClient();
-        //     const cacheKey = `categories:all`;
-        //     await redis.del(cacheKey);
-        //     console.log(`Redis cache invalidated for ${cacheKey}`);
-        // } catch (error) {
-        //     console.error("Error updating category in redis:", error);
-        // }
         return setCorsHeaders(res, "PUT");
     } catch (error) {
         console.log("category_POST:", error);

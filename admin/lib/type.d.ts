@@ -137,4 +137,8 @@ type SaleType={
     updatedAt: Date,
 }
 
+type CacheRedisType= {
+    cacheKey :string,
+    TTL : number | 86400,
+}
 

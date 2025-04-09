@@ -1,4 +1,5 @@
 
+
 import Customer from "../models/Customer";
 import Orders from "../models/Orders";
 import { connectToDB } from "../db/init.mongoDB"
@@ -51,6 +52,48 @@ const getTitleCategory = async (idTitle: string) => {
     return data?.title ?? null;
 }
 
+// get data from redis cache by key
+const getDataFromRedisCache = async (cacheKey : string): Promise<{
+    cachedData: any | null,
+    redis: any | null
+}> => {
+    let redis = null;
+    let cachedData = null;
+    try {
+        redis = await getRedisClient();
+        cachedData = await redis.get(cacheKey);
+        if (cachedData) {
+            console.log("Redis cache hit: ", cacheKey);
+            return {
+                cachedData: JSON.parse(cachedData),
+                redis,
+            }
+        }
+        console.log("Redis cache miss: ", cacheKey);
+    } catch (error) {
+        console.log("Error getting data from Redis cache:", error);
+        redis = null;
+    }
+    return { cachedData: null, redis };
+}
+
+// set data to redis cache
+const setDataToRedisCache = async (redis : any, cacheKey: string, cacheTTL :number, cacheNX:boolean, data: any) : Promise<void> => {
+    if(!redis){
+        return;
+    }
+    try {
+        await redis.set(cacheKey, JSON.stringify(data), {
+            EX: cacheTTL,
+            NX:cacheNX,
+        })
+        console.log(`Redis cache set for ${cacheKey} with ${cacheTTL} seconds`);
+    } catch (error) {
+        console.log("Error setting data to Redis cache: ",error);
+    }
+}
+
+// invalidate key in redis cache
 const invalidateKeyRedisCache = async (key: string) => {
     try {
         const redis = await getRedisClient();
@@ -61,4 +104,4 @@ const invalidateKeyRedisCache = async (key: string) => {
     }
 }
 
-export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory,invalidateKeyRedisCache }
+export { getTotalSales, getTotalCustomers, getSalesPerMonth, getTitleCategory, getDataFromRedisCache,setDataToRedisCache, invalidateKeyRedisCache }

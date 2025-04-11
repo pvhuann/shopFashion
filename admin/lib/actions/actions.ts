@@ -94,11 +94,11 @@ const setDataToRedisCache = async (redis : any, cacheKey: string, cacheTTL :numb
 }
 
 // invalidate key in redis cache
-const invalidateKeyRedisCache = async (key: string) => {
+const invalidateKeyRedisCache = async (keys: string[] ) => {
     try {
         const redis = await getRedisClient();
-        await redis.del(key); // Delete the key from Redis cache
-        console.log(`Redis cache invalidated for ${key}`);
+        await redis.del(keys); // Delete the key from Redis cache
+        console.log(`Redis cache invalidated for: ${keys.join(",")}`);
     } catch (error) {
         console.error("Error deleting key from Redis cache:", error);
     }

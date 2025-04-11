@@ -1,8 +1,9 @@
 import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/db/init.mongoDB";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import setCorsHeaders from "@/lib/cors";
 
-export const GET= async(request:NextRequest, {params}:{params: {query: string}})=> {
+export const GET= async(res: NextResponse,{params}:{params: {query: string}})=> {
     try {
         await connectToDB();
 
@@ -14,10 +15,11 @@ export const GET= async(request:NextRequest, {params}:{params: {query: string}})
             ]
         })
 
-        return NextResponse.json(searchProducts,{status: 200});
-        
+        res = NextResponse.json(searchProducts,{status: 200});
+        return setCorsHeaders(res, "GET");
     } catch (error) {
         console.log("search_query", error);
-        return new NextResponse("Internal server error", {status: 500});
+        res = NextResponse.json({message:"Internal server error"}, {status: 500});
+        return setCorsHeaders(res, "GET");
     }
 }

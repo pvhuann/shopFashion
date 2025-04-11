@@ -82,9 +82,20 @@ export const PUT = async (req: NextRequest,res : NextResponse, { params }: { par
             { new: true }
         ).populate({ path: "collections", model: Collection });
         await productUpdate.save();
-        await invalidateKeyRedisCache(`products:all`);
-        await invalidateKeyRedisCache(`products:${params.productId}`);
-        await invalidateKeyRedisCache(`products:id-Title`);
+        // invalidate array cache redis
+        await invalidateKeyRedisCache([ 
+            `products:all`,
+            `products:${params.productId}`,
+            `products:ids`,
+            `products:id-Title`,
+        ])
+        .then(()=> {
+            console.log("Redis cache invalidated successfully!");
+        })
+        .catch((err)=> {
+            console.log("Error invalidating redis cache: ",err);
+        })
+        // return
         res = NextResponse.json(productUpdate, { status: 200 });
         return setCorsHeaders(res , "PUT");
     } catch (error) {

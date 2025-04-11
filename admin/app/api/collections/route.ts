@@ -30,7 +30,17 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         }
         const newCollection = await Collection.create({ title, description, image });
         await newCollection.save();
-        await invalidateKeyRedisCache("collections:all");
+        
+        // Invalidate the cache for categories
+        await invalidateKeyRedisCache([`collections:all`, `collections:id-title`])
+            .then(() => {
+                console.log("Redis cache invalidated successfully!");
+            })
+            .catch((err) => {
+                console.log("Error invalidating redis cache: ", err);
+            })
+
+        // return
         res = NextResponse.json(newCollection, { status: 200 });
         return setCorsHeaders(res, "POST");
     } catch (error) {
@@ -43,41 +53,41 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
 //GET all collections from the database 
 export const GET = async (req: NextRequest, res: NextResponse) => {
-        const { searchParams } = new URL(req.url);
-        const data = searchParams.get("data");
-        const cacheSuffix = data === "id-title" ? "id-title" : "all";
-        const cacheKey = `collections:${cacheSuffix}`;
-        // get data from redis cache
-        const {cachedData, redis} = await getDataFromRedisCache(cacheKey);
-        if(cachedData){
-            res = NextResponse.json(cachedData, { status: 200 });
+    const { searchParams } = new URL(req.url);
+    const data = searchParams.get("data");
+    const cacheSuffix = data === "id-title" ? "id-title" : "all";
+    const cacheKey = `collections:${cacheSuffix}`;
+    // get data from redis cache
+    const { cachedData, redis } = await getDataFromRedisCache(cacheKey);
+    if (cachedData) {
+        res = NextResponse.json(cachedData, { status: 200 });
+        return setCorsHeaders(res, "GET");
+    }
+    //if redis is not available get data from database and set data to redis cache
+    try {
+        await connectToDB();
+        let query = Collection.find().sort({ createdAt: 'desc' });
+        if (!data) {
+            query = Collection.find().sort({ createdAt: 'desc' });
+        } else if (data === "id") {
+            query = Collection.find({ _id: 1 }).sort({ createdAt: 'desc' });
+        }
+        else if (data === "id-title") {
+            query = Collection.find({ _id: 1, title: 1 }).sort({ createdAt: 'desc' });
+        }
+        const collections = await query.exec();
+        // set data to redis cache
+        await setDataToRedisCache(redis, cacheKey, COLLECTIONS_CACHE_TTL, true, collections);
+        // if not found or collections list is empty
+        if (!collections || collections.length === 0) {
+            res = NextResponse.json({ message: "No collections found" }, { status: 404 });
             return setCorsHeaders(res, "GET");
         }
-        //if redis is not available get data from database and set data to redis cache
-        try {
-            await connectToDB();
-            let query = Collection.find().sort({ createdAt: 'desc' });
-            if(!data){
-                query = Collection.find().sort({ createdAt: 'desc' });
-            }else if (data === "id") {
-                query = Collection.find({ _id: 1 }).sort({ createdAt: 'desc' });
-            }
-            else if (data === "id-title") {
-                query = Collection.find({ _id: 1, title: 1 }).sort({ createdAt: 'desc' });
-            }
-            const collections = await query.exec();
-            // set data to redis cache
-            await setDataToRedisCache(redis, cacheKey, COLLECTIONS_CACHE_TTL,true,collections);
-            // if not found or collections list is empty
-            if(!collections || collections.length ===0){
-                res = NextResponse.json({ message: "No collections found" }, { status: 404 });
-                return setCorsHeaders(res, "GET");
-            }
-            res = NextResponse.json(collections, { status: 200 });
-            return setCorsHeaders(res, "GET");
-        } catch (error) {
-            console.log("Collections_GET", error);
-            res = NextResponse.json({ error: { message: "Internal Server Error" } }, { status: 500 });
-            return setCorsHeaders(res, "GET");
-        }
+        res = NextResponse.json(collections, { status: 200 });
+        return setCorsHeaders(res, "GET");
+    } catch (error) {
+        console.log("Collections_GET", error);
+        res = NextResponse.json({ error: { message: "Internal Server Error" } }, { status: 500 });
+        return setCorsHeaders(res, "GET");
+    }
 }

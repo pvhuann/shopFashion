@@ -28,8 +28,14 @@ export const PUT = async (req: NextRequest, res: NextResponse, { params }: { par
         )
         await category.save()
         res = NextResponse.json(JSON.stringify(category), { status: 200 });
-        // update redis cache
-        await invalidateKeyRedisCache(`categories:all`);
+        // Invalidate the cache for categories
+        await invalidateKeyRedisCache([`categories:all`, `categories:id-title`])
+            .then(() => {
+                console.log("Redis cache invalidated successfully!");
+            })
+            .catch((err) => {
+                console.log("Error invalidating redis cache: ", err);
+            })
         return setCorsHeaders(res, "PUT");
     } catch (error) {
         console.log("category_POST:", error);
@@ -48,13 +54,19 @@ export const DELETE = async (req: NextRequest, res: NextResponse, { params }: { 
             return setCorsHeaders(res, "DELETE");
         }
         await Product.updateMany({ category: params.categoryId }, { $pull: { category: params.categoryId } });
-        // update redis cache
-        await invalidateKeyRedisCache(`categories:all`);
+        // Invalidate the cache for categories
+        await invalidateKeyRedisCache([`categories:all`, `categories:id-title`])
+            .then(() => {
+                console.log("Redis cache invalidated successfully!");
+            })
+            .catch((err) => {
+                console.log("Error invalidating redis cache: ", err);
+            })
         res = NextResponse.json({ message: "Category deleted" }, { status: 200 });
-        return setCorsHeaders(res, "DELETE"); 
+        return setCorsHeaders(res, "DELETE");
     } catch (error) {
         console.log("category_DELETE:", error);
-        res = NextResponse.json({error:"Internal Server Error"}, { status: 500 })
+        res = NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
         return setCorsHeaders(res, "DELETE");
     }
 }
@@ -65,14 +77,14 @@ export const GET = async (req: NextRequest, res: NextResponse, { params }: { par
         await connectToDB();
         const category = await Category.findById(params.categoryId);
         if (!category) {
-            res = NextResponse.json({message:"Category not found"}, { status: 404 });
+            res = NextResponse.json({ message: "Category not found" }, { status: 404 });
             return setCorsHeaders(res, "GET");
         }
         res = NextResponse.json(JSON.stringify(category), { status: 200 });
         return setCorsHeaders(res, "GET");
     } catch (error) {
         console.log("category_GET:", error);
-        res = NextResponse.json({error:"Internal Server Error"}, { status: 500 })
+        res = NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
         return setCorsHeaders(res, "GET");
     }
 }

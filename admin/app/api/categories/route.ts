@@ -61,9 +61,16 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         }
         const newCategory = await Category.create({ title, description, image, parent });
         await newCategory.save();
-        res = NextResponse.json(JSON.stringify(newCategory), { status: 201 });
         // Invalidate the cache for categories
-        await invalidateKeyRedisCache(`categories:all`);
+        await invalidateKeyRedisCache([`categories:all`, `categories:id-title`])
+        .then(()=>{
+            console.log("Redis cache invalidated successfully!");
+        })
+        .catch((err)=>{
+            console.log("Error invalidating redis cache: ",err);
+        })
+        // return
+        res = NextResponse.json(JSON.stringify(newCategory), { status: 201 });
         return setCorsHeaders(res, "POST");
     } catch (error) {
         console.log("categories_POST:", error);

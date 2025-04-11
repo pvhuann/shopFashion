@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import setCorsHeaders from "@/lib/cors";
+import { invalidateKeyRedisCache } from "@/lib/actions/actions";
 
 const vendorUpdateSchema = z.object({
     name: z.string().min(1).optional(),
@@ -15,28 +17,32 @@ const vendorUpdateSchema = z.object({
 
 
 // get vendor by id
-export const GET = async (req: NextRequest, { params }: { params: { vendorId: string } }) => {
+export const GET = async (req: NextRequest, res: NextResponse, { params }: { params: { vendorId: string } }) => {
     try {
         await connectToDB();
         const vendor = await Vendor.findById(params.vendorId);
         if (!vendor) {
-            return NextResponse.json({ message: "No vendor found" }, { status: 404 });
+            res = NextResponse.json({ message: "No vendor found" }, { status: 404 });
+            return setCorsHeaders(res, "GET");
         }
-        return NextResponse.json(vendor, { status: 200 });
+        res = NextResponse.json(vendor, { status: 200 });
+        return setCorsHeaders(res, "GET");
     } catch (error) {
         console.log("VENDOR_ID_GET", error);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        res = NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        return setCorsHeaders(res, "GET");
     }
 }
 
 // update vendor by id
-export const PATCH = async (req: NextRequest, { params }: { params: { vendorId: string } }) => {
+export const PATCH = async (req: NextRequest, res: NextResponse, { params }: { params: { vendorId: string } }) => {
     try {
         await connectToDB();
         // let vendor = await Vendor.findById(params.vendorId);
         const vendor = await Vendor.findById(params.vendorId);
         if (!vendor) {
-            return NextResponse.json({ message: "No vendor found" }, { status: 404 });
+            res = NextResponse.json({ message: "No vendor found" }, { status: 404 });
+            return setCorsHeaders(res, "PATCH");
         }
 
         const body = await req.json();
@@ -54,42 +60,53 @@ export const PATCH = async (req: NextRequest, { params }: { params: { vendorId: 
         // vendor = await Vendor.findByIdAndUpdate(params.vendorId, { name, email, phone, address }, { new: true });
         // await vendor.save();
 
-        return NextResponse.json({message: "Vendor updated successfully", data: vendor}, { status: 200 });
+        // invalidate key redis cache
+        await invalidateKeyRedisCache("vendors:all");
+        res = NextResponse.json({ message: "Vendor updated successfully", data: vendor }, { status: 200 });
+        return setCorsHeaders(res, "PATCH");
     } catch (error) {
-        if(error instanceof z.ZodError) {
-            return NextResponse.json({ message: "Invalid data", error: error.errors }, { status: 400 });
+        if (error instanceof z.ZodError) {
+            res = NextResponse.json({ message: "Invalid data", error: error.errors }, { status: 400 });
+            return setCorsHeaders(res, "PATCH");
         }
         console.log("VENDOR_ID_POST:", error);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        res = NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        return setCorsHeaders(res, "PATCH");
     }
 }
 
 // delete vendor by id
-export const DELETE = async (req: NextRequest, { params }: { params: { vendorId: string } }) => {
+export const DELETE = async (req: NextRequest, res: NextResponse, { params }: { params: { vendorId: string } }) => {
     try {
         await connectToDB();
-
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
             const vendor = await Vendor.findByIdAndDelete(params.vendorId, { session });
             if (!vendor) {
-                return NextResponse.json({ message: "No vendor found" }, { status: 404 });
+                res = NextResponse.json({ message: "No vendor found" }, { status: 404 });
+                return setCorsHeaders(res, "DELETE");
             }
             await Product.deleteMany({ vendor: params.vendorId }, { session });
             await session.commitTransaction();
             // Revalidate path for re-fetching data from the server and updating the cache accordingly when the vendor is deleted
             revalidatePath("/vendors");
-            return NextResponse.json({ message: "Vendor deleted successfully" }, { status: 200 });
+            // invalidate key redis cache
+            await invalidateKeyRedisCache("vendors:all");
+
+            res = NextResponse.json({ message: "Vendor deleted successfully" }, { status: 200 });
+            return setCorsHeaders(res, "DELETE");
         } catch (error) {
             await session.abortTransaction();
             console.log("VENDOR_ID_DELETE:", error);
-            return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+            res = NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+            return setCorsHeaders(res, "DELETE");
         } finally {
             session.endSession();
         }
     } catch (error) {
         console.log("VENDOR_ID_DELETE:", error);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        res = NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        return setCorsHeaders(res, "DELETE");
     }
 }

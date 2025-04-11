@@ -1,47 +1,52 @@
+import { getDataFromRedisCache, invalidateKeyRedisCache, setDataToRedisCache } from '@/lib/actions/actions';
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/db/init.mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server"
+import setCorsHeaders from "@/lib/cors";
 
-
-export const GET = async (req: NextRequest, { params }: { params: { productId: string } }) => {
+const PRODUCT_CACHE_TTL = 3600;
+export const GET = async (req: NextRequest, res: NextResponse, { params }: { params: { productId: string } }) => {
     try {
-        await connectToDB()
-
-        const product = await Product.findById(params.productId)
-            .populate({ path: "collections", model: Collection });
-        if (!product) {
-            return new NextResponse("Product not found", { status: 404 })
+        const { cachedData, redis } = await getDataFromRedisCache(`products:${params.productId}`);
+        if (cachedData) {
+            res = NextResponse.json(cachedData, { status: 200 });
+            return setCorsHeaders(res, "GET");
         }
-
-        return new NextResponse(JSON.stringify(product), {
-            status: 200,
-            headers: {
-                "Access-Control-Allow-Origin": `${process.env.ECOMMERCE_SHOP_URL}`,
-                "Access-Control-Allow-Methods": "GET",
-                "Access-Control-Allow-Headers": "Content-Type",
-            },
-        });
+        await connectToDB();
+        const product = await Product.findById(params.productId).populate({ path: "collections", model: Collection });
+        // if products not found
+        if (!product) {
+            res = new NextResponse("Product not found", { status: 404 });
+            return setCorsHeaders(res, "GET");
+        }
+        // return product
+        await setDataToRedisCache(redis, `products:${params.productId}`, PRODUCT_CACHE_TTL, true, product);
+        res = new NextResponse(JSON.stringify(product), { status: 200, });
+        return setCorsHeaders(res, "GET");
     } catch (error) {
         console.log("productId_GET", error);
-        return new NextResponse("Internal Error", { status: 500 })
+        res = NextResponse.json({ message: "Internal Error" }, { status: 500 });
+        return setCorsHeaders(res, "GET");
     }
 }
 
 
-export const POST = async (req: NextRequest, { params }: { params: { productId: string } }) => {
+export const PUT = async (req: NextRequest,res : NextResponse, { params }: { params: { productId: string } }) => {
     try {
         const { userId } = auth()
         if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 })
+            res = NextResponse.json({message:"Internal Error"}, { status: 401 });
+            return setCorsHeaders(res , "PUT");
         }
 
         await connectToDB()
 
         const product = await Product.findById(params.productId)
         if (!product) {
-            return new NextResponse("Product not found", { status: 404 })
+            res =  NextResponse.json({message:"Product not found"}, { status: 404 });
+            return setCorsHeaders(res , "PUT");
         }
 
         const {
@@ -50,7 +55,7 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
             media,
             category,
             collections,
-            
+
             tags,
             sizes,
             colors,
@@ -75,31 +80,35 @@ export const POST = async (req: NextRequest, { params }: { params: { productId: 
                 inventory,
             },
             { new: true }
-        ).populate({ path: "collections", model: Collection })
-
-        await productUpdate.save()
-        return NextResponse.json(productUpdate, { status: 200 })
-
+        ).populate({ path: "collections", model: Collection });
+        await productUpdate.save();
+        await invalidateKeyRedisCache(`products:all`);
+        await invalidateKeyRedisCache(`products:${params.productId}`);
+        await invalidateKeyRedisCache(`products:id-Title`);
+        res = NextResponse.json(productUpdate, { status: 200 });
+        return setCorsHeaders(res , "PUT");
     } catch (error) {
         console.log("productId_POST", error);
-        return new NextResponse("Internal Error", { status: 500 })
+        res = NextResponse.json({message:"Internal Error"}, { status: 500 });
+        return setCorsHeaders(res , "PUT");
     }
 }
 
 
 
-export const DELETE = async (req: NextRequest, { params }: { params: { productId: string } }) => {
+export const DELETE = async (req: NextRequest, res :NextResponse, { params }: { params: { productId: string } }) => {
     try {
         const { userId } = auth()
         if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 })
+            res =  NextResponse.json({message:"Unauthorized"}, { status: 401 });
+            return setCorsHeaders(res , "DELETE");
         }
+        await connectToDB();
 
-        await connectToDB()
-
-        const product = await Product.findById(params.productId)
+        const product = await Product.findById(params.productId);
         if (!product) {
-            return new NextResponse("Product not found", { status: 404 })
+            res =  NextResponse.json({message:"Product not found"}, { status: 404 });
+            return setCorsHeaders(res , "DELETE");
         }
 
         await Product.findByIdAndDelete(params.productId)
@@ -112,10 +121,27 @@ export const DELETE = async (req: NextRequest, { params }: { params: { productId
                 })
             )
         );
-        return new NextResponse("Product deleted", { status: 200 })
 
+        // invalidate redis cache
+        await invalidateKeyRedisCache([ 
+            `products:all`,
+            `products:${params.productId}`,
+            `products:ids`,
+            `products:id-Title`,
+        ])
+        .then(()=> {
+            console.log("Redis cache invalidated successfully!");
+        })
+        .catch((err)=> {
+            console.log("Error invalidating redis cache: ",err);
+        })
+
+        // return
+        res = NextResponse.json({message:"Product deleted!"}, { status: 200 });
+        return setCorsHeaders(res , "DELETE");
     } catch (error) {
         console.log("productId_DELETE", error);
-        return new NextResponse("Internal Error", { status: 500 })
+        res = NextResponse.json({message:"Internal Error"}, { status: 500 });
+        return setCorsHeaders(res , "DELETE");
     }
 }
